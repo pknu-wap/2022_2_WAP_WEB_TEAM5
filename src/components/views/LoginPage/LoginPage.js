@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 import "./LoginPage.css";
 
-function LandingPage() {
+function LoginPage() {
   return (
     <div className="body">
       <link
@@ -85,4 +85,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage;
+export default LoginPage;

@@ -15,12 +15,12 @@ body {
 }
 
 .image {
-  width: 70%;
+  width: 75%;
   height: 70%;
 }
 
 .main {
-  padding: 0px 10px;
+  padding: 50px 0px;
 }
 
 @media screen and (max-height: 450px) {
@@ -41,7 +41,7 @@ body {
 
 @media screen and (min-width: 768px) {
   .main {
-    margin-left: 80%;
+    margin-left: 75%;
   }
 
   .sidenav {
@@ -53,9 +53,9 @@ body {
   }
 
   .login-form {
+    width: 300px;
     margin-top: 80%;
   }
-  /* 폼 위 여백 설정 */
 
   .register-form {
     margin-top: 20%;
@@ -64,8 +64,9 @@ body {
 
 .login-main-text {
   height: 100%;
-  margin-top: 0;
-  /* padding: 60px; */
+  margin-top: 30px;
+  margin-left: 50px;
+  padding: 60px;
   color: #fff;
 }
 

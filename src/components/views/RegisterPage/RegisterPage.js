@@ -1,7 +1,14 @@
-import React, { Fragment } from "react";
+import React from "react";
 import "./RegisterPage.css";
+import { useNavigate } from "react-router-dom";
 
-function LandingPage() {
+function RegisterPage() {
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <link
@@ -12,9 +19,13 @@ function LandingPage() {
       <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
       <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
-      <div class="sidenav">
-        <div class="login-main-text">
-          <img src="https://source.unsplash.com/random" class="image"></img>
+      <div className="sidenav">
+        <div className="login-main-text">
+          <img
+            src="https://source.unsplash.com/random"
+            className="image"
+            alt="No"
+          ></img>
           <h2>
             <br />
             Application
@@ -23,46 +34,46 @@ function LandingPage() {
           <p>Login or register from here to access.</p>
         </div>
       </div>
-      <div class="main">
-        <div class="col-md-6 col-sm-12">
-          <div class="login-form">
+      <div className="main">
+        <div className="col-md-6 col-sm-12">
+          <div className="login-form">
             <form>
-              <div class="form-group">
+              <div className="form-group">
                 <label>ID</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="User Name"
-                />
+                <input type="text" className="form-control" placeholder="ID" />
               </div>
-              <div class="form-group">
+              <div className="form-group">
                 <label>Name</label>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   placeholder="User Name"
                 />
               </div>
-              <div class="form-group">
-                <label>Password</label>
+              <div className="form-group">
+                <label>password</label>
                 <input
                   type="password"
-                  class="form-control"
-                  placeholder="User Name"
-                />
-              </div>
-              <div class="form-group">
-                <label>Password Check</label>
-                <input
-                  type="password"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Password"
                 />
               </div>
-              {/* <button type="submit" class="btn btn-black">
+              <div className="form-group">
+                <label>Password Check</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  placeholder="Password"
+                />
+              </div>
+              {/* <button type="submit" className="btn btn-black">
                 Login
               </button> */}
-              <button type="submit" class="btn btn-secondary">
+              <button
+                type="submit"
+                className="btn btn-secondary btn-lg btn-block"
+                onClick={handleSubmit}
+              >
                 Register
               </button>
             </form>
@@ -73,4 +84,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage;
+export default RegisterPage;

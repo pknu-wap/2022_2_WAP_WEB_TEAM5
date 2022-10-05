@@ -14,8 +14,13 @@ body {
   padding-top: 20px;
 }
 
+.image {
+  width: 75%;
+  height: 70%;
+}
+
 .main {
-  padding: 0px 10px;
+  padding: 50px 0px;
 }
 
 @media screen and (max-height: 450px) {
@@ -36,11 +41,11 @@ body {
 
 @media screen and (min-width: 768px) {
   .main {
-    margin-left: 40%;
+    margin-left: 75%;
   }
 
   .sidenav {
-    width: 40%;
+    width: 70%;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -48,6 +53,7 @@ body {
   }
 
   .login-form {
+    width: 300px;
     margin-top: 80%;
   }
 
@@ -57,7 +63,8 @@ body {
 }
 
 .login-main-text {
-  margin-top: 20%;
+  height: 100%;
+  margin-top: 0;
   padding: 60px;
   color: #fff;
 }
@@ -69,4 +76,10 @@ body {
 .btn-black {
   background-color: #000 !important;
   color: #fff;
+}
+
+.goto {
+  /* padding-top: 30px; */
+  color: black;
+  /* float: right; */
 }
