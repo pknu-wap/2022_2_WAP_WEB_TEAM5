@@ -1,4 +1,4 @@
-package com.selett.server.login.dto;
+package com.selett.server.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user_informations")
-public class LoginEntity {
+public class UserInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
