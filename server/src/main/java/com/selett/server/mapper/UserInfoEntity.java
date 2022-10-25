@@ -1,4 +1,4 @@
-package com.selett.server.dto;
+package com.selett.server.mapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
