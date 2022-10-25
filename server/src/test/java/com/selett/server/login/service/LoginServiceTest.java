@@ -1,12 +1,10 @@
 package com.selett.server.login.service;
 
-import com.selett.server.dto.UserInfoEntity;
+import com.selett.server.mapper.UserInfoEntity;
 import com.selett.server.repository.UserInfoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 @SpringBootTest
 public class LoginServiceTest {
@@ -15,8 +13,13 @@ public class LoginServiceTest {
 
     @Test
     public void searchAll() {
-        List<UserInfoEntity> loginEntity = this.userInfoRepository.findAll();
+        userInfoRepository.findAll().forEach(System.out::println);
+    }
 
-        loginEntity.forEach(System.out::println);
+    @Test
+    public void exist() {
+//        System.out.println(userInfoRepository.existsByIdentification("admin"));
+//        System.out.println(userInfoRepository.existsByIdentificationAndPassword("admin", "selettadmin"));
+        UserInfoEntity userInfoEntity = userInfoRepository.findByIdentificationAndPassword("admin", "selettadmin");
     }
 }
