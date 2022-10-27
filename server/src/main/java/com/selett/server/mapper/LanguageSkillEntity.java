@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -16,15 +18,16 @@ public class LanguageSkillEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @NotNull
     private String title;
 
-    @Column(nullable = false, length = 20)
+    @NotNull
+    @Size(min = 1, max = 20)
     private String grade;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer position;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer userId;
 }

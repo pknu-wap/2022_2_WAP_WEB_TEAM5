@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -16,15 +18,19 @@ public class UserInfoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
 
-    @Column(nullable = false, length = 20)
+    @NotNull
+    @Size(min = 1, max = 20)
     private String identification;
 
-    @Column(nullable = false, length = 20)
+    @NotNull
+    @Size(min = 1, max = 20)
     private String password;
 
-    @Column(nullable = false, length = 20)
+    @NotNull
+    @Size(min = 1, max = 20)
     private String name;
 
-    @Column(nullable = false, length = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
     private String email;
 }

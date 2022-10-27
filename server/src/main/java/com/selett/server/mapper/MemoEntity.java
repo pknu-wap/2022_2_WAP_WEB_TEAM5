@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -18,9 +19,9 @@ public class MemoEntity {
 
     private String description;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer position;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer userId;
 }

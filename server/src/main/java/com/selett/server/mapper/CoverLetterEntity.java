@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -18,17 +19,17 @@ public class CoverLetterEntity {
 
     private String title;
 
-    @Column(nullable = false)
+    @NotNull
     private Boolean titleLock;
 
     private String description;
 
-    @Column(nullable = false)
+    @NotNull
     private Boolean descriptionLock;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer position;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer listId;
 }

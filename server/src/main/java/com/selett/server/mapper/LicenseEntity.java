@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -17,17 +18,17 @@ public class LicenseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @NotNull
     private String title;
 
-    @Column(nullable = false)
+    @NotNull
     private LocalDate date;
 
     private String description;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer position;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer userId;
 }

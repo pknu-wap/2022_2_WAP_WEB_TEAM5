@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 @Entity
 @Data
@@ -16,23 +18,25 @@ public class AwardEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @NotNull
     private String title;
 
-    @Column(nullable = false)
+    @NotNull
     private LocalDate date;
 
-    @Column(nullable = false, length = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
     private String organization;
 
-    @Column(nullable = false, length = 20)
+    @NotNull
+    @Size(min = 1, max = 20)
     private String grade;
 
     private String description;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer position;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer userId;
 }
