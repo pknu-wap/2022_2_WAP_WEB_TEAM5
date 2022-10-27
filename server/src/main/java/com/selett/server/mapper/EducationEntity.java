@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
@@ -17,19 +19,22 @@ public class EducationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
     private String name;
 
-    @Column(nullable = false, length = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
     private String major;
 
-    @Column(nullable = false, length = 20)
+    @NotNull
+    @Size(min = 1, max = 20)
     private String degree;
 
-    @Column(nullable = false)
+    @NotNull
     private LocalDate admissionDate;
 
-    @Column(nullable = false)
+    @NotNull
     private LocalDate graduationDate;
 
     private Float majorGrade;
@@ -42,9 +47,9 @@ public class EducationEntity {
 
     private Integer course;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer position;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer userId;
 }
