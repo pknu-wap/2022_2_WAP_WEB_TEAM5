@@ -1,9 +1,10 @@
 package com.selett.server.login.dto;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
