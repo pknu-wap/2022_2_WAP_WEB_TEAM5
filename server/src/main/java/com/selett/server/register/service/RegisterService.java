@@ -1,7 +1,6 @@
 package com.selett.server.register.service;
 
 import com.selett.server.mapper.UserInfoEntity;
-import com.selett.server.register.dto.RegisterRequest;
 import com.selett.server.register.dto.RegisterResponse;
 import com.selett.server.repository.UserInfoRepository;
 import lombok.AllArgsConstructor;

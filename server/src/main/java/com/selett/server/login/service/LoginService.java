@@ -2,7 +2,6 @@ package com.selett.server.login.service;
 
 import com.selett.server.login.dto.LoginResponse;
 import com.selett.server.mapper.UserInfoEntity;
-import com.selett.server.login.dto.LoginRequest;
 import com.selett.server.repository.UserInfoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
