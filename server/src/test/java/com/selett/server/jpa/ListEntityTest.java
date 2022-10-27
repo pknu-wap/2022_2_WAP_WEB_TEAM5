@@ -1,4 +1,4 @@
-package com.selett.server.list;
+package com.selett.server.jpa;
 
 import com.selett.server.mapper.ListEntity;
 import com.selett.server.repository.ListRepository;
