@@ -18,7 +18,7 @@ public class LoginService {
         if(success) {
             UserInfoEntity user = userInfoRepository.findByIdentificationAndPassword(identification, password);
             loginResponse.setSuccess(true);
-            loginResponse.setUser_id(user.getUser_id());
+            loginResponse.setUserId(user.getUser_id());
         }
         else
             loginResponse.setSuccess(false);
