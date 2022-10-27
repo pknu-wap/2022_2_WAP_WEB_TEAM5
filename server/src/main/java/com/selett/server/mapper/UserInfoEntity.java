@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -31,6 +32,7 @@ public class UserInfoEntity {
     private String name;
 
     @NotNull
+    @Email
     @Size(min = 1, max = 50)
     private String email;
 }
