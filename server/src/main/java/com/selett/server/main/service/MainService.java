@@ -7,7 +7,6 @@ import com.selett.server.mapper.ListEntity;
 import com.selett.server.repository.CoverLetterRepository;
 import com.selett.server.repository.ListRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class MainService {
     public MainResponse getListAndCoverLetter(Integer userId) {
         MainResponse response = new MainResponse(new ArrayList<>());
 
-        List<ListEntity> listEntities = listRepository.findAll(Sort.by(Sort.Direction.ASC, "position"));
+        List<ListEntity> listEntities = listRepository.findAllByUserIdOrderByPositionAsc(userId);
         for(ListEntity listEntity : listEntities) {
             FolderList folderList = new FolderList();
 
