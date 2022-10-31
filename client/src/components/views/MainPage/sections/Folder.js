@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from "react";
-import { AddIcon } from "@chakra-ui/icons";
+import React, { Fragment, useState, useRef } from "react";
+import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
@@ -13,17 +13,22 @@ import {
   Input,
   FormLabel,
   useDisclosure,
+  Avatar,
+  AvatarBadge,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
-
-import { Box, ChakraProvider } from "@chakra-ui/react";
-import { Menu, MenuList, MenuButton, MenuItem } from "@chakra-ui/menu";
-import { ContextMenu } from "chakra-ui-contextmenu";
 
 function Folder(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
   const [CompanyList, setCompanyList] = useState(["빈 폴더"]);
+  const cancelRef = useRef();
 
   const companyHandler = (event) => {
     setCompany(event.currentTarget.value);
@@ -34,30 +39,86 @@ function Folder(props) {
     setCompany("");
   };
 
+  const folderHandler = () => {
+    setCompanyList([]);
+  };
+
   return (
     <Fragment>
       {CompanyList &&
         CompanyList.map((company, index) => (
-          <Menu>
-            <MenuButton // 폴더의 동그라미
-              type="button"
-              className="rounded-circle"
-              key={index}
-              value={company}
-              style={{
-                width: "55px",
-                height: "55px",
-                color: "black",
-                backgroundColor: "white",
-                marginTop: "40px",
-                cursor: "pointer",
-              }}
-            ></MenuButton>
-            <MenuList minWidth="30px" style={{}}>
-              <MenuItem>수정</MenuItem>
-              <MenuItem>삭제</MenuItem>
-            </MenuList>
-          </Menu>
+          <Avatar // 폴더의 동그라미
+            type="button"
+            className="rounded-circle"
+            key={index}
+            name={company}
+            style={{
+              width: "55px",
+              height: "55px",
+              color: "black",
+              backgroundColor: "white",
+              marginTop: "40px",
+              cursor: "pointer",
+            }}
+          >
+            <AvatarBadge
+              borderColor="white"
+              bg="white"
+              boxSize="1.25em"
+              onClick={folderHandler}
+            >
+              <DeleteIcon style={{ width: "90%", height: "90%" }} />
+            </AvatarBadge>
+          </Avatar>
+          // <Avatar // 폴더의 동그라미
+          //   type="button"
+          //   className="rounded-circle"
+          //   key={index}
+          //   name={company}
+          //   style={{
+          //     width: "55px",
+          //     height: "55px",
+          //     color: "black",
+          //     backgroundColor: "white",
+          //     marginTop: "40px",
+          //     cursor: "pointer",
+          //   }}
+          // >
+          //   <AvatarBadge
+          //     borderColor="white"
+          //     bg="white"
+          //     boxSize="1.25em"
+          //     onClick={onOpen}
+          //   >
+          //     <DeleteIcon style={{ width: "90%", height: "90%" }} />
+          //   </AvatarBadge>
+          //   <AlertDialog
+          //     isOpen={isOpen}
+          //     leastDestructiveRef={cancelRef}
+          //     onClose={onClose}
+          //   >
+          //     <AlertDialogOverlay>
+          //       <AlertDialogContent>
+          //         <AlertDialogHeader fontSize="lg" fontWeight="bold">
+          //           Delete Customer
+          //         </AlertDialogHeader>
+
+          //         <AlertDialogBody>
+          //           Are you sure? You can't undo this action afterwards.
+          //         </AlertDialogBody>
+
+          //         <AlertDialogFooter>
+          //           <Button ref={cancelRef} onClick={onClose}>
+          //             Cancel
+          //           </Button>
+          //           <Button colorScheme="red" onClick={onClose} ml={3}>
+          //             Delete
+          //           </Button>
+          //         </AlertDialogFooter>
+          //       </AlertDialogContent>
+          //     </AlertDialogOverlay>
+          //   </AlertDialog>
+          // </Avatar>
         ))}
       <button // 폴더의 동그라미
         className="rounded-circle"
