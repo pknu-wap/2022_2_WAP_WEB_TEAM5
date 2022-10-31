@@ -1,6 +1,7 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { Button } from "@chakra-ui/react";
 import Count from "./Count";
+import { LockIcon } from "@chakra-ui/icons";
 
 function Form(props) {
   const [Title, setTitle] = useState("");
@@ -14,18 +15,43 @@ function Form(props) {
     setText(event.currentTarget.value);
   };
 
-  const buttonHandler = () => {
-    let body = {
-      newTitle: Title,
-      newText: Text,
-    };
-
-    props.refreshFunction(body);
+  const titlebuttonHandler = () => {
+    props.updateTitle(Title);
   };
 
-  useEffect(() => {
-    console.log(props.Content);
-  }, [props.Content]);
+  const textbuttonHandler = () => {
+    props.updateText(Text);
+  };
+
+  const calc = (text, blank = 0) => {
+    let word = 0;
+
+    if (blank === 0) {
+      text = text.replace(/\s+/g, "");
+    }
+    word = text.length;
+    // setWord(Text.length);
+    // console.log(Text.length);
+    return word;
+  };
+
+  const byteCounter = (text, blank = 0) => {
+    let byte = 0;
+
+    if (blank === 0) {
+      text = text.replace(/\s+/g, "");
+    }
+
+    for (let i = 0; i < text.length; i++) {
+      if (/[ㄱ-ㅎㅏ-ㅣ가-힣一-龥ぁ-ゔァ-ヴー々〆〤]/.test(text[i])) {
+        byte = byte + 2;
+      } else {
+        byte++;
+      }
+    }
+
+    return byte;
+  };
 
   return (
     <Fragment>
@@ -33,7 +59,7 @@ function Form(props) {
         style={{
           // 흰색 블록
           backgroundColor: "white",
-          marginTop: "50px",
+          marginTop: "30px",
           marginLeft: "30px",
           width: "95%",
           height: "83%",
@@ -59,10 +85,10 @@ function Form(props) {
           <input // 제목 input
             type="text"
             style={{
+              marginLeft: "10px",
               width: "95%",
               height: "99%",
               border: "none",
-              marginLeft: "5px",
               outline: "0",
             }}
             value={Title}
@@ -71,21 +97,22 @@ function Form(props) {
           ></input>
 
           <Button // 제목 버튼
-            colorScheme="teal"
+            colorScheme="gray"
             variant="ghost"
             style={{
-              // width: "30px",
-              width: "3%",
-              height: "60%",
+              width: "40px",
+              height: "40px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: "13px",
+              marginTop: "1px",
               marginLeft: "10px",
+              border: "none",
+              outline: "0",
             }}
-            // onClick={buttonHandler}
+            onClick={titlebuttonHandler}
           >
-            🔒
+            <LockIcon />
           </Button>
         </div>
 
@@ -105,10 +132,10 @@ function Form(props) {
               type="text"
               style={{
                 width: "95%",
-                height: "95%",
+                height: "97%",
                 border: "none",
-                marginLeft: "5px",
-                marginTop: "5px",
+                marginLeft: "10px",
+                marginTop: "10px",
                 resize: "none",
                 outline: "0",
               }}
@@ -117,102 +144,25 @@ function Form(props) {
               onChange={textHandler}
             ></textarea>
             <Button // 내용 버튼
-              colorScheme="facebook"
+              colorScheme="gray"
               variant="ghost"
               style={{
-                width: "50px",
-                height: "50px",
+                width: "40px",
+                height: "40px",
+                marginTop: "1px",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 marginLeft: "10px",
+                border: "none",
+                outline: "0",
               }}
-              onClick={buttonHandler}
+              onClick={textbuttonHandler}
             >
-              🔒
+              <LockIcon />
             </Button>
           </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "right",
-              marginBottom: "20px",
-            }}
-          >
-            <div // 공백 포함과 바이트 묶는 div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                // justifyContent: "center",
-                alignItems: "center",
-                width: "100px",
-                height: "100px",
-              }}
-            >
-              <div // 공백 포함
-                style={{
-                  color: "black",
-                  borderTopStyle: "solid",
-                  borderTopWidth: "1px",
-                  borderTopColor: "white",
-                  width: "150px",
-                  height: "50px",
-                  fontWeight: "bold",
-                  paddingTop: "10px",
-                }}
-              >
-                공백 포함
-              </div>
-              <div // byte
-                className="byte"
-                style={{
-                  color: "black",
-                  borderBottomStyle: "solid",
-                  borderBottomWidth: "1px",
-                  borderBottomColor: "white",
-                  width: "150px",
-                  height: "50px",
-                }}
-              >
-                0 / 0 byte
-              </div>
-            </div>
-            <div // 공백 미포함과 바이트 묶는 div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                // justifyContent: "center",
-                alignItems: "center",
-                width: "150px",
-                height: "100px",
-              }}
-            >
-              <div // 공백 미포함
-                style={{
-                  color: "black",
-                  width: "100px",
-                  height: "50px",
-                  fontWeight: "bold",
-                  paddingTop: "10px",
-                }}
-              >
-                공백 미포함
-              </div>
-              <div // byte
-                className="byte"
-                style={{
-                  color: "black",
-                  borderBottomStyle: "solid",
-                  borderBottomWidth: "1px",
-                  borderBottomColor: "white",
-                  width: "100px",
-                  height: "50px",
-                }}
-              >
-                0 / 0 byte
-              </div>
-            </div>
-          </div>
+          <Count calc={calc} Text={Text} byteCounter={byteCounter} />
         </div>
       </div>
     </Fragment>

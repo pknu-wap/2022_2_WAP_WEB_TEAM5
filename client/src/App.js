@@ -6,6 +6,7 @@ import MainPage from "./components/views/MainPage/MainPage";
 import Account from "./components/views/Account/Account";
 import Profile from "./components/views/Profile/Profile";
 import { ChakraProvider } from "@chakra-ui/react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (

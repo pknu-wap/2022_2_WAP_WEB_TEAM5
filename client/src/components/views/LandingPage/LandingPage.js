@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./LandingPage.css";
 import { useNavigate } from "react-router-dom";
+import Carousel from "react-bootstrap/Carousel";
+import sellet from "./SELLET.JPG";
+import sellet2 from "./sellet2.JPG";
+import { InputGroup, Input, InputRightElement, Button } from "@chakra-ui/react";
 
 function LandingPage() {
   const navigate = useNavigate();
+  const [Show, setShow] = useState(false);
+  const handleClick = () => setShow(!Show);
 
   const handleSubmit = () => {
     navigate("/main");
@@ -14,66 +20,90 @@ function LandingPage() {
   };
 
   return (
-    <div>
-      <link
-        href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        rel="stylesheet"
-        id="bootstrap-css"
-      />
-      <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-      <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-      <div className="sidenav">
-        <div className="login-main-text">
-          <img
-            src="https://source.unsplash.com/random"
-            className="image"
-            alt="No"
-          ></img>
-          <h2>
-            <br />
-            Application
-            <br /> Landing Page
-          </h2>
-          <p>Login or register from here to access.</p>
-        </div>
+    <div style={{ display: "flex" }}>
+      <div // 검정색 배경
+        style={{
+          width: "75%",
+          height: "100vh",
+          backgroundColor: "black",
+          display: "flex",
+        }}
+      >
+        <Carousel
+          fade
+          style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "8%",
+            // marginLeft: "7%",
+          }}
+        >
+          <Carousel.Item>
+            <img className="d-block w-100" src={sellet} alt="First slide" />
+          </Carousel.Item>
+          <Carousel.Item>
+            <img className="d-block w-100" src={sellet2} alt="Third slide" />
+          </Carousel.Item>
+        </Carousel>
       </div>
-      <div className="main">
-        <div className="col-md-6 col-sm-12">
-          <div className="login-form">
-            <form>
-              <div className="form-group">
-                <label>User Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="User Name"
-                />
-              </div>
-              <div className="form-group">
-                <label>Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Password"
-                />
-              </div>
-              {/* <button type="submit" className="btn btn-black">
-                Login
-              </button> */}
-              <button
-                type="submit"
-                className="btn btn-secondary btn-lg btn-block"
-                onClick={handleSubmit}
-              >
-                Login
-              </button>
-              {/* <br /> */}
-              <br />
-              <div className="goto" onClick={handleSignup}>
-                Sign up
-              </div>
-            </form>
+      <div // 흰색 배경
+        style={{
+          backgroundColor: "white",
+          height: "100vh",
+          width: "25%",
+          marginTop: "13%",
+        }}
+      >
+        <div
+          style={{
+            width: "88%",
+            marginLeft: "6%",
+            // backgroundColor: "gray",
+            height: "45%",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "40px",
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            SELETT
+          </div>
+          <label style={{ width: "80%", marginLeft: "10%" }}>User Name</label>
+          <Input placeholder="ID" style={{ width: "80%", marginLeft: "10%" }} />
+          <br />
+          <br />
+          <label style={{ width: "80%", marginLeft: "10%" }}>Password</label>
+          <br />
+          <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
+            <Input
+              pr="4.5rem"
+              type={Show ? "text" : "password"}
+              placeholder="Enter password"
+            />
+            <InputRightElement width="4.5rem">
+              <Button h="1.75rem" size="sm" onClick={handleClick}>
+                {Show ? "Hide" : "Show"}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+          <br />
+          <Button
+            colorScheme="gray"
+            onClick={handleSubmit}
+            style={{ width: "80%", marginLeft: "10%" }}
+          >
+            Login
+          </Button>
+          <div
+            onClick={handleSignup}
+            style={{ marginTop: "10px", cursor: "pointer", marginLeft: "10%" }}
+          >
+            Register
           </div>
         </div>
       </div>
