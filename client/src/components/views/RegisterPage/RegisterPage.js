@@ -4,16 +4,60 @@ import Carousel from "react-bootstrap/Carousel";
 import sellet from "../LandingPage/SELLET.JPG";
 import sellet2 from "../LandingPage/sellet2.JPG";
 import { InputGroup, Input, InputRightElement, Button } from "@chakra-ui/react";
+import axios from "axios";
 
 function RegisterPage() {
   const navigate = useNavigate();
   const [Show, setShow] = useState(false);
   const [Show_c, setShow_c] = useState(false);
+  const [Id, setId] = useState("");
+  const [Name, setName] = useState("");
+  const [Password, setPassword] = useState("");
+  const [PasswordCheck, setPasswordCheck] = useState("");
+  const [Email, setEmail] = useState("");
   const handleClick = () => setShow(!Show);
   const handleClick_c = () => setShow_c(!Show_c);
 
+  const IdHandler = (event) => {
+    setId(event.currentTarget.value);
+  };
+
+  const NameHandler = (event) => {
+    setName(event.currentTarget.value);
+  };
+
+  const EmailHandler = (event) => {
+    setEmail(event.currentTarget.value);
+  };
+
+  const PasswordHandler = (event) => {
+    setPassword(event.currentTarget.value);
+  };
+
+  const PasswordCheckHandler = (event) => {
+    setPasswordCheck(event.currentTarget.value);
+  };
+
   const handleSubmit = () => {
-    navigate("/");
+    const body = {
+      identification: Id,
+      password: Password,
+      name: Name,
+      email: Email,
+    };
+
+    axios
+      .post(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/register",
+        body
+      )
+      .then((response) => {
+        if (response.data.success) {
+          navigate("/");
+        } else {
+          alert("경고");
+        }
+      });
   };
 
   return (
@@ -71,14 +115,31 @@ function RegisterPage() {
             SELETT
           </div>
           <label style={{ width: "80%", marginLeft: "10%" }}>ID</label>
-          <Input placeholder="ID" style={{ width: "80%", marginLeft: "10%" }} />
+          <Input
+            value={Id}
+            onChange={IdHandler}
+            placeholder="ID"
+            style={{ width: "80%", marginLeft: "10%" }}
+          />
           <br />
 
           <label style={{ width: "80%", marginLeft: "10%", marginTop: "3%" }}>
             Name
           </label>
           <Input
+            value={Name}
+            onChange={NameHandler}
             placeholder="Name"
+            style={{ width: "80%", marginLeft: "10%", marginTop: "3%" }}
+          />
+          <br />
+          <label style={{ width: "80%", marginLeft: "10%", marginTop: "3%" }}>
+            Email
+          </label>
+          <Input
+            value={Email}
+            onChange={EmailHandler}
+            placeholder="Email"
             style={{ width: "80%", marginLeft: "10%", marginTop: "3%" }}
           />
           <br />
@@ -88,6 +149,8 @@ function RegisterPage() {
           </label>
           <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
             <Input
+              value={Password}
+              onChange={PasswordHandler}
               pr="4.5rem"
               type={Show ? "text" : "password"}
               placeholder="Enter password"
@@ -102,23 +165,53 @@ function RegisterPage() {
             password check
           </label>
           <br />
-          <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
-            <Input
-              pr="4.5rem"
-              type={Show_c ? "text" : "password"}
-              placeholder="Enter password"
-            />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={handleClick_c}>
-                {Show_c ? "Hide" : "Show"}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
+          {/* 비밀번호 확인 시작 */}
+          {Password === PasswordCheck ? (
+            <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
+              <Input
+                value={PasswordCheck}
+                onChange={PasswordCheckHandler}
+                pr="4.5rem"
+                type={Show_c ? "text" : "password"}
+                placeholder="Enter password"
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={handleClick_c}>
+                  {Show_c ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          ) : (
+            <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
+              <Input
+                value={PasswordCheck}
+                onChange={PasswordCheckHandler}
+                pr="4.5rem"
+                type={Show_c ? "text" : "password"}
+                placeholder="Enter password"
+                style={{ backgroundColor: "red" }}
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={handleClick_c}>
+                  {Show_c ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          )}
+
           <br />
           <Button
             colorScheme="gray"
             onClick={handleSubmit}
             style={{ width: "80%", marginLeft: "10%" }}
+            disabled={
+              Id === "" ||
+              Name === "" ||
+              Email === "" ||
+              Password === "" ||
+              PasswordCheck === "" ||
+              Password !== PasswordCheck
+            }
           >
             Register
           </Button>

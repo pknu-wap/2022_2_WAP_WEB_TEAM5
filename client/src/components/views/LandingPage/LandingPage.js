@@ -5,14 +5,43 @@ import Carousel from "react-bootstrap/Carousel";
 import sellet from "./SELLET.JPG";
 import sellet2 from "./sellet2.JPG";
 import { InputGroup, Input, InputRightElement, Button } from "@chakra-ui/react";
+import axios from "axios";
 
 function LandingPage() {
   const navigate = useNavigate();
   const [Show, setShow] = useState(false);
+  const [Id, setId] = useState("");
+  const [Password, setPassword] = useState("");
   const handleClick = () => setShow(!Show);
 
+  const IdHandler = (event) => {
+    setId(event.currentTarget.value);
+  };
+
+  const PwHandler = (event) => {
+    setPassword(event.currentTarget.value);
+  };
+
   const handleSubmit = () => {
-    navigate("/main");
+    const body = {
+      identification: Id,
+      password: Password,
+    };
+
+    axios
+      .post(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/login",
+        body
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.data.success) {
+          sessionStorage.setItem("user_id", response.data.user_id);
+          navigate("/main");
+        } else {
+          alert("아이디 혹은 비밀번호를 확인해주세요.");
+        }
+      });
   };
 
   const handleSignup = () => {
@@ -74,13 +103,20 @@ function LandingPage() {
             SELETT
           </div>
           <label style={{ width: "80%", marginLeft: "10%" }}>User Name</label>
-          <Input placeholder="ID" style={{ width: "80%", marginLeft: "10%" }} />
+          <Input
+            placeholder="ID"
+            style={{ width: "80%", marginLeft: "10%" }}
+            value={Id}
+            onChange={IdHandler}
+          />
           <br />
           <br />
           <label style={{ width: "80%", marginLeft: "10%" }}>Password</label>
           <br />
           <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
             <Input
+              value={Password}
+              onChange={PwHandler}
               pr="4.5rem"
               type={Show ? "text" : "password"}
               placeholder="Enter password"

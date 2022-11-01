@@ -1,5 +1,6 @@
-import React, { Fragment, useState, useRef } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
+import axios from "axios";
 import {
   Modal,
   ModalOverlay,
@@ -15,12 +16,6 @@ import {
   useDisclosure,
   Avatar,
   AvatarBadge,
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  AlertDialogHeader,
-  AlertDialogBody,
-  AlertDialogFooter,
 } from "@chakra-ui/react";
 
 function Folder(props) {
@@ -28,19 +23,30 @@ function Folder(props) {
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
   const [CompanyList, setCompanyList] = useState(["빈 폴더"]);
-  const cancelRef = useRef();
+
+  useEffect(() => {
+    axios
+      .get(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      )
+      .then((response) => {
+        // console.log(response.data);
+        setCompanyList(response.data.list);
+        // setTitle(response.data.list[0].cover_letter[0].title);
+      });
+  }, []);
 
   const companyHandler = (event) => {
     setCompany(event.currentTarget.value);
   };
 
   const companyclickHandler = () => {
-    setCompanyList([...CompanyList, Company]);
-    setCompany("");
+    //   setCompanyList([...CompanyList, Company]);
+    //   setCompany("");
   };
 
   const folderHandler = () => {
-    setCompanyList([]);
+    // setCompanyList([]);
   };
 
   return (
@@ -51,7 +57,7 @@ function Folder(props) {
             type="button"
             className="rounded-circle"
             key={index}
-            name={company}
+            name={company.title}
             style={{
               width: "55px",
               height: "55px",
@@ -70,55 +76,6 @@ function Folder(props) {
               <DeleteIcon style={{ width: "90%", height: "90%" }} />
             </AvatarBadge>
           </Avatar>
-          // <Avatar // 폴더의 동그라미
-          //   type="button"
-          //   className="rounded-circle"
-          //   key={index}
-          //   name={company}
-          //   style={{
-          //     width: "55px",
-          //     height: "55px",
-          //     color: "black",
-          //     backgroundColor: "white",
-          //     marginTop: "40px",
-          //     cursor: "pointer",
-          //   }}
-          // >
-          //   <AvatarBadge
-          //     borderColor="white"
-          //     bg="white"
-          //     boxSize="1.25em"
-          //     onClick={onOpen}
-          //   >
-          //     <DeleteIcon style={{ width: "90%", height: "90%" }} />
-          //   </AvatarBadge>
-          //   <AlertDialog
-          //     isOpen={isOpen}
-          //     leastDestructiveRef={cancelRef}
-          //     onClose={onClose}
-          //   >
-          //     <AlertDialogOverlay>
-          //       <AlertDialogContent>
-          //         <AlertDialogHeader fontSize="lg" fontWeight="bold">
-          //           Delete Customer
-          //         </AlertDialogHeader>
-
-          //         <AlertDialogBody>
-          //           Are you sure? You can't undo this action afterwards.
-          //         </AlertDialogBody>
-
-          //         <AlertDialogFooter>
-          //           <Button ref={cancelRef} onClick={onClose}>
-          //             Cancel
-          //           </Button>
-          //           <Button colorScheme="red" onClick={onClose} ml={3}>
-          //             Delete
-          //           </Button>
-          //         </AlertDialogFooter>
-          //       </AlertDialogContent>
-          //     </AlertDialogOverlay>
-          //   </AlertDialog>
-          // </Avatar>
         ))}
       <button // 폴더의 동그라미
         className="rounded-circle"

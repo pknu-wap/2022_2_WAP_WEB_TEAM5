@@ -1,6 +1,7 @@
 import "./Account.css";
 import NavBar from "../NavBar/NavBar";
 import { Button, ButtonGroup, Image } from "@chakra-ui/react";
+import { CheckIcon } from "@chakra-ui/icons";
 import { useRef, useState } from "react";
 
 function Account() {
@@ -52,6 +53,22 @@ function Account() {
     }
   };
 
+  const [Username, setUsername] = useState("");
+  const [NewUsername, setNewUsername] = useState("");
+
+  // const UsernameHandler = (event) => {
+  //   setUsername(event.currentTarget.value);
+  // };
+
+  const NewUsernameHandler = (event) => {
+    setNewUsername(event.currentTarget.value);
+  };
+
+  const usernameHandler = () => {
+    setUsername(NewUsername);
+  };
+  console.log(Username);
+
   return (
     <div className="account">
       <div>
@@ -68,7 +85,7 @@ function Account() {
             <div className="preview">
               <div
                 style={{
-                  marginTop: "10px",
+                  marginTop: "100px",
                   display: "flex",
                 }}
               >
@@ -90,12 +107,23 @@ function Account() {
                 />
               </div>
             </div>
+            <div className="change_img_btn">
+              <Button
+                onClick={handleRemoveClick}
+                variant="outline"
+                spacing="6"
+                colorScheme="yellow"
+              >
+                삭제
+              </Button>
+            </div>
 
             <div className="change_username">
               <input
                 type="username"
-                id="username"
-                placeholder="user name"
+                value={NewUsername}
+                onChange={NewUsernameHandler}
+                placeholder="current user name"
                 style={{
                   textDecoration: "underline",
                   textDecorationThickness: "3px",
@@ -105,20 +133,24 @@ function Account() {
                   height: "30px",
                   width: "150px",
                   fontSize: "large",
+                  marginTop: "20px",
                 }}
               />
+              <Button
+                style={{
+                  width: "15px",
+                  height: "20px",
+                  display: "flex",
+                  marginLeft: "180px",
+                  border: "none",
+                  outline: "0",
+                }}
+                onClick={usernameHandler}
+              >
+                <CheckIcon />
+              </Button>
             </div>
           </div>
-        </div>
-        <div className="change_img_btn">
-          <Button
-            onClick={handleRemoveClick}
-            variant="outline"
-            spacing="6"
-            colorScheme="yellow"
-          >
-            삭제
-          </Button>
         </div>
 
         <div className="change_password">

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
+import axios from "axios";
 import {
   Modal,
   ModalOverlay,
@@ -20,18 +21,33 @@ function Folder() {
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
   const [ContentList, setContentList] = useState(["빈 파일"]);
+  const [Company, setCompany] = useState("");
+
+  useEffect(() => {
+    axios
+      .get(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1&&"
+      )
+      .then((response) => {
+        // console.log(response.data);
+        setContentList(response.data.list[0].cover_letter);
+        setCompany(response.data.list[0]);
+        // console.log(response.data.list[0].cover_letter[0].title);
+        // setTitle(response.data.list[0].cover_letter[0].title);
+      });
+  }, []);
 
   const ContentHandler = (event) => {
     setContent(event.currentTarget.value);
   };
 
   const contentclickHandler = () => {
-    setContentList([...ContentList, Content]);
-    setContent("");
+    // setContentList([...ContentList, Content]);
+    // setContent("");
   };
 
   const deleteClick = () => {
-    setContentList([]);
+    // setContentList([]);
   };
 
   const folderDelete = () => {};
@@ -58,14 +74,15 @@ function Folder() {
             paddingLeft: "25px",
             height: "80px",
             color: "white",
-            fontSize: "25px",
+            fontSize: "20px",
             width: "60%",
             fontWeight: "bold",
             lineHeight: "85px",
             overflow: "hidden",
           }}
         >
-          빈 폴더
+          {/* 빈 폴더 */}
+          {Company.title}
         </div>
         <AddIcon
           onClick={onOpen}
@@ -81,20 +98,6 @@ function Folder() {
             marginRight: "10%",
           }}
         ></AddIcon>
-        {/* <DeleteIcon
-          color="white"
-          onClick={folderDelete}
-          style={{
-            // display: "flex",
-            lineHeight: "0px",
-            width: "7%",
-            cursor: "pointer",
-            height: "80px",
-            // paddingBottom: "10px",
-            paddingTop: "2%",
-            marginRight: "10%",
-          }}
-        /> */}
       </div>
 
       {ContentList &&
@@ -110,17 +113,17 @@ function Folder() {
               paddingLeft: "25px",
               height: "50px",
               color: "white",
-              fontSize: "18px",
+              fontSize: "15px",
               textAlign: "left",
               width: "100%",
               marginTop: "10px",
-              overflow: "hidden",
+              overflow: "scroll",
               // float: "left",
               border: "none",
               outline: "0",
             }}
           >
-            {content}
+            {content.title}
             <DeleteIcon />
           </Button>
         ))}

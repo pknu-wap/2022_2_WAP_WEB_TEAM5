@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Grid,
   GridItem,
@@ -12,17 +13,32 @@ import {
 import "./MainPage.css";
 import logo_img from "../NavBar/lala1.png";
 
+import Form from "./sections/Form";
+
 import Question from "./sections/Question";
 import Folder from "./sections/Folder";
-import Form from "./sections/Form";
 // 사전 기능 ,
 
 function MainPage() {
   const [Title, setTitle] = useState("");
   const [Text, setText] = useState("");
+  const [Cover, setCover] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      )
+      .then((response) => {
+        // console.log(response.data);
+        // console.log(response.data.list[0].cover_letter[0].title);
+        setCover(response.data.list[0].cover_letter[0]);
+      });
+  }, []);
 
   const updateTitle = (title) => {
-    setTitle(title);
+    setTitle(Cover.title);
+    console.log(Cover.title);
   };
 
   const updateText = (text) => {
@@ -106,14 +122,15 @@ function MainPage() {
         >
           <Folder />
         </GridItem>
+
         <GridItem // 파일 칸
           colSpan={3}
-          ms={0}
           height="10px"
           style={{ backgroundColor: "#303136", height: "100vh" }}
         >
           <Question />
         </GridItem>
+
         <GridItem
           colSpan={16}
           height="10px"
