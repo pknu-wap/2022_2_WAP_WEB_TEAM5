@@ -32,7 +32,8 @@ public class MainService {
                 CoverLetter coverLetter = new CoverLetter();
                 coverLetter.setId(coverLetterEntity.getId());
                 coverLetter.setTitle(coverLetterEntity.getTitle());
-                coverLetter.setTitleLock(coverLetterEntity.getTitleLock());
+                coverLetter.setQuestion(coverLetterEntity.getQuestion());
+                coverLetter.setQuestionLock(coverLetterEntity.getQuestionLock());
                 coverLetter.setDescription(coverLetterEntity.getDescription());
                 coverLetter.setDescriptionLock(coverLetterEntity.getDescriptionLock());
 
