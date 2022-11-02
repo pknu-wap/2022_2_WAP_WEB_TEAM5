@@ -94,7 +94,7 @@ function RegisterPage() {
           backgroundColor: "white",
           height: "100vh",
           width: "25%",
-          marginTop: "10%",
+          marginTop: "9%",
         }}
       >
         <div
@@ -167,7 +167,7 @@ function RegisterPage() {
           </label>
           <br />
           {/* 비밀번호 확인 시작 */}
-          {Password === PasswordCheck ? (
+          {!Password || Password === PasswordCheck ? (
             <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
               <Input
                 value={PasswordCheck}
