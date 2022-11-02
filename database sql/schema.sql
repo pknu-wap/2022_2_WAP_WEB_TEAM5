@@ -24,7 +24,8 @@ CREATE TABLE cover_letters
 (
     id               INT  NOT NULL AUTO_INCREMENT,
     title            TINYTEXT,
-    title_lock       BOOL NOT NULL,
+    question            TINYTEXT,
+    question_lock       BOOL NOT NULL,
     description      TEXT,
     description_lock BOOL NOT NULL,
     position         INT  NOT NULL,
