@@ -1,10 +1,10 @@
-import React, { useState, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Button } from "@chakra-ui/react";
 import Count from "./Count";
 import { LockIcon } from "@chakra-ui/icons";
 
-function Form(props) {
-  // 맞춤법 검사가 켜져있음
+function FormG(props) {
+  // 맞춤법 검사가 꺼져있음
   const [Title, setTitle] = useState("");
   const [Text, setText] = useState("");
 
@@ -62,7 +62,7 @@ function Form(props) {
           backgroundColor: "white",
           marginTop: "30px",
           marginLeft: "25px",
-          width: "70%",
+          width: "95%",
           height: "90%",
           //   borderRadius: "20px",
           overflow: "hidden",
@@ -134,9 +134,9 @@ function Form(props) {
               style={{
                 width: "95%",
                 height: "97%",
+                border: "none",
                 marginLeft: "10px",
                 marginTop: "10px",
-                border: "none",
                 resize: "none",
                 outline: "0",
               }}
@@ -170,4 +170,4 @@ function Form(props) {
   );
 }
 
-export default Form;
+export default FormG;

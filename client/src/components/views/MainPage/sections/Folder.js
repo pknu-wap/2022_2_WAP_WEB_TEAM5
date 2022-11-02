@@ -56,8 +56,10 @@ function Folder(props) {
           <Avatar // 폴더의 동그라미
             type="button"
             className="rounded-circle"
-            key={index}
             name={company.title}
+            getInitials={() => `${company.title}`}
+            key={index}
+            size="50"
             style={{
               width: "55px",
               height: "55px",
@@ -65,6 +67,7 @@ function Folder(props) {
               backgroundColor: "white",
               marginTop: "40px",
               cursor: "pointer",
+              fontWeight: "bold",
             }}
           >
             <AvatarBadge
@@ -107,6 +110,7 @@ function Folder(props) {
                 placeholder="Company"
                 value={Company}
                 onChange={companyHandler}
+                focusBorderColor="gray.300"
               />
             </FormControl>
           </ModalBody>

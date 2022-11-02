@@ -1,4 +1,5 @@
 import React from "react";
+import { Highlight, Text } from "@chakra-ui/react";
 
 export default function Count(props) {
   return (
@@ -17,7 +18,7 @@ export default function Count(props) {
           alignItems: "center",
           width: "100px",
           height: "100px",
-          marginRight: "130px",
+          marginRight: "150px",
         }}
       >
         <div // 공백 포함
@@ -32,24 +33,29 @@ export default function Count(props) {
             paddingTop: "10px",
           }}
         >
-          공백 포함
+          공백 포함(글자/바이트)
         </div>
-        <div
-          // value=
+        <Text
           style={{
             textAlign: "left",
             width: "300px",
             height: "50px",
-            // fontWeight: "bold",
+            fontWeight: "bold",
             fontSize: "30px",
             border: "none",
             outline: "0",
           }}
-          readOnly
-        >{`${props.calc(props.Text, 1)} / ${props.byteCounter(
-          props.Text,
-          1
-        )} byte`}</div>
+        >
+          <Highlight
+            query={["자", "/", "byte"]}
+            styles={{ py: "1", fontWeight: "normal" }}
+          >
+            {`${props.calc(props.Text, 1)}/${props.byteCounter(
+              props.Text,
+              1
+            )} byte`}
+          </Highlight>
+        </Text>
       </div>
       <div // 공백 미포함과 바이트 묶는 div
         style={{
@@ -68,32 +74,35 @@ export default function Count(props) {
             borderTopStyle: "solid",
             borderTopWidth: "1px",
             borderTopColor: "white",
-            width: "230px",
+            width: "300px",
             height: "40px",
             fontWeight: "bold",
             paddingTop: "10px",
           }}
         >
-          공백 미포함
+          공백 미포함(글자/바이트)
         </div>
-        <div
-          // value=
+        <Text
           style={{
             textAlign: "left",
-            width: "230px",
+            width: "300px",
             height: "50px",
-            // fontWeight: "bold",
+            fontWeight: "bold",
             fontSize: "30px",
             border: "none",
             outline: "0",
           }}
-          readOnly
         >
-          {`${props.calc(props.Text, 0)} / ${props.byteCounter(
-            props.Text,
-            0
-          )} byte`}
-        </div>
+          <Highlight
+            query={["/", "byte"]}
+            styles={{ py: "1", fontWeight: "normal" }}
+          >
+            {`${props.calc(props.Text, 0)}/${props.byteCounter(
+              props.Text,
+              0
+            )} byte`}
+          </Highlight>
+        </Text>
       </div>
     </div>
   );

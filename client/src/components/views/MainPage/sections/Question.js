@@ -50,7 +50,7 @@ function Folder() {
     // setContentList([]);
   };
 
-  const folderDelete = () => {};
+  // const folderDelete = () => {};
 
   return (
     <div
@@ -138,6 +138,7 @@ function Folder() {
             <FormControl>
               <FormLabel>파일 이름</FormLabel>
               <Input
+                focusBorderColor="gray.300"
                 ref={initialRef}
                 placeholder="file name"
                 value={Content}

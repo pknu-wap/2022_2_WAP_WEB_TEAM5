@@ -132,6 +132,7 @@ function LandingPage() {
             colorScheme="gray"
             onClick={handleSubmit}
             style={{ width: "80%", marginLeft: "10%" }}
+            disabled={Id === "" || Password === ""}
           >
             Login
           </Button>

@@ -1,6 +1,6 @@
 import "./Account.css";
 import NavBar from "../NavBar/NavBar";
-import { Button, ButtonGroup, Image } from "@chakra-ui/react";
+import { Button, Image } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { useRef, useState } from "react";
 
@@ -34,22 +34,22 @@ function Account() {
     );
   };
 
-  const [CurrentPassword, setcurrentPassword] = useState("");
+  const [CurrentPassword, setCurrentPassword] = useState("");
   const [NewPassword, setNewPassword] = useState("");
-  const [NewPassword_re, setNewPassword_re] = useState("");
-  const currentpasswordHandler = (event) => {
-    setcurrentPassword(event.currentTarget.value);
+  const [NewPasswordCheck, setNewPasswordCheck] = useState("");
+  const CurrentPasswordHandler = (event) => {
+    setCurrentPassword(event.currentTarget.value);
   };
-  const NewpasswordHandler = (event) => {
+  const NewPasswordHandler = (event) => {
     setNewPassword(event.currentTarget.value);
   };
-  const NewpasswordHandler_re = (event) => {
-    setNewPassword_re(event.currentTarget.value);
+  const NewPasswordCheckHandler = (event) => {
+    setNewPasswordCheck(event.currentTarget.value);
   };
 
   const passwordHandler = () => {
-    if (NewPassword === NewPassword_re) {
-      setcurrentPassword(NewPassword);
+    if (NewPassword === NewPasswordCheck) {
+      setCurrentPassword(NewPassword);
     }
   };
 
@@ -70,142 +70,206 @@ function Account() {
   console.log(Username);
 
   return (
-    <div className="account">
-      <div>
-        <NavBar />
-        <div
-          className="account"
-          style={{
-            marginTop: "10px",
-            display: "flex",
-            marginLeft: "700px",
-          }}
-        >
-          <div className="change_img">
-            <div className="preview">
+    <div classNam="account_border">
+      <div className="account">
+        <div>
+          <NavBar />
+          <div className="account_page">
+            <div
+              className="account_border"
+              style={{
+                marginTop: "5%",
+                marginLeft: "36%",
+                width: "30%",
+                height: "70%",
+                border: "5px solid #D9D9D9",
+                borderRadius: "20px",
+              }}
+            >
               <div
+                className="account"
                 style={{
-                  marginTop: "100px",
+                  marginTop: "5px",
                   display: "flex",
+                  marginLeft: "30%",
                 }}
               >
-                {/* <Button onClick={handleButtonClick}> */}
-                <Image
-                  borderRadius="full"
-                  boxSize="150px"
-                  src={imgfile}
-                  onClick={handleButtonClick}
-                  style={{ cursor: "pointer" }}
-                />
-                {/* </Button> */}
+                <div className="change_img">
+                  <div className="preview">
+                    <div
+                      style={{
+                        marginTop: "64px",
+                        display: "flex",
+                      }}
+                    >
+                      {/* <Button onClick={handleButtonClick}> */}
+                      <Image
+                        borderRadius="full"
+                        boxSize="150px"
+                        src={imgfile}
+                        onClick={handleButtonClick}
+                        style={{ cursor: "pointer" }}
+                      />
+                      {/* </Button> */}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInput}
+                        onChange={handleChange}
+                        style={{ display: "none" }}
+                      />
+                      <div change_img_btn>
+                        <Button
+                          colorScheme="teal"
+                          variant="solid"
+                          onClick={handleRemoveClick}
+                          spacing="6"
+                          marginLeft="40%"
+                          marginTop="30%"
+                        >
+                          적용
+                        </Button>
+                        <Button
+                          colorScheme="teal"
+                          variant="outline"
+                          onClick={handleRemoveClick}
+                          spacing="6"
+                          marginLeft="40%"
+                          style={{
+                            marginTop: "10px",
+                          }}
+                        >
+                          삭제
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="change_img_btn"
+                    style={{
+                      marginLeft: "150px",
+                      display: "flex",
+                    }}
+                  ></div>
+
+                  <div
+                    className="change_username"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <input
+                      type="username"
+                      value={NewUsername}
+                      onChange={NewUsernameHandler}
+                      placeholder="current username"
+                      style={{
+                        textDecoration: "underline",
+                        textDecorationThickness: "3px",
+                        borderRadius: "10px",
+                        backgroundColor: "none",
+                        border: "none",
+                        height: "30px",
+                        width: "150px",
+                        fontSize: "large",
+                        marginTop: "20px",
+                      }}
+                    />
+                    <Button
+                      style={{
+                        width: "10px",
+                        height: "20px",
+                        border: "none",
+                        outline: "0",
+                        marginTop: "23px",
+                      }}
+                      onClick={usernameHandler}
+                    >
+                      <CheckIcon />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="change_password">
                 <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInput}
-                  onChange={handleChange}
-                  style={{ display: "none" }}
+                  type="password"
+                  placeholder="   현재 비밀번호"
+                  onChange={CurrentPasswordHandler}
+                  value={CurrentPassword}
+                  style={{
+                    borderRadius: "10px",
+                    backgroundColor: "#D9D9D9",
+                    border: "none",
+                    height: "50px",
+                    width: "350px",
+                  }}
                 />
               </div>
-            </div>
-            <div className="change_img_btn">
-              <Button
-                onClick={handleRemoveClick}
-                variant="outline"
-                spacing="6"
-                colorScheme="yellow"
-              >
-                삭제
-              </Button>
-            </div>
 
-            <div className="change_username">
-              <input
-                type="username"
-                value={NewUsername}
-                onChange={NewUsernameHandler}
-                placeholder="current user name"
+              <div className="change_password">
+                <input
+                  type="password"
+                  placeholder="   새 비밀번호"
+                  onChange={NewPasswordHandler}
+                  value={NewPassword}
+                  style={{
+                    borderRadius: "10px",
+                    backgroundColor: "#D9D9D9",
+                    border: "none",
+                    height: "50px",
+                    width: "350px",
+                  }}
+                />
+              </div>
+
+              <div className="change_password">
+                <input
+                  type="password"
+                  placeholder="   새 비밀번호 확인"
+                  onChange={NewPasswordCheckHandler}
+                  value={NewPasswordCheck}
+                  style={{
+                    borderRadius: "10px",
+                    backgroundColor: "#D9D9D9",
+                    border: "none",
+                    height: "50px",
+                    width: "350px",
+                  }}
+                />
+              </div>
+
+              <div
+                className="change_password_confirm"
                 style={{
-                  textDecoration: "underline",
-                  textDecorationThickness: "3px",
-                  borderRadius: "10px",
-                  backgroundColor: "none",
-                  border: "none",
-                  height: "30px",
-                  width: "150px",
-                  fontSize: "large",
-                  marginTop: "20px",
-                }}
-              />
-              <Button
-                style={{
-                  width: "15px",
-                  height: "20px",
                   display: "flex",
-                  marginLeft: "180px",
-                  border: "none",
-                  outline: "0",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-                onClick={usernameHandler}
               >
-                <CheckIcon />
-              </Button>
+                <Button
+                  variant="outline"
+                  spacing="6"
+                  style={{
+                    borderRadius: "30px",
+                    marginTop: "15px",
+                    width: "350px",
+                    display: "flex",
+                    marginBottom: "10%",
+                  }}
+                  onClick={passwordHandler}
+                  colorScheme="blue"
+                  disabled={
+                    CurrentPassword === "" ||
+                    NewPassword === "" ||
+                    NewPasswordCheck == "" ||
+                    NewPassword !== NewPasswordCheck
+                    //CurrentPassword확인
+                  }
+                >
+                  변경
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="change_password">
-          <input
-            type="password"
-            placeholder="현재 비밀번호"
-            onChange={currentpasswordHandler}
-            value={CurrentPassword}
-            style={{
-              borderRadius: "10px",
-              backgroundColor: "#D9D9D9",
-              border: "none",
-              height: "50px",
-              width: "350px",
-            }}
-          />
-        </div>
-        <div className="change_password">
-          <input
-            type="password"
-            placeholder="새 비밀번호"
-            onChange={NewpasswordHandler}
-            value={NewPassword}
-            style={{
-              borderRadius: "10px",
-              backgroundColor: "#D9D9D9",
-              border: "none",
-              height: "50px",
-              width: "350px",
-            }}
-          />
-        </div>
-
-        <div className="change_password">
-          <input
-            type="password"
-            placeholder="새 비밀번호 확인"
-            onChange={NewpasswordHandler_re}
-            value={NewPassword_re}
-            style={{
-              borderRadius: "10px",
-              backgroundColor: "#D9D9D9",
-              border: "none",
-              height: "50px",
-              width: "350px",
-            }}
-          />
-        </div>
-
-        <div className="change_password_confirm">
-          <ButtonGroup variant="outline" spacing="6">
-            <Button onClick={passwordHandler} colorScheme="blue">
-              변경
-            </Button>
-          </ButtonGroup>
         </div>
       </div>
     </div>

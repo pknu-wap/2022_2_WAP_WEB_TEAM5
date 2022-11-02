@@ -55,7 +55,7 @@ function RegisterPage() {
         if (response.data.success) {
           navigate("/");
         } else {
-          alert("경고");
+          alert("회원가입에 실패하셨습니다.");
         }
       });
   };
@@ -182,21 +182,36 @@ function RegisterPage() {
               </InputRightElement>
             </InputGroup>
           ) : (
-            <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
-              <Input
-                value={PasswordCheck}
-                onChange={PasswordCheckHandler}
-                pr="4.5rem"
-                type={Show_c ? "text" : "password"}
-                placeholder="Enter password"
-                style={{ backgroundColor: "red" }}
-              />
-              <InputRightElement width="4.5rem">
-                <Button h="1.75rem" size="sm" onClick={handleClick_c}>
-                  {Show_c ? "Hide" : "Show"}
-                </Button>
-              </InputRightElement>
-            </InputGroup>
+            <div>
+              <InputGroup
+                size="md"
+                style={{ width: "80%", marginLeft: "10%", border: "red" }}
+              >
+                <Input
+                  value={PasswordCheck}
+                  onChange={PasswordCheckHandler}
+                  pr="4.5rem"
+                  type={Show_c ? "text" : "password"}
+                  placeholder="Enter password"
+                  // style={{ backgroundColor: "red" }}
+                />
+                <InputRightElement width="4.5rem">
+                  <Button h="1.75rem" size="sm" onClick={handleClick_c}>
+                    {Show_c ? "Hide" : "Show"}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              <div
+                style={{
+                  marginLeft: "10%",
+                  color: "red",
+                  fontStyle: "italic",
+                  fontSize: "15px",
+                }}
+              >
+                값이 일치하지 않습니다.
+              </div>
+            </div>
           )}
 
           <br />
