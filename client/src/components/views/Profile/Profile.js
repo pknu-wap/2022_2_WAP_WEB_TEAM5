@@ -1,5 +1,6 @@
 import React from "react";
 import NavBar from "../NavBar/NavBar";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import { useState } from "react";
 import {
@@ -15,6 +16,7 @@ import {
   FormLabel,
   FormControl,
   useDisclosure,
+  border,
 } from "@chakra-ui/react";
 
 function Profile() {
@@ -36,6 +38,11 @@ function Profile() {
 
   const initialRef = React.useRef(null);
 
+  const navigate = useNavigate();
+
+  const handleAccount = () => {
+    navigate("/account");
+  };
   //취득 자격증
   const dateHandler = (event) => {
     setDate(event.currentTarget.value);
@@ -129,7 +136,6 @@ function Profile() {
           <img
             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             className="radius-img"
-            alt=""
           />
         </div>
         <div
@@ -180,7 +186,7 @@ function Profile() {
 
               <ModalFooter>
                 <Button
-                  colorScheme="gray"
+                  colorScheme="blue"
                   onClick={() => {
                     updateContent3();
                     onClose3();
@@ -271,10 +277,10 @@ function Profile() {
           </div>
           <Button
             variant="outline"
-            colorScheme="blue"
+            colorScheme="gray"
             onClick={onOpen3}
             style={{
-              width: "50px",
+              width: "8%",
               height: "30px",
             }}
           >
@@ -406,10 +412,10 @@ function Profile() {
 
           <Button
             variant="outline"
-            colorScheme="blue"
+            colorScheme="gray"
             onClick={onOpen1}
             style={{
-              width: "50px",
+              width: "5%",
               height: "30px",
             }}
           >
@@ -591,10 +597,10 @@ function Profile() {
 
           <Button
             variant="outline"
-            colorScheme="blue"
+            colorScheme="gray"
             onClick={onOpen2}
             style={{
-              width: "50px",
+              width: "5%",
               height: "30px",
             }}
           >
@@ -678,7 +684,7 @@ function Profile() {
               setMemo([Memo]);
               console.log([Memo]);
             }}
-            style={{ float: "right", height: "30px" }}
+            style={{ float: "right", height: "30px", width: "5%" }}
           >
             저장
           </Button>

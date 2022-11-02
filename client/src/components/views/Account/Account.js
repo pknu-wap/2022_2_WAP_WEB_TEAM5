@@ -172,8 +172,8 @@ function Account() {
                       onChange={NewUsernameHandler}
                       placeholder="current username"
                       style={{
-                        textDecoration: "underline",
-                        textDecorationThickness: "3px",
+                        // textDecoration: "underline",
+                        // textDecorationThickness: "3px",
                         borderRadius: "10px",
                         backgroundColor: "none",
                         border: "none",
