@@ -78,7 +78,7 @@ function Account() {
             <div
               className="account_border"
               style={{
-                marginTop: "5%",
+                marginTop: "1.5%",
                 marginLeft: "36%",
                 width: "30%",
                 height: "70%",
@@ -260,7 +260,7 @@ function Account() {
                   disabled={
                     CurrentPassword === "" ||
                     NewPassword === "" ||
-                    NewPasswordCheck == "" ||
+                    NewPasswordCheck === "" ||
                     NewPassword !== NewPasswordCheck
                     //CurrentPassword확인
                   }

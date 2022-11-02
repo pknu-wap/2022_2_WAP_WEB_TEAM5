@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormControl,
   useDisclosure,
+  border,
 } from "@chakra-ui/react";
 
 function Profile() {
@@ -129,26 +130,35 @@ function Profile() {
   }; //인적사항
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh-80px",
-        backgroundColor: "#d9d9d9",
-      }}
-    >
+    <div style={{ width: "100%", height: "100vh", backgroundColor: "#eceff1" }}>
       <NavBar />
       <div className="left-nav">
         <div className="profile-img">
           <img
             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             className="radius-img"
-            alt=""
           />
         </div>
-        <div className="my-info">
+        <div
+          style={{
+            borderBottom: "1px solid black",
+            width: "100%",
+            paddingLeft: "10px",
+            paddingTop: "5%",
+            marginLeft: "5%",
+            marginBottom: "10px",
+          }}
+        >
+          <h4>인적사항</h4>
+        </div>
+        <div
+          className="my-info"
+          style={{ overflow: "scroll", maxWidth: "100%" }}
+        >
           <Modal
             initialFocusRef={initialRef}
             isOpen={isOpen3}
+            kjy
             onClose={onClose3}
           >
             <ModalOverlay />
@@ -161,14 +171,14 @@ function Profile() {
                   <Input
                     ref={initialRef}
                     value={Type}
-                    placeholder="이름"
+                    placeholder="ex) 이름"
                     onChange={typeHandler}
                   />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>내 정보</FormLabel>
                   <Input
-                    placeholder="홍길동"
+                    placeholder="ex) 홍길동"
                     value={MyInfo}
                     onChange={myInfoHandler}
                   />
@@ -195,7 +205,7 @@ function Profile() {
             className="contents"
             style={{
               display: "inline-block",
-              width: "30%",
+              width: "40%",
               height: "100%",
               marginRight: "10px",
             }}
@@ -206,6 +216,9 @@ function Profile() {
                 paddingTop: "5px",
                 paddingBottom: "5px",
                 marginLeft: "5px",
+                marginTop: "5px",
+                marginBottom: "0",
+                backgroundColor: "#d9d9d9",
                 borderBottom: "1px solid black",
               }}
             >
@@ -213,7 +226,14 @@ function Profile() {
             </h6>
             {MyContent &&
               MyContent.map((contents, index) => (
-                <div key={index} style={{ marginLeft: "5px" }}>
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    padding: "5px",
+                    borderBottom: "1px solid grey",
+                  }}
+                >
                   {contents.type}
                 </div>
               ))}
@@ -223,7 +243,7 @@ function Profile() {
             className="contents"
             style={{
               display: "inline-block",
-              width: "30%",
+              width: "45%",
               height: "100%",
               marginRight: "10px",
             }}
@@ -235,13 +255,23 @@ function Profile() {
                 paddingBottom: "5px",
                 marginLeft: "5px",
                 borderBottom: "1px solid black",
+                marginBottom: "0",
+                marginTop: "5px",
+                backgroundColor: "#d9d9d9",
               }}
             >
               내 정보
             </h6>
             {MyContent &&
               MyContent.map((contents, index) => (
-                <div key={index} style={{ marginLeft: "5px" }}>
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    borderBottom: "1px solid grey",
+                    padding: "5px",
+                  }}
+                >
                   {contents.myInfo}
                 </div>
               ))}
@@ -250,28 +280,14 @@ function Profile() {
             type="button"
             className="add"
             onClick={onOpen3}
-            style={{ border: "1px solid black" }}
+            style={{
+              border: "1px solid black",
+              width: "10%",
+            }}
           >
             추가
           </button>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            handleAccount();
-          }}
-          className="button"
-          style={{
-            fontSize: "20px",
-            width: "85%",
-            paddingTop: "15px",
-            marginLeft: "5%",
-            cursor: "pointer",
-            border: "1px solid black",
-          }}
-        >
-          <p>계정관리</p>
-        </button>
       </div>
 
       <div className="right-nav">
@@ -298,6 +314,9 @@ function Profile() {
                 paddingBottom: "5px",
                 marginLeft: "5px",
                 borderBottom: "1px solid black",
+                marginTop: "5px",
+                marginBottom: "0",
+                backgroundColor: "#d9d9d9",
               }}
             >
               날짜
@@ -305,7 +324,14 @@ function Profile() {
             {/* content에 정보가 있으면, 날짜값 출력 */}
             {Content &&
               Content.map((contents, index) => (
-                <div key={index} style={{ marginLeft: "5px" }}>
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    borderBottom: "1px solid grey",
+                    padding: "5px",
+                  }}
+                >
                   {contents.date}
                 </div>
               ))}
@@ -326,13 +352,23 @@ function Profile() {
                 paddingBottom: "5px",
                 marginLeft: "5px",
                 borderBottom: "1px solid black",
+                marginTop: "5px",
+                marginBottom: "0",
+                backgroundColor: "#d9d9d9",
               }}
             >
               자격증명
             </h6>
             {Content &&
               Content.map((contents, index) => (
-                <div key={index} style={{ marginLeft: "5px" }}>
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    borderBottom: "1px solid grey",
+                    padding: "5px",
+                  }}
+                >
                   {contents.name}
                 </div>
               ))}
@@ -353,13 +389,23 @@ function Profile() {
                 paddingBottom: "5px",
                 marginLeft: "5px",
                 borderBottom: "1px solid black",
+                marginTop: "5px",
+                marginBottom: "0",
+                backgroundColor: "#d9d9d9",
               }}
             >
               상세정보
             </h6>
             {Content &&
               Content.map((contents, index) => (
-                <div key={index} style={{ marginLeft: "5px" }}>
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    borderBottom: "1px solid grey",
+                    padding: "5px",
+                  }}
+                >
                   {contents.info}
                 </div>
               ))}
@@ -369,7 +415,10 @@ function Profile() {
             type="button"
             className="add"
             onClick={onOpen1}
-            style={{ border: "1px solid black" }}
+            style={{
+              border: "1px solid black",
+              width: "5%",
+            }}
           >
             추가
           </button>
@@ -388,14 +437,14 @@ function Profile() {
                   <Input
                     ref={initialRef}
                     value={Date}
-                    placeholder="날짜"
+                    placeholder="ex) 2022.10.1"
                     onChange={dateHandler}
                   />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>자격증명</FormLabel>
                   <Input
-                    placeholder="자격증명"
+                    placeholder="ex) 정보처리"
                     value={Name}
                     onChange={nameHandler}
                   />
@@ -404,7 +453,7 @@ function Profile() {
                   <FormLabel>상세정보</FormLabel>
                   <Input
                     ref={initialRef}
-                    placeholder="상세정보"
+                    placeholder="ex) 기사"
                     value={Info}
                     onChange={infoHandler}
                   />
@@ -451,13 +500,23 @@ function Profile() {
                 paddingBottom: "5px",
                 marginLeft: "5px",
                 borderBottom: "1px solid black",
+                marginTop: "5px",
+                marginBottom: "0",
+                backgroundColor: "#d9d9d9",
               }}
             >
               날짜
             </h6>
             {Content2 &&
               Content2.map((contents2, index) => (
-                <div key={index} style={{ marginLeft: "5px" }}>
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    borderBottom: "1px solid grey",
+                    padding: "5px",
+                  }}
+                >
                   {contents2.date2}
                 </div>
               ))}
@@ -478,13 +537,23 @@ function Profile() {
                 paddingBottom: "5px",
                 marginLeft: "5px",
                 borderBottom: "1px solid black",
+                marginTop: "5px",
+                marginBottom: "0",
+                backgroundColor: "#d9d9d9",
               }}
             >
               대회명
             </h6>
             {Content2 &&
               Content2.map((contents2, index) => (
-                <div key={index} style={{ marginLeft: "5px" }}>
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    borderBottom: "1px solid grey",
+                    padding: "5px",
+                  }}
+                >
                   {contents2.name2}
                 </div>
               ))}
@@ -505,13 +574,23 @@ function Profile() {
                 paddingBottom: "5px",
                 marginLeft: "5px",
                 borderBottom: "1px solid black",
+                marginTop: "5px",
+                marginBottom: "0",
+                backgroundColor: "#d9d9d9",
               }}
             >
               상세정보
             </h6>
             {Content2 &&
               Content2.map((contents2, index) => (
-                <div key={index} style={{ marginLeft: "5px" }}>
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    borderBottom: "1px solid grey",
+                    padding: "5px",
+                  }}
+                >
                   {contents2.info2}
                 </div>
               ))}
@@ -521,7 +600,10 @@ function Profile() {
             type="button"
             className="add"
             onClick={onOpen2}
-            style={{ border: "1px solid black" }}
+            style={{
+              border: "1px solid black",
+              width: "5%",
+            }}
           >
             추가
           </button>
@@ -540,14 +622,14 @@ function Profile() {
                   <Input
                     ref={initialRef}
                     value={Date2}
-                    placeholder="날짜"
+                    placeholder="ex) 2022.10.1"
                     onChange={dateHandler2}
                   />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>대회명</FormLabel>
                   <Input
-                    placeholder="대회명"
+                    placeholder="ex) 아이디어톤"
                     value={Name2}
                     onChange={nameHandler2}
                   />
@@ -556,7 +638,7 @@ function Profile() {
                   <FormLabel>상세정보</FormLabel>
                   <Input
                     ref={initialRef}
-                    placeholder="상세정보"
+                    placeholder="ex) 대상"
                     value={Info2}
                     onChange={infoHandler2}
                   />
