@@ -1,12 +1,24 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Button } from "@chakra-ui/react";
 import Count from "./Count";
 import { LockIcon } from "@chakra-ui/icons";
+import axios from "axios";
 
 function FormG(props) {
   // 맞춤법 검사가 꺼져있음
   const [Title, setTitle] = useState("");
   const [Text, setText] = useState("");
+
+  useEffect(() => {
+    axios
+      .get(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      )
+      .then((response) => {
+        setTitle(response.data.list[0].cover_letter[0].question);
+        setText(response.data.list[0].cover_letter[0].description);
+      });
+  }, []);
 
   const titleHandler = (event) => {
     setTitle(event.currentTarget.value);
@@ -17,11 +29,18 @@ function FormG(props) {
   };
 
   const titlebuttonHandler = () => {
-    props.updateTitle(Title);
+    setTitle(Title);
+    console.log(Title);
   };
 
   const textbuttonHandler = () => {
-    props.updateText(Text);
+    setText(Text);
+    console.log(Text);
+  };
+
+  const saveHandler = () => {
+    setText(Text);
+    console.log(Text);
   };
 
   const calc = (text, blank = 0) => {
@@ -30,7 +49,10 @@ function FormG(props) {
     if (blank === 0) {
       text = text.replace(/\s+/g, "");
     }
-    word = text.length;
+
+    if (text !== 0) {
+      word = text.length;
+    }
     // setWord(Text.length);
     // console.log(Text.length);
     return word;
@@ -43,11 +65,13 @@ function FormG(props) {
       text = text.replace(/\s+/g, "");
     }
 
-    for (let i = 0; i < text.length; i++) {
-      if (/[ㄱ-ㅎㅏ-ㅣ가-힣一-龥ぁ-ゔァ-ヴー々〆〤]/.test(text[i])) {
-        byte = byte + 2;
-      } else {
-        byte++;
+    if (text !== 0) {
+      for (let i = 0; i < text.length; i++) {
+        if (/[ㄱ-ㅎㅏ-ㅣ가-힣一-龥ぁ-ゔァ-ヴー々〆〤]/.test(text[i])) {
+          byte = byte + 2;
+        } else {
+          byte++;
+        }
       }
     }
 
@@ -102,7 +126,7 @@ function FormG(props) {
             variant="ghost"
             style={{
               width: "40px",
-              height: "40px",
+              height: "90%",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -144,24 +168,50 @@ function FormG(props) {
               value={Text}
               onChange={textHandler}
             ></textarea>
-            <Button // 내용 버튼
-              colorScheme="gray"
-              variant="ghost"
+            <div
               style={{
-                width: "40px",
-                height: "40px",
-                marginTop: "1px",
                 display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginLeft: "10px",
-                border: "none",
-                outline: "0",
+                flexDirection: "column",
               }}
-              onClick={textbuttonHandler}
             >
-              <LockIcon />
-            </Button>
+              <Button // 내용 버튼
+                colorScheme="gray"
+                variant="ghost"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  marginTop: "1px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginLeft: "10px",
+                  border: "none",
+                  outline: "0",
+                }}
+                onClick={textbuttonHandler}
+              >
+                <LockIcon />
+              </Button>
+              <Button // 내용 버튼
+                colorScheme="gray"
+                variant="outline"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  marginTop: "1px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginLeft: "10px",
+                  fontSize: "13px",
+                  // border: "none",
+                  // outline: "0",
+                }}
+                onClick={saveHandler}
+              >
+                저장
+              </Button>
+            </div>
           </div>
           <Count calc={calc} Text={Text} byteCounter={byteCounter} />
         </div>

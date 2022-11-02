@@ -10,12 +10,12 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import { DragHandleIcon } from "@chakra-ui/icons";
-import GrammerForm from "./sections/GrammerForm";
+// import GrammerForm from "./sections/GrammerForm";
 
 import "./MainPage.css";
 import logo_img from "../NavBar/lala1.png";
 
-import Form from "./sections/Form";
+// import Form from "./sections/Form";
 import FormG from "./sections/FormG";
 
 import Question from "./sections/Question";
@@ -23,8 +23,6 @@ import Folder from "./sections/Folder";
 // 사전 기능 ,
 
 function MainPage() {
-  const [Title, setTitle] = useState("");
-  const [Text, setText] = useState("");
   const [Cover, setCover] = useState([]);
   const [Grammer, setGrammer] = useState(false);
 
@@ -37,27 +35,6 @@ function MainPage() {
         setCover(response.data.list[0].cover_letter[0]);
       });
   }, []);
-
-  const updateTitle = (title) => {
-    setTitle(Cover.title);
-    console.log(Cover.title);
-  };
-
-  const updateText = (text) => {
-    setText(text);
-  };
-
-  useEffect(() => {
-    if (Title && Title.length > 0) {
-      console.log(Title);
-    }
-  }, [Title]);
-
-  useEffect(() => {
-    if (Text && Text.length > 0) {
-      console.log(Text);
-    }
-  }, [Text]);
 
   const navigate = useNavigate();
 
@@ -77,6 +54,10 @@ function MainPage() {
     setGrammer(!Grammer);
   };
 
+  const logoutHandler = () => {
+    alert("로그아웃 되셨습니다.");
+  };
+
   return (
     <div>
       <div>
@@ -84,7 +65,7 @@ function MainPage() {
           className="navbar navbar-light bg-light"
           style={{
             boxShadow: "0px 4px 4px -4px black",
-            height: "80px",
+            height: "64px",
             paddingLeft: "20px",
           }}
         >
@@ -94,19 +75,39 @@ function MainPage() {
             style={{ width: "100px", height: "40px", cursor: "pointer" }}
             alt=""
           />
-          <Menu>
-            <MenuButton>
-              <DragHandleIcon style={{ width: "40px", height: "40px" }} />
-            </MenuButton>
-            <MenuList minWidth="100px" style={{ width: "120px" }}>
-              <MenuItem style={{ width: "120px" }} onClick={handleProfile}>
-                마이페이지
-              </MenuItem>
-              <MenuItem style={{ width: "120px" }} onClick={handleAccount}>
-                계정관리
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <button
+              style={{
+                marginRight: "20px",
+                width: "50px",
+                // height: "40px",
+                fontWeight: "bold",
+              }}
+              onClick={logoutHandler}
+            >
+              logout
+            </button>
+            <Menu>
+              <MenuButton>
+                <DragHandleIcon
+                  style={{ width: "40px", height: "40px", marginRight: "9px" }}
+                />
+              </MenuButton>
+              <MenuList minWidth="100px" style={{ width: "120px" }}>
+                <MenuItem style={{ width: "120px" }} onClick={handleProfile}>
+                  마이페이지
+                </MenuItem>
+                <MenuItem style={{ width: "120px" }} onClick={handleAccount}>
+                  계정관리
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </div>
         </div>
       </div>
       <Grid templateColumns="repeat(20, 1fr)" h="90vh">
@@ -133,7 +134,7 @@ function MainPage() {
         >
           <Question />
         </GridItem>
-        {Grammer ? (
+        {/* {Grammer ? (
           <GridItem
             colSpan={16}
             // height="10px"
@@ -144,8 +145,6 @@ function MainPage() {
           >
             <div style={{ display: "flex", height: "100%" }}>
               <Form // Form 가져옴
-                updateTitle={updateTitle}
-                updateText={updateText}
                 title={Title}
                 text={Text}
               />
@@ -199,41 +198,36 @@ function MainPage() {
               </div>
             </div>
           </GridItem>
-        ) : (
-          <GridItem
-            colSpan={16}
-            style={{
-              backgroundColor: "#d9d9d9",
-              height: "100%",
-            }}
-          >
-            <div style={{ display: "flex", height: "100%" }}>
-              <FormG
-                updateTitle={updateTitle}
-                updateText={updateText}
-                title={Title}
-                text={Text}
-              />
-              <div
-                style={{
-                  backgroundColor: "#303136",
-                  color: "white",
-                  height: "min-content",
-                  width: "2%",
-                  marginTop: "50px",
-                  overflow: "hidden",
-                  fontSize: "13px",
-                  cursor: "pointer",
-                  padding: "0.1%",
-                  textAlign: "center",
-                }}
-                onClick={grammerHandler}
-              >
-                맞춤법검사
-              </div>
+        ) : ( */}
+        <GridItem
+          colSpan={16}
+          style={{
+            backgroundColor: "#d9d9d9",
+            height: "100%",
+          }}
+        >
+          <div style={{ display: "flex", height: "100%" }}>
+            <FormG title={Cover.question} text={Cover.description} />
+            <div
+              style={{
+                backgroundColor: "#303136",
+                color: "white",
+                height: "min-content",
+                width: "2%",
+                marginTop: "50px",
+                overflow: "hidden",
+                fontSize: "13px",
+                cursor: "pointer",
+                padding: "0.1%",
+                textAlign: "center",
+              }}
+              onClick={grammerHandler}
+            >
+              맞춤법검사
             </div>
-          </GridItem>
-        )}
+          </div>
+        </GridItem>
+        {/* )} */}
       </Grid>
     </div>
   );

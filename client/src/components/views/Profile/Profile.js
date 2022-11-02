@@ -1,8 +1,6 @@
 import React from "react";
 import NavBar from "../NavBar/NavBar";
-import { useNavigate } from "react-router-dom";
 import "./Profile.css";
-// import List from "./List";
 import { useState } from "react";
 import {
   Modal,
@@ -17,7 +15,6 @@ import {
   FormLabel,
   FormControl,
   useDisclosure,
-  border,
 } from "@chakra-ui/react";
 
 function Profile() {
@@ -39,11 +36,6 @@ function Profile() {
 
   const initialRef = React.useRef(null);
 
-  const navigate = useNavigate();
-
-  const handleAccount = () => {
-    navigate("/account");
-  };
   //취득 자격증
   const dateHandler = (event) => {
     setDate(event.currentTarget.value);
@@ -90,7 +82,7 @@ function Profile() {
   let [Type, setType] = useState("");
   let [MyInfo, setMyInfo] = useState("");
   let [MyContent, setMyContent] = useState([]);
-
+  //메모
   let [Memo, setMemo] = useState("");
 
   const updateContent = () => {
@@ -137,6 +129,7 @@ function Profile() {
           <img
             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             className="radius-img"
+            alt=""
           />
         </div>
         <div
@@ -187,7 +180,7 @@ function Profile() {
 
               <ModalFooter>
                 <Button
-                  colorScheme="blue"
+                  colorScheme="gray"
                   onClick={() => {
                     updateContent3();
                     onClose3();
@@ -276,17 +269,17 @@ function Profile() {
                 </div>
               ))}
           </div>
-          <button
-            type="button"
-            className="add"
+          <Button
+            variant="outline"
+            colorScheme="blue"
             onClick={onOpen3}
             style={{
-              border: "1px solid black",
-              width: "10%",
+              width: "50px",
+              height: "30px",
             }}
           >
             추가
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -411,17 +404,17 @@ function Profile() {
               ))}
           </div>
 
-          <button
-            type="button"
-            className="add"
+          <Button
+            variant="outline"
+            colorScheme="blue"
             onClick={onOpen1}
             style={{
-              border: "1px solid black",
-              width: "5%",
+              width: "50px",
+              height: "30px",
             }}
           >
             추가
-          </button>
+          </Button>
           <Modal
             initialFocusRef={initialRef}
             isOpen={isOpen1}
@@ -596,17 +589,17 @@ function Profile() {
               ))}
           </div>
 
-          <button
-            type="button"
-            className="add"
+          <Button
+            variant="outline"
+            colorScheme="blue"
             onClick={onOpen2}
             style={{
-              border: "1px solid black",
-              width: "5%",
+              width: "50px",
+              height: "30px",
             }}
           >
             추가
-          </button>
+          </Button>
           <Modal
             initialFocusRef={initialRef}
             isOpen={isOpen2}
@@ -678,6 +671,17 @@ function Profile() {
               outline: "0",
             }}
           ></textarea>
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            onClick={() => {
+              setMemo([Memo]);
+              console.log([Memo]);
+            }}
+            style={{ float: "right", height: "30px" }}
+          >
+            저장
+          </Button>
         </div>
       </div>
     </div>

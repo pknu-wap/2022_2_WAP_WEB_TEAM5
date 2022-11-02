@@ -13,9 +13,11 @@ function NavBar() {
       style={{
         boxShadow: "0px 4px 4px -4px black",
         backgroundColor: "white",
-        height: "80px",
+        height: "64px",
         paddingLeft: "20px",
-        paddingTop: "20px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "left",
       }}
     >
       <img
