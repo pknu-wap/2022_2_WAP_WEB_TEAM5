@@ -17,10 +17,13 @@ public class CoverLetterEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotNull
     private String title;
 
+    private String question;
+
     @NotNull
-    private Boolean titleLock;
+    private Boolean questionLock;
 
     private String description;
 

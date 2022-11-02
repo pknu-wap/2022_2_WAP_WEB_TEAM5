@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 public class CoverLetter {
     private Integer id;
     private String title;
-    private Boolean titleLock;
+    private String question;
+    private Boolean questionLock;
     private String description;
     private Boolean descriptionLock;
 }
