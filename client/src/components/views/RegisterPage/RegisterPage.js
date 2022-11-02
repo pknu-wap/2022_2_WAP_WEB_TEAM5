@@ -137,6 +137,7 @@ function RegisterPage() {
             Email
           </label>
           <Input
+            type="email"
             value={Email}
             onChange={EmailHandler}
             placeholder="Email"
