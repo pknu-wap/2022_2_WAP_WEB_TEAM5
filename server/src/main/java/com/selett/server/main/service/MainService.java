@@ -23,23 +23,16 @@ public class MainService {
 
         List<ListEntity> listEntities = listRepository.findAllByUserIdOrderByPositionAsc(userId);
         for(ListEntity listEntity : listEntities) {
-            FolderList folderList = new FolderList();
-
-            folderList.setListId(listEntity.getListId());
-            folderList.setTitle(listEntity.getTitle());
             List<CoverLetter> coverLetters = new ArrayList<>();
             coverLetterRepository.findAllByListIdOrderByPositionAsc(listEntity.getListId()).forEach(coverLetterEntity -> {
-                CoverLetter coverLetter = new CoverLetter();
-                coverLetter.setId(coverLetterEntity.getId());
-                coverLetter.setTitle(coverLetterEntity.getTitle());
-                coverLetter.setQuestion(coverLetterEntity.getQuestion());
-                coverLetter.setQuestionLock(coverLetterEntity.getQuestionLock());
-                coverLetter.setDescription(coverLetterEntity.getDescription());
-                coverLetter.setDescriptionLock(coverLetterEntity.getDescriptionLock());
+                CoverLetter coverLetter = new CoverLetter(coverLetterEntity);
 
                 coverLetters.add(coverLetter);
             });
 
+            FolderList folderList = new FolderList();
+            folderList.setListId(listEntity.getListId());
+            folderList.setTitle(listEntity.getTitle());
             folderList.setCoverLetter(coverLetters);
 
             response.getList().add(folderList);
