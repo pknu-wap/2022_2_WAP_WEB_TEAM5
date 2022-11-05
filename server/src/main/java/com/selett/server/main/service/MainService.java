@@ -30,10 +30,7 @@ public class MainService {
                 coverLetters.add(coverLetter);
             });
 
-            FolderList folderList = new FolderList();
-            folderList.setListId(listEntity.getListId());
-            folderList.setTitle(listEntity.getTitle());
-            folderList.setCoverLetter(coverLetters);
+            FolderList folderList = new FolderList(listEntity, coverLetters);
 
             response.getList().add(folderList);
         }
