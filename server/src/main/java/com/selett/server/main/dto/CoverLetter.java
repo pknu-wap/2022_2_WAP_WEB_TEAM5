@@ -1,6 +1,7 @@
 package com.selett.server.main.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.selett.server.mapper.CoverLetterEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,13 @@ public class CoverLetter {
 
     @JsonProperty("description_lock")
     private Boolean descriptionLock;
+
+    public CoverLetter(CoverLetterEntity coverLetterEntity) {
+        id = coverLetterEntity.getId();
+        title = coverLetterEntity.getTitle();
+        question = coverLetterEntity.getQuestion();
+        questionLock = coverLetterEntity.getQuestionLock();
+        description = coverLetterEntity.getDescription();
+        descriptionLock = coverLetterEntity.getDescriptionLock();
+    }
 }
