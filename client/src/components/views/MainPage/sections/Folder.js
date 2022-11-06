@@ -43,7 +43,9 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
   const deleteHandler = (id) =>
     // (CompanyList.list_id) =>
     {
-      setCompanyList(CompanyList.filter((company) => company.list_id !== id));
+      if (window.confirm("정말 삭제하시겠습니까?")) {
+        setCompanyList(CompanyList.filter((company) => company.list_id !== id));
+      }
     };
 
   return (

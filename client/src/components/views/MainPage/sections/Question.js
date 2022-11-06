@@ -30,7 +30,9 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
   };
 
   const deleteClick = (id) => {
-    setCover(Cover.filter((content) => content.id !== id));
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      setCover(Cover.filter((content) => content.id !== id));
+    }
   };
 
   return (
