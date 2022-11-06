@@ -47,12 +47,15 @@ function Account() {
   const [Show_c, setShow_c] = useState(false);
   const handleClick = () => setShow(!Show);
   const handleClick_c = () => setShow_c(!Show_c);
+
   const CurrentPasswordHandler = (event) => {
     setCurrentPassword(event.currentTarget.value);
   };
+
   const NewPasswordHandler = (event) => {
     setNewPassword(event.currentTarget.value);
   };
+
   const NewPasswordCheckHandler = (event) => {
     setNewPasswordCheck(event.currentTarget.value);
   };

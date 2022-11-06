@@ -104,6 +104,7 @@ function Profile() {
     setName("");
     setInfo("");
   }; //취득 자격증
+
   const updateContent2 = () => {
     setDate2([...Date2, Date2]);
     setName2([...Name2, Name2]);

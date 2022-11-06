@@ -10,12 +10,13 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import { DragHandleIcon } from "@chakra-ui/icons";
-// import GrammerForm from "./sections/GrammerForm";
+import GrammerForm from "./sections/GrammerForm";
+import NavBar from "../NavBar/NavBar";
 
 import "./MainPage.css";
 import logo_img from "../NavBar/lala1.png";
 
-// import Form from "./sections/Form";
+import Form from "./sections/Form";
 import FormG from "./sections/FormG";
 
 import Question from "./sections/Question";
@@ -61,54 +62,7 @@ function MainPage() {
   return (
     <div>
       <div>
-        <div
-          className="navbar navbar-light bg-light"
-          style={{
-            boxShadow: "0px 4px 4px -4px black",
-            height: "64px",
-            paddingLeft: "20px",
-          }}
-        >
-          <img
-            src={logo_img}
-            onClick={navHandler}
-            style={{ width: "100px", height: "40px", cursor: "pointer" }}
-            alt=""
-          />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <button
-              style={{
-                marginRight: "20px",
-                width: "50px",
-                // height: "40px",
-                fontWeight: "bold",
-              }}
-              onClick={logoutHandler}
-            >
-              logout
-            </button>
-            <Menu>
-              <MenuButton>
-                <DragHandleIcon
-                  style={{ width: "40px", height: "40px", marginRight: "9px" }}
-                />
-              </MenuButton>
-              <MenuList minWidth="100px" style={{ width: "120px" }}>
-                <MenuItem style={{ width: "120px" }} onClick={handleProfile}>
-                  마이페이지
-                </MenuItem>
-                <MenuItem style={{ width: "120px" }} onClick={handleAccount}>
-                  계정관리
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          </div>
-        </div>
+        <NavBar loc="main" />
       </div>
       <Grid templateColumns="repeat(20, 1fr)" h="90vh">
         <GridItem // 폴더 칸
@@ -134,7 +88,7 @@ function MainPage() {
         >
           <Question />
         </GridItem>
-        {/* {Grammer ? (
+        {Grammer ? (
           <GridItem
             colSpan={16}
             // height="10px"
@@ -144,10 +98,7 @@ function MainPage() {
             }}
           >
             <div style={{ display: "flex", height: "100%" }}>
-              <Form // Form 가져옴
-                title={Title}
-                text={Text}
-              />
+              <Form title={Cover.question} text={Cover.description} />
               <div // 오른쪽에 달린 태그
                 style={{
                   backgroundColor: "#303136",
@@ -167,10 +118,10 @@ function MainPage() {
               </div>
               <div // 네모
                 style={{
-                  marginLeft: "1.5%",
+                  marginLeft: "0.5%",
                   backgroundColor: "white",
                   marginTop: "5%",
-                  width: "30%",
+                  width: "25%",
                   height: "555px",
                   display: "flex",
                   flexDirection: "column",
@@ -198,36 +149,36 @@ function MainPage() {
               </div>
             </div>
           </GridItem>
-        ) : ( */}
-        <GridItem
-          colSpan={16}
-          style={{
-            backgroundColor: "#d9d9d9",
-            height: "100%",
-          }}
-        >
-          <div style={{ display: "flex", height: "100%" }}>
-            <FormG title={Cover.question} text={Cover.description} />
-            <div
-              style={{
-                backgroundColor: "#303136",
-                color: "white",
-                height: "min-content",
-                width: "2%",
-                marginTop: "50px",
-                overflow: "hidden",
-                fontSize: "13px",
-                cursor: "pointer",
-                padding: "0.1%",
-                textAlign: "center",
-              }}
-              onClick={grammerHandler}
-            >
-              맞춤법검사
+        ) : (
+          <GridItem
+            colSpan={16}
+            style={{
+              backgroundColor: "#d9d9d9",
+              height: "100%",
+            }}
+          >
+            <div style={{ display: "flex", height: "100%" }}>
+              <FormG title={Cover.question} text={Cover.description} />
+              <div
+                style={{
+                  backgroundColor: "#303136",
+                  color: "white",
+                  height: "min-content",
+                  width: "2%",
+                  marginTop: "50px",
+                  overflow: "hidden",
+                  fontSize: "13px",
+                  cursor: "pointer",
+                  padding: "0.1%",
+                  textAlign: "center",
+                }}
+                onClick={grammerHandler}
+              >
+                맞춤법검사
+              </div>
             </div>
-          </div>
-        </GridItem>
-        {/* )} */}
+          </GridItem>
+        )}
       </Grid>
     </div>
   );
