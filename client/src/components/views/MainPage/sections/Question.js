@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
@@ -14,11 +14,14 @@ import {
   FormLabel,
   useDisclosure,
 } from "@chakra-ui/react";
+import QuestionList from "./QuestionList";
 
 function Question({ CompanyList, Cover, setCover, refreshFunction }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
+  const [Edit, setEdit] = useState(true);
+  const [Text, setText] = useState("");
 
   const ContentHandler = (event) => {
     setContent(event.currentTarget.value);
@@ -29,11 +32,11 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
     setContent("");
   };
 
-  const deleteClick = (id) => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      setCover(Cover.filter((content) => content.id !== id));
-    }
-  };
+  // const deleteClick = (id) => {
+  //   if (window.confirm("정말 삭제하시겠습니까?")) {
+  //     setCover(Cover.filter((content) => content.id !== id));
+  //   }
+  // };
 
   return (
     <div
@@ -82,29 +85,12 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
 
       {Cover &&
         Cover.map((content, index) => (
-          <Button
+          <QuestionList
             key={index}
-            colorScheme="whiteAlpha"
-            variant="ghost"
-            // justifyContent="flex-start"
-            justifyContent="space-between"
-            style={{
-              paddingLeft: "25px",
-              height: "50px",
-              color: "white",
-              fontSize: "15px",
-              textAlign: "left",
-              width: "100%",
-              marginTop: "10px",
-              overflow: "scroll",
-              // float: "left",
-              border: "none",
-              outline: "0",
-            }}
-          >
-            {content.title}
-            <DeleteIcon onClick={() => deleteClick(content.id)} />
-          </Button>
+            content={content}
+            setCover={setCover}
+            Cover={Cover}
+          />
         ))}
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
