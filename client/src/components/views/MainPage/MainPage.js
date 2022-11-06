@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {
-  Grid,
-  GridItem,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-} from "@chakra-ui/react";
-import { DragHandleIcon } from "@chakra-ui/icons";
+import { Grid, GridItem } from "@chakra-ui/react";
 import GrammerForm from "./sections/GrammerForm";
 import NavBar from "../NavBar/NavBar";
 
 import "./MainPage.css";
-import logo_img from "../NavBar/lala1.png";
 
 import Form from "./sections/Form";
 import FormG from "./sections/FormG";
@@ -25,7 +15,12 @@ import Folder from "./sections/Folder";
 
 function MainPage() {
   const [Cover, setCover] = useState([]);
+  // 몇 번 폴더의 몇 번 파일의 데이터가 들어있음(현재는 0,0)
+  // 이걸로 title과 content 가져옴
   const [Grammer, setGrammer] = useState(false);
+  // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
+  const [CompanyList, setCompanyList] = useState(["빈 폴더"]);
+  // 폴더의 list가 저장됨
 
   useEffect(() => {
     axios
@@ -33,30 +28,14 @@ function MainPage() {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
       )
       .then((response) => {
+        // data.list : 폴더, cover_letter : 파일
         setCover(response.data.list[0].cover_letter[0]);
+        setCompanyList(response.data.list);
       });
   }, []);
 
-  const navigate = useNavigate();
-
-  const handleAccount = () => {
-    navigate("/account");
-  };
-
-  const handleProfile = () => {
-    navigate("/profile");
-  };
-
-  const navHandler = () => {
-    navigate("/main");
-  };
-
   const grammerHandler = () => {
     setGrammer(!Grammer);
-  };
-
-  const logoutHandler = () => {
-    alert("로그아웃 되셨습니다.");
   };
 
   return (
@@ -75,7 +54,7 @@ function MainPage() {
             alignItems: "center",
           }}
         >
-          <Folder />
+          <Folder CompanyList={CompanyList} />
         </GridItem>
 
         <GridItem // 파일 칸

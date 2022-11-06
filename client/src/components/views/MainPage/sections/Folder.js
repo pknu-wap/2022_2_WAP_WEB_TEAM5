@@ -18,23 +18,10 @@ import {
   AvatarBadge,
 } from "@chakra-ui/react";
 
-function Folder(props) {
+function Folder({ CompanyList }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
-  const [CompanyList, setCompanyList] = useState(["빈 폴더"]);
-
-  useEffect(() => {
-    axios
-      .get(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-      )
-      .then((response) => {
-        // console.log(response.data);
-        setCompanyList(response.data.list);
-        // setTitle(response.data.list[0].cover_letter[0].title);
-      });
-  }, []);
 
   const companyHandler = (event) => {
     setCompany(event.currentTarget.value);
