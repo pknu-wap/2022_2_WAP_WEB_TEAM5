@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Grid, GridItem } from "@chakra-ui/react";
 import GrammerForm from "./sections/GrammerForm";
@@ -19,7 +19,13 @@ function MainPage() {
   // 이걸로 title과 content 가져옴
   const [Grammer, setGrammer] = useState(false);
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
-  const [CompanyList, setCompanyList] = useState(["빈 폴더"]);
+  const [CompanyList, setCompanyList] = useState([
+    {
+      cover_letter: [],
+      list_id: 0,
+      title: "",
+    },
+  ]);
   // 폴더의 list가 저장됨
 
   useEffect(() => {
@@ -36,6 +42,19 @@ function MainPage() {
 
   const grammerHandler = () => {
     setGrammer(!Grammer);
+  };
+  let nextId = CompanyList.length + 1;
+
+  const onUpdate = (company) => {
+    // 자식에서 return 받은 회사 값으로 state에 저장시켜준다.
+    const body = {
+      cover_letter: [],
+      list_id: nextId,
+      title: company,
+    };
+    setCompanyList([...CompanyList, body]);
+
+    nextId += 1;
   };
 
   return (
@@ -54,7 +73,11 @@ function MainPage() {
             alignItems: "center",
           }}
         >
-          <Folder CompanyList={CompanyList} />
+          <Folder
+            CompanyList={CompanyList}
+            setCompanyList={setCompanyList}
+            refreshFunction={onUpdate}
+          />
         </GridItem>
 
         <GridItem // 파일 칸

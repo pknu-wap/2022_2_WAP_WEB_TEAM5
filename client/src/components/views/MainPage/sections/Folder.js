@@ -18,23 +18,42 @@ import {
   AvatarBadge,
 } from "@chakra-ui/react";
 
-function Folder({ CompanyList }) {
+function Folder({ CompanyList, setCompanyList, refreshFunction }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
 
   const companyHandler = (event) => {
+    // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
     setCompany(event.currentTarget.value);
   };
 
   const companyclickHandler = () => {
-    //   setCompanyList([...CompanyList, Company]);
-    //   setCompany("");
+    // save 버튼을 눌렀을 때 작동하는 코드
+    refreshFunction(Company); // Company의 값을 부모로 return 해준다.
+    // setCompanyList([...CompanyList, Company]); // 현재 회사 리스트에 방금 적은 회사를 추가함
+    setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
   };
+  console.log(CompanyList);
 
   const folderHandler = () => {
+    // 폴더의 동그라미를 눌렀을 때 작동하는 코드
     // setCompanyList([]);
   };
+
+  const deleteHandler = (id) =>
+    // (CompanyList.list_id) =>
+    {
+      setCompanyList(CompanyList.filter((company) => company.list_id !== id));
+    };
+
+  // const onRemove = id => {
+  //   setUsers(users.filter(user => user.id !== id));
+  // };
+
+  // <UserList users={users} onRemove={onRemove} />
+
+  // function UserList(Pusers, onRemove) {}
 
   return (
     <Fragment>
@@ -63,7 +82,10 @@ function Folder({ CompanyList }) {
               boxSize="1.25em"
               onClick={folderHandler}
             >
-              <DeleteIcon style={{ width: "90%", height: "90%" }} />
+              <DeleteIcon
+                style={{ width: "90%", height: "90%" }}
+                onClick={() => deleteHandler(company.list_id)}
+              />
             </AvatarBadge>
           </Avatar>
         ))}
