@@ -1,6 +1,5 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-import axios from "axios";
 import {
   Modal,
   ModalOverlay,
@@ -34,7 +33,7 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
     // setCompanyList([...CompanyList, Company]); // 현재 회사 리스트에 방금 적은 회사를 추가함
     setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
   };
-  console.log(CompanyList);
+  // console.log(CompanyList);
 
   const folderHandler = () => {
     // 폴더의 동그라미를 눌렀을 때 작동하는 코드
@@ -46,14 +45,6 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
     {
       setCompanyList(CompanyList.filter((company) => company.list_id !== id));
     };
-
-  // const onRemove = id => {
-  //   setUsers(users.filter(user => user.id !== id));
-  // };
-
-  // <UserList users={users} onRemove={onRemove} />
-
-  // function UserList(Pusers, onRemove) {}
 
   return (
     <Fragment>

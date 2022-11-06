@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-import axios from "axios";
 import {
   Modal,
   ModalOverlay,
@@ -16,41 +15,23 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-function Folder() {
+function Question({ CompanyList, Cover, setCover, refreshFunction }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
-  const [ContentList, setContentList] = useState(["빈 파일"]);
-  const [Company, setCompany] = useState("");
-
-  useEffect(() => {
-    axios
-      .get(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1&&"
-      )
-      .then((response) => {
-        // console.log(response.data);
-        setContentList(response.data.list[0].cover_letter);
-        setCompany(response.data.list[0]);
-        // console.log(response.data.list[0].cover_letter[0].title);
-        // setTitle(response.data.list[0].cover_letter[0].title);
-      });
-  }, []);
 
   const ContentHandler = (event) => {
     setContent(event.currentTarget.value);
   };
 
   const contentclickHandler = () => {
-    // setContentList([...ContentList, Content]);
-    // setContent("");
+    refreshFunction(Content);
+    setContent("");
   };
 
-  const deleteClick = () => {
-    // setContentList([]);
+  const deleteClick = (id) => {
+    setCover(Cover.filter((content) => content.id !== id));
   };
-
-  // const folderDelete = () => {};
 
   return (
     <div
@@ -81,32 +62,28 @@ function Folder() {
             overflow: "hidden",
           }}
         >
-          {/* 빈 폴더 */}
-          {Company.title}
+          {CompanyList[0].title}
         </div>
         <AddIcon
           onClick={onOpen}
           color="white"
           style={{
-            // display: "flex",
             lineHeight: "0px",
             width: "7%",
             cursor: "pointer",
             height: "80px",
-            // paddingBottom: "10px",
             paddingTop: "2%",
             marginRight: "10%",
           }}
         ></AddIcon>
       </div>
 
-      {ContentList &&
-        ContentList.map((content, index) => (
+      {Cover &&
+        Cover.map((content, index) => (
           <Button
             key={index}
             colorScheme="whiteAlpha"
             variant="ghost"
-            onClick={deleteClick}
             // justifyContent="flex-start"
             justifyContent="space-between"
             style={{
@@ -124,7 +101,7 @@ function Folder() {
             }}
           >
             {content.title}
-            <DeleteIcon />
+            <DeleteIcon onClick={() => deleteClick(content.id)} />
           </Button>
         ))}
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
@@ -166,4 +143,4 @@ function Folder() {
   );
 }
 
-export default Folder;
+export default Question;

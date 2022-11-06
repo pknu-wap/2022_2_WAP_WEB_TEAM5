@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Grid, GridItem } from "@chakra-ui/react";
 import GrammerForm from "./sections/GrammerForm";
@@ -14,10 +14,19 @@ import Folder from "./sections/Folder";
 // 사전 기능 ,
 
 function MainPage() {
-  const [Cover, setCover] = useState([]);
-  // 몇 번 폴더의 몇 번 파일의 데이터가 들어있음(현재는 0,0)
-  // 이걸로 title과 content 가져옴
+  const [Cover, setCover] = useState([
+    // 파일을 저장
+    {
+      description: "",
+      descriptionLock: false,
+      id: 0,
+      question: "",
+      questionLock: false,
+      title: "",
+    },
+  ]);
   const [Grammer, setGrammer] = useState(false);
+
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
   const [CompanyList, setCompanyList] = useState([
     {
@@ -29,13 +38,14 @@ function MainPage() {
   // 폴더의 list가 저장됨
 
   useEffect(() => {
+    // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
     axios
       .get(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
       )
       .then((response) => {
         // data.list : 폴더, cover_letter : 파일
-        setCover(response.data.list[0].cover_letter[0]);
+        setCover(response.data.list[0].cover_letter);
         setCompanyList(response.data.list);
       });
   }, []);
@@ -43,18 +53,31 @@ function MainPage() {
   const grammerHandler = () => {
     setGrammer(!Grammer);
   };
-  let nextId = CompanyList.length + 1;
+
+  let nextId = CompanyList.length + 1; // id를 현재 배열에 저장되어있는 길이 +1을 해줌
 
   const onUpdate = (company) => {
-    // 자식에서 return 받은 회사 값으로 state에 저장시켜준다.
+    // 자식에서 return 받은 company 값을 state에 저장시켜준다.
     const body = {
       cover_letter: [],
       list_id: nextId,
       title: company,
     };
     setCompanyList([...CompanyList, body]);
+  };
 
-    nextId += 1;
+  let fileId = Cover.length + 1; // id를 현재 배열에 저장되어있는 길이 +1을 해줌
+  const onfileUpdate = (content) => {
+    // 자식에서 return 받은 title 값을 state에 저장 시킨다.
+    const body = {
+      description: "",
+      descriptionLock: false,
+      id: fileId,
+      question: "",
+      questionLock: false,
+      title: content,
+    };
+    setCover([...Cover, body]);
   };
 
   return (
@@ -88,7 +111,12 @@ function MainPage() {
             height: "100%",
           }}
         >
-          <Question />
+          <Question
+            CompanyList={CompanyList}
+            Cover={Cover}
+            setCover={setCover}
+            refreshFunction={onfileUpdate}
+          />
         </GridItem>
         {Grammer ? (
           <GridItem
