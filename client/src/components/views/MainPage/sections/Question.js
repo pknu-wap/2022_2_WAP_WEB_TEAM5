@@ -26,9 +26,22 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
   };
 
   const contentclickHandler = () => {
+    let va = false;
+
     if (Content) {
-      refreshFunction(Content);
-      onClose();
+      Cover.map((list, index) => {
+        if (list.title === Content) {
+          va = true;
+          return va;
+        }
+      });
+
+      if (va === false) {
+        refreshFunction(Content);
+        onClose();
+      } else {
+        alert("중복되는 파일이 존재합니다.");
+      }
     } else {
       alert("값을 입력해주세요");
     }
