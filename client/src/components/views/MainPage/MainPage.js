@@ -7,7 +7,7 @@ import NavBar from "../NavBar/NavBar";
 import "./MainPage.css";
 
 import Form from "./sections/Form";
-import FormG from "./sections/FormG";
+import GrammerTag from "./sections/GrammerTag";
 
 import Question from "./sections/Question";
 import Folder from "./sections/Folder";
@@ -37,6 +37,12 @@ function MainPage() {
   ]);
   // 폴더의 list가 저장됨
 
+  // const [Forms, setForms] = useState([
+  //   {
+
+  //   }
+  // ]);
+
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
     axios
@@ -49,10 +55,6 @@ function MainPage() {
         setCompanyList(response.data.list);
       });
   }, []);
-
-  const grammerHandler = () => {
-    setGrammer(!Grammer);
-  };
 
   let nextId = CompanyList.length + 1; // id를 현재 배열에 저장되어있는 길이 +1을 해줌
 
@@ -128,24 +130,8 @@ function MainPage() {
             }}
           >
             <div style={{ display: "flex", height: "100%" }}>
-              <Form title={Cover.question} text={Cover.description} />
-              <div // 오른쪽에 달린 태그
-                style={{
-                  backgroundColor: "#303136",
-                  color: "white",
-                  height: "min-content",
-                  width: "2%",
-                  marginTop: "50px",
-                  overflow: "hidden",
-                  fontSize: "13px",
-                  cursor: "pointer",
-                  padding: "0.1%",
-                  textAlign: "center",
-                }}
-                onClick={grammerHandler}
-              >
-                맞춤법검사(켜짐)
-              </div>
+              <Form />
+              <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
               <div // 네모
                 style={{
                   marginLeft: "0.5%",
@@ -157,6 +143,7 @@ function MainPage() {
                   flexDirection: "column",
                   alignItems: "center",
                   overflow: "scroll",
+                  marginRight: "1%",
                 }}
               >
                 <div // 네모의 제일 상위 제목
@@ -188,24 +175,8 @@ function MainPage() {
             }}
           >
             <div style={{ display: "flex", height: "100%" }}>
-              <FormG title={Cover.question} text={Cover.description} />
-              <div
-                style={{
-                  backgroundColor: "#303136",
-                  color: "white",
-                  height: "min-content",
-                  width: "2%",
-                  marginTop: "50px",
-                  overflow: "hidden",
-                  fontSize: "13px",
-                  cursor: "pointer",
-                  padding: "0.1%",
-                  textAlign: "center",
-                }}
-                onClick={grammerHandler}
-              >
-                맞춤법검사
-              </div>
+              <Form grammer="no" />
+              <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
             </div>
           </GridItem>
         )}
