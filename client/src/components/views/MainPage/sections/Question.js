@@ -20,8 +20,6 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
-  // const [Edit, setEdit] = useState(true);
-  // const [Text, setText] = useState("");
 
   const ContentHandler = (event) => {
     setContent(event.currentTarget.value);
@@ -34,6 +32,7 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
     } else {
       alert("값을 입력해주세요");
     }
+
     setContent("");
   };
 

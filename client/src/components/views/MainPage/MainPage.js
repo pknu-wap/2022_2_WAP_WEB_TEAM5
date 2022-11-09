@@ -56,7 +56,7 @@ function MainPage() {
       });
   }, []);
 
-  let nextId = CompanyList.length + 1; // id를 현재 배열에 저장되어있는 길이 +1을 해줌
+  let nextId = CompanyList.length; // id를 현재 배열에 저장되어있는 길이 +1을 해줌
 
   const onUpdate = (company) => {
     // 자식에서 return 받은 company 값을 state에 저장시켜준다.
@@ -68,7 +68,7 @@ function MainPage() {
     setCompanyList([...CompanyList, body]);
   };
 
-  let fileId = Cover.length + 1; // id를 현재 배열에 저장되어있는 길이 +1을 해줌
+  let fileId = Cover.length; // id를 현재 배열에 저장되어있는 길이 +1을 해줌
   const onfileUpdate = (content) => {
     // 자식에서 return 받은 title 값을 state에 저장 시킨다.
     const body = {
