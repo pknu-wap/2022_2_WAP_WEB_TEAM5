@@ -29,7 +29,12 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
 
   const companyclickHandler = () => {
     // save 버튼을 눌렀을 때 작동하는 코드
-    refreshFunction(Company); // Company의 값을 부모로 return 해준다.
+    if (Company) {
+      refreshFunction(Company); // Company의 값을 부모로 return 해준다.
+      onclose(); // 값이 있을 때만 모달창을 닫아줌
+    } else {
+      alert("값을 입력해주세요");
+    }
     // setCompanyList([...CompanyList, Company]); // 현재 회사 리스트에 방금 적은 회사를 추가함
     setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
   };
@@ -123,7 +128,7 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
               mr={3}
               onClick={() => {
                 companyclickHandler();
-                onClose();
+                // onClose();
               }}
             >
               Save

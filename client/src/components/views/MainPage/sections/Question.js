@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AddIcon, DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
@@ -20,15 +20,20 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
-  const [Edit, setEdit] = useState(true);
-  const [Text, setText] = useState("");
+  // const [Edit, setEdit] = useState(true);
+  // const [Text, setText] = useState("");
 
   const ContentHandler = (event) => {
     setContent(event.currentTarget.value);
   };
 
   const contentclickHandler = () => {
-    refreshFunction(Content);
+    if (Content) {
+      refreshFunction(Content);
+      onClose();
+    } else {
+      alert("값을 입력해주세요");
+    }
     setContent("");
   };
 
@@ -117,7 +122,7 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
               colorScheme="blue"
               mr={3}
               onClick={() => {
-                onClose();
+                // onClose();
                 contentclickHandler();
               }}
             >
