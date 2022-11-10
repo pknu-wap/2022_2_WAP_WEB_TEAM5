@@ -6,5 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ListRepository extends JpaRepository<ListEntity, Integer> {
-    List<ListEntity> findAllByUserIdOrderByPositionAsc(Integer userId);
+    List<ListEntity> findAllByUserId(Integer userId);
+    boolean existsByUserIdAndTitle(Integer userId, String title);
+    ListEntity findByUserIdAndNext(Integer userId, Integer next);
+    Long countByUserId(Integer userId);
 }
