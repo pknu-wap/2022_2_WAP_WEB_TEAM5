@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
-    private Boolean success;
-
     @JsonProperty("user_id")
     private Integer userId;
 }
