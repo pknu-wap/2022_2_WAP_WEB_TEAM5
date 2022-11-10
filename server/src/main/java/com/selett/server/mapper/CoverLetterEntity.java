@@ -31,7 +31,10 @@ public class CoverLetterEntity {
     private Boolean descriptionLock;
 
     @NotNull
-    private Integer position;
+    private Integer prev;
+
+    @NotNull
+    private Integer next;
 
     @NotNull
     private Integer listId;
