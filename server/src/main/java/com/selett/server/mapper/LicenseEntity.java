@@ -27,8 +27,5 @@ public class LicenseEntity {
     private String description;
 
     @NotNull
-    private Integer position;
-
-    @NotNull
     private Integer userId;
 }

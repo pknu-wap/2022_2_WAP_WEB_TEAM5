@@ -26,8 +26,5 @@ public class LanguageSkillEntity {
     private String grade;
 
     @NotNull
-    private Integer position;
-
-    @NotNull
     private Integer userId;
 }

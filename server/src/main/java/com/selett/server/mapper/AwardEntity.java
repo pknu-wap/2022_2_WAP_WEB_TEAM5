@@ -35,8 +35,5 @@ public class AwardEntity {
     private String description;
 
     @NotNull
-    private Integer position;
-
-    @NotNull
     private Integer userId;
 }

@@ -48,8 +48,5 @@ public class EducationEntity {
     private Integer course;
 
     @NotNull
-    private Integer position;
-
-    @NotNull
     private Integer userId;
 }
