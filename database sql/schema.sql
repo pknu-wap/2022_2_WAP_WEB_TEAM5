@@ -10,10 +10,11 @@ CREATE TABLE user_informations
 
 CREATE TABLE lists
 (
-    list_id  INT NOT NULL AUTO_INCREMENT,
-    title    TINYTEXT,
-    position INT NOT NULL,
-    user_id  INT NOT NULL,
+    list_id INT NOT NULL AUTO_INCREMENT,
+    title   TINYTEXT,
+    prev    INT NOT NULL,
+    next    INT NOT NULL,
+    user_id INT NOT NULL,
     PRIMARY KEY (list_id),
     FOREIGN KEY (user_id)
         REFERENCES user_informations (user_id)
@@ -24,11 +25,12 @@ CREATE TABLE cover_letters
 (
     id               INT  NOT NULL AUTO_INCREMENT,
     title            TINYTEXT,
-    question            TINYTEXT,
-    question_lock       BOOL NOT NULL,
+    question         TINYTEXT,
+    question_lock    BOOL NOT NULL,
     description      TEXT,
     description_lock BOOL NOT NULL,
-    position         INT  NOT NULL,
+    prev             INT  NOT NULL,
+    next             INT  NOT NULL,
     list_id          INT  NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (list_id)
@@ -49,7 +51,6 @@ CREATE TABLE educations
     grade           FLOAT,
     max_grade       FLOAT,
     course          INT,
-    position        INT         NOT NULL,
     user_id         INT         NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id)
@@ -63,7 +64,6 @@ CREATE TABLE licenses
     title       TINYTEXT NOT NULL,
     date        DATE     NOT NULL,
     description TEXT,
-    position     INT      NOT NULL,
     user_id     INT      NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id)
@@ -79,7 +79,6 @@ CREATE TABLE awards
     organization VARCHAR(50) NOT NULL,
     grade        VARCHAR(20) NOT NULL,
     description  TEXT,
-    position     INT         NOT NULL,
     user_id      INT         NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id)
@@ -89,11 +88,10 @@ CREATE TABLE awards
 
 CREATE TABLE language_skills
 (
-    id       INT         NOT NULL AUTO_INCREMENT,
-    title    TINYTEXT    NOT NULL,
-    grade    VARCHAR(20) NOT NULL,
-    position INT         NOT NULL,
-    user_id  INT         NOT NULL,
+    id      INT         NOT NULL AUTO_INCREMENT,
+    title   TINYTEXT    NOT NULL,
+    grade   VARCHAR(20) NOT NULL,
+    user_id INT         NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id)
         REFERENCES user_informations (user_id)
@@ -104,7 +102,6 @@ CREATE TABLE memos
 (
     id          INT NOT NULL AUTO_INCREMENT,
     description TEXT,
-    position    INT NOT NULL,
     user_id     INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id)
