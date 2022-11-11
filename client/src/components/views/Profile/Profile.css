@@ -1,0 +1,93 @@
+.left-nav {
+    padding-top: 1%;
+    padding-left: 2%;
+    width: 65%;
+    height: 100%;
+    float: left;
+}
+
+.right-nav {
+    padding-top: 1%;
+    padding-left: 2%;
+    width: 30%;
+    height: 100%;
+    float: left;
+}
+
+.my-info {   
+    margin-left: 5%;
+    width: 100%;
+    height: 45%;
+    text-align: left;
+    background-color: white;
+} 
+
+.memo {
+    margin-left: 5%;
+    width: 100%;
+    height: 25%;
+    margin-bottom: 50px;
+    text-align: left;
+    background-color: white;
+}
+
+.info-title {
+    border-bottom: 1px solid black;
+    width: 100%;
+    padding-left: 10px;
+    margin-top: 2%;
+    margin-bottom: 10px;
+}
+
+.info-div{
+    width: 100%;
+    height: 15%;
+    background-color: white;
+}
+
+.info-type {
+    display: inline-block;
+    width: 12%;
+}
+
+.info-myinfo {
+    display: inline-block;
+    width: 20%
+}
+
+.info-contents {
+    display: flex;
+}
+
+.info-type-myinfo {
+    display: flex;
+}
+
+.info-type-contents {
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 5px;
+    border-bottom: 1px solid black;
+    margin-top: 5px;
+    margin-bottom: 0;
+    background-color: #d9d9d9;
+}
+
+.info-myinfo-contents {
+
+    margin-left: 5px;
+    border-bottom: 1px solid grey;
+    width: 100px;
+    height: 35px;
+    padding: 5px;
+}
+
+.right-title {
+        border-bottom: 1px solid black;
+        width: 100%;
+        padding-left: 10px;
+        padding-top: 2%;
+        margin-left: 5%;
+        margin-bottom: 10px;
+}

@@ -1,7 +1,9 @@
 import React from "react";
 
 function Account() {
-  return <div>Account</div>;
+    return(
+        <div>account</div>
+    );
 }
 
 export default Account;
