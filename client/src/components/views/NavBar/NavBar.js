@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import logo_img from "./lala1.png";
 import { useNavigate } from "react-router-dom";
-import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Spinner,
+} from "@chakra-ui/react";
 import { DragHandleIcon } from "@chakra-ui/icons";
 // import axios from "axios";
 
@@ -61,6 +67,16 @@ function NavBar(props) {
             alignItems: "center",
           }}
         >
+          {props.Loading ? (
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="gray.700"
+              size="xl"
+              marginRight="20px"
+            />
+          ) : null}
           <button // 로그아웃 버튼
             style={{
               marginRight: "20px",

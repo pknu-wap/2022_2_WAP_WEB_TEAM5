@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Grid, GridItem, Spinner } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import GrammerForm from "./sections/GrammerForm";
 import NavBar from "../NavBar/NavBar";
 
@@ -89,7 +89,7 @@ function MainPage() {
   return (
     <div>
       <div>
-        <NavBar loc="main" />
+        <NavBar loc="main" Loading={Loading} />
         {/* 네비게이션 바 출력 */}
       </div>
       <Grid templateColumns="repeat(20, 1fr)" h="90vh">
@@ -103,24 +103,13 @@ function MainPage() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Folder
             // 이곳은 폴더들의 내용이 담겨있음
             CompanyList={CompanyList}
             setCompanyList={setCompanyList}
             refreshFunction={onUpdate}
           />
-          {Loading ? ( // 만약 로딩 중이라면, 이곳에 스피너 표시
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="blue.500"
-              size="xl"
-              marginTop="40px"
-            />
-          ) : null}
         </GridItem>
 
         <GridItem // 파일 칸
@@ -129,8 +118,7 @@ function MainPage() {
           style={{
             backgroundColor: "#303136",
             height: "100%",
-          }}
-        >
+          }}>
           <Question
             CompanyList={CompanyList}
             Cover={Cover}
@@ -145,8 +133,7 @@ function MainPage() {
             style={{
               backgroundColor: "#d9d9d9",
               height: "100%",
-            }}
-          >
+            }}>
             <div style={{ display: "flex", height: "100%" }}>
               <Form />
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
@@ -162,8 +149,7 @@ function MainPage() {
                   alignItems: "center",
                   overflow: "scroll",
                   marginRight: "1%",
-                }}
-              >
+                }}>
                 <div // 네모의 제일 상위 제목
                   style={{
                     fontWeight: "bold",
@@ -172,8 +158,7 @@ function MainPage() {
                     fontSize: "20px",
                     color: "black",
                     marginBottom: "5px",
-                  }}
-                >
+                  }}>
                   맞춤법 검사
                 </div>
                 <GrammerForm />
@@ -190,8 +175,7 @@ function MainPage() {
             style={{
               backgroundColor: "#d9d9d9",
               height: "100%",
-            }}
-          >
+            }}>
             <div style={{ display: "flex", height: "100%" }}>
               <Form grammer="no" />
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
