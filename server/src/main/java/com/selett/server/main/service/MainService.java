@@ -92,8 +92,6 @@ public class MainService {
         FolderList newList = new FolderList(newListEntity, coverLetters);
 
         CreateListResponse createListResponse = new CreateListResponse();
-        createListResponse.setPrevListId(newListEntity.getPrev());
-        createListResponse.setPrevId(coverLetter.getPrevId());
         createListResponse.setList(newList);
 
         return createListResponse;
