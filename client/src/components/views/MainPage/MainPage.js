@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, Spinner } from "@chakra-ui/react";
 import GrammerForm from "./sections/GrammerForm";
 import NavBar from "../NavBar/NavBar";
 
@@ -35,6 +35,7 @@ function MainPage() {
       title: "",
     },
   ]);
+  const [Loading, setLoading] = useState(false);
   // 폴더의 list가 저장됨
 
   // const [Forms, setForms] = useState([
@@ -45,18 +46,21 @@ function MainPage() {
 
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
+    setLoading(true);
     axios
       .get(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
       )
       .then((response) => {
+        console.log(response.data);
         // data.list : 폴더, cover_letter : 파일
         setCover(response.data.list[0].cover_letter);
         setCompanyList(response.data.list);
+        setLoading(false);
       });
   }, []);
 
-  let nextId = CompanyList.length; // id를 현재 배열에 저장되어있는 길이 +1을 해줌
+  let nextId = CompanyList.length; // id를 현재 배열에 저장되어있는 길이를 구해줌
 
   const onUpdate = (company) => {
     // 자식에서 return 받은 company 값을 state에 저장시켜준다.
@@ -68,7 +72,7 @@ function MainPage() {
     setCompanyList([...CompanyList, body]);
   };
 
-  let fileId = Cover.length; // id를 현재 배열에 저장되어있는 길이 +1을 해줌
+  let fileId = Cover.length; // id를 현재 배열에 저장되어있는 길이를 구해줌
   const onfileUpdate = (content) => {
     // 자식에서 return 받은 title 값을 state에 저장 시킨다.
     const body = {
@@ -86,9 +90,12 @@ function MainPage() {
     <div>
       <div>
         <NavBar loc="main" />
+        {/* 네비게이션 바 출력 */}
       </div>
       <Grid templateColumns="repeat(20, 1fr)" h="90vh">
+        {/* chakra의 grid를 사용하는데, 총 메인 페이지의 열을 20개의 열로 나눔 */}
         <GridItem // 폴더 칸
+          // 이 곳은 폴더의 전체칸으로, 20개의 열 중에 한 개의 열만 사용한다.
           colSpan={1}
           style={{
             backgroundColor: "#212226",
@@ -99,10 +106,21 @@ function MainPage() {
           }}
         >
           <Folder
+            // 이곳은 폴더들의 내용이 담겨있음
             CompanyList={CompanyList}
             setCompanyList={setCompanyList}
             refreshFunction={onUpdate}
           />
+          {Loading ? ( // 만약 로딩 중이라면, 이곳에 스피너 표시
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+              marginTop="40px"
+            />
+          ) : null}
         </GridItem>
 
         <GridItem // 파일 칸
