@@ -38,6 +38,10 @@ function RegisterPage() {
     setPasswordCheck(event.currentTarget.value);
   };
 
+  const handleSignin = () => {
+    navigate("/");
+  };
+
   const handleSubmit = () => {
     const body = {
       identification: Id,
@@ -52,10 +56,13 @@ function RegisterPage() {
         body
       )
       .then((response) => {
-        if (response.data.success) {
+        console.log(response.data);
+        if (response.data.status === 0) {
           navigate("/");
+        } else if (response.data.status === 1) {
+          alert("중복된 아이디입니다.");
         } else {
-          alert("회원가입에 실패하셨습니다.");
+          alert("중복된 이메일입니다.");
         }
       });
   };
@@ -122,7 +129,6 @@ function RegisterPage() {
             style={{ width: "80%", marginLeft: "10%" }}
           />
           <br />
-
           <label style={{ width: "80%", marginLeft: "10%", marginTop: "3%" }}>
             Name
           </label>
@@ -144,7 +150,6 @@ function RegisterPage() {
             style={{ width: "80%", marginLeft: "10%", marginTop: "3%" }}
           />
           <br />
-
           <label style={{ width: "80%", marginLeft: "10%", marginTop: "3%" }}>
             password
           </label>
@@ -214,7 +219,6 @@ function RegisterPage() {
               </div>
             </div>
           )}
-
           <br />
           <Button
             colorScheme="gray"
@@ -231,6 +235,12 @@ function RegisterPage() {
           >
             Register
           </Button>
+          <div
+            onClick={handleSignin}
+            style={{ marginTop: "10px", cursor: "pointer", marginLeft: "10%" }}
+          >
+            login
+          </div>
         </div>
       </div>
     </div>

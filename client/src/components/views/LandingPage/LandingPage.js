@@ -8,7 +8,7 @@ import { InputGroup, Input, InputRightElement, Button } from "@chakra-ui/react";
 import axios from "axios";
 
 function LandingPage() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // navigate 선언
   const [Show, setShow] = useState(false);
   const [Id, setId] = useState("");
   const [Password, setPassword] = useState("");
@@ -34,8 +34,7 @@ function LandingPage() {
         body
       )
       .then((response) => {
-        console.log(response);
-        if (response.data.success) {
+        if (response.data.user_id) {
           sessionStorage.setItem("user_id", response.data.user_id);
           navigate("/main");
         } else {

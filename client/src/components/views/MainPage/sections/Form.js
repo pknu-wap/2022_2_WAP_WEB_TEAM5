@@ -10,16 +10,16 @@ function FormG(props) {
   let [Text, setText] = useState("");
   const [Grammer, setGrammer] = useState(false);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-  //     )
-  //     .then((response) => {
-  //       setTitle(response.data.list[0].cover_letter[0].question);
-  //       setText(response.data.list[0].cover_letter[0].description);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      )
+      .then((response) => {
+        setTitle(response.data.list[0].cover_letter[0].question);
+        setText(response.data.list[0].cover_letter[0].description);
+      });
+  }, []);
 
   const titleHandler = (event) => {
     setTitle(event.currentTarget.value);
@@ -47,17 +47,14 @@ function FormG(props) {
 
   const titlebuttonHandler = () => {
     setTitle(Title);
-    console.log(Title);
   };
 
   const textbuttonHandler = () => {
     setText(Text);
-    console.log(Text);
   };
 
   const saveHandler = () => {
     setText(Text);
-    console.log(Text);
   };
 
   const calc = (text, blank = 0) => {
@@ -323,50 +320,24 @@ function FormG(props) {
                 value={Text}
                 onChange={textHandler}
               ></textarea>
-              <div
+              <Button // 내용 버튼
+                colorScheme="gray"
+                variant="ghost"
                 style={{
+                  width: "40px",
+                  height: "40px",
+                  marginTop: "1px",
                   display: "flex",
-                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginLeft: "10px",
+                  border: "none",
+                  outline: "0",
                 }}
+                onClick={textbuttonHandler}
               >
-                <Button // 내용 버튼
-                  colorScheme="gray"
-                  variant="ghost"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    marginTop: "1px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginLeft: "10px",
-                    border: "none",
-                    outline: "0",
-                  }}
-                  onClick={textbuttonHandler}
-                >
-                  <LockIcon />
-                </Button>
-                <Button // 내용 버튼
-                  colorScheme="gray"
-                  variant="outline"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    marginTop: "1px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginLeft: "10px",
-                    fontSize: "13px",
-                    // border: "none",
-                    // outline: "0",
-                  }}
-                  onClick={saveHandler}
-                >
-                  저장
-                </Button>
-              </div>
+                <LockIcon />
+              </Button>
             </div>
             <Count calc={calc} Text={Text} byteCounter={byteCounter} />
           </div>

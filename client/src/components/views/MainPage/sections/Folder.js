@@ -33,7 +33,6 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
 
     if (Company) {
       CompanyList.map((list, index) => {
-        // console.log(list.title);
         if (list.title === Company) {
           va = true;
           return va;
