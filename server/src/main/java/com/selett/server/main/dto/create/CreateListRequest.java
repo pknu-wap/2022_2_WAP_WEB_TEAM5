@@ -1,4 +1,4 @@
-package com.selett.server.main.dto;
+package com.selett.server.main.dto.create;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCoverLetterRequest {
+public class CreateListRequest {
     @NotNull
-    @JsonProperty("list_id")
-    private Integer listId;
+    @JsonProperty("user_id")
+    private Integer userId;
 
     private String title;
 }

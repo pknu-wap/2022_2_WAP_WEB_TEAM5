@@ -1,6 +1,8 @@
 package com.selett.server.main.service;
 
 import com.selett.server.main.dto.*;
+import com.selett.server.main.dto.create.CreateCoverLetterResponse;
+import com.selett.server.main.dto.create.CreateListResponse;
 import com.selett.server.mapper.CoverLetterEntity;
 import com.selett.server.mapper.ListEntity;
 import com.selett.server.repository.CoverLetterRepository;
