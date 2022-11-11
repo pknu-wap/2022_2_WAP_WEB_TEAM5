@@ -64,17 +64,53 @@ function Profile() {
     setInfo2(event.currentTarget.value);
   };
   //인적사항
-  const typeHandler = (event) => {
-    setType(event.currentTarget.value);
+  const schoolHandler = (event) => {
+    setSchool(event.currentTarget.value);
   };
-  const myInfoHandler = (event) => {
-    setMyInfo(event.currentTarget.value);
+  const majorHandler = (event) => {
+    setMajor(event.currentTarget.value);
   };
-
+  const degreeHandler = (event) => {
+    setDegree(event.currentTarget.value);
+  };
+  const enrollmentHandler = (event) => {
+    setEnrollment(event.currentTarget.value);
+  };
+  const graduationHandler = (event) => {
+    setGraduation(event.currentTarget.value);
+  };
+  const majorCreditHandler = (event) => {
+    setMajorCredit(event.currentTarget.value);
+  };
+  const completingMajorCreditHandler = (event) => {
+    setCompletingMajorCredit(event.currentTarget.value);
+  };
+  const creditHandler = (event) => {
+    setCredit(event.currentTarget.value);
+  };
+  const maxCreditHandler = (event) => {
+    setMaxCredit(event.currentTarget.value);
+  };
+  const completingCreditHandler = (event) => {
+    setCompletingCredit(event.currentTarget.value);
+  };
   const memoHandler = (event) => {
     setMemo(event.currentTarget.value);
   };
 
+  //인적사항
+  let [School, setSchool] = useState("");
+  let [Major, setMajor] = useState("");
+  let [Degree, setDegree] = useState("");
+  let [Enrollment, setEnrollment] = useState("");
+  let [Graduation, setGraduation] = useState("");
+  let [MajorCredit, setMajorCredit] = useState("");
+  let [CompletingMajorCredit, setCompletingMajorCredit] = useState("");
+  let [Credit, setCredit] = useState("");
+  let [MaxCredit, setMaxCredit] = useState("");
+  let [CompletingCredit, setCompletingCredit] = useState("");
+  let [Type, setType] = useState([]);
+  let [MyInfo, setMyInfo] = useState([]);
   //취득 자격증
   let [Date, setDate] = useState("");
   let [Name, setName] = useState("");
@@ -85,14 +121,61 @@ function Profile() {
   let [Name2, setName2] = useState("");
   let [Info2, setInfo2] = useState("");
   let [Content2, setContent2] = useState([]);
-  //인적사항
-  let [Type, setType] = useState("");
-  let [MyInfo, setMyInfo] = useState("");
-  let [MyContent, setMyContent] = useState([]);
   //메모
   let [Memo, setMemo] = useState("");
 
-  const updateContent = () => {
+  // 인적사항
+  const updateMyinfo = () => {
+    setSchool([...School, School]);
+    setMajor([...Major, Major]);
+    setDegree([...Degree, Degree]);
+    setEnrollment([...Enrollment, Enrollment]);
+    setGraduation([...Graduation, Graduation]);
+    setMajorCredit([...MajorCredit, MajorCredit]);
+    setCompletingMajorCredit([...CompletingMajorCredit, CompletingMajorCredit]);
+    setCredit([...Credit, Credit]);
+    setMaxCredit([...MaxCredit, MaxCredit]);
+    setCompletingCredit([...CompletingCredit, CompletingCredit]);
+
+    setMyInfo([
+      School,
+      Major,
+      Degree,
+      Enrollment,
+      Graduation,
+      MajorCredit,
+      CompletingMajorCredit,
+      Credit,
+      MaxCredit,
+      CompletingCredit,
+    ]);
+    setType([
+      "학교명",
+      "전공",
+      "학위",
+      "입학일",
+      "졸업일",
+      "전공학점",
+      "전공이수학점",
+      "학점",
+      "최대학점",
+      "이수학점",
+    ]);
+
+    setSchool("");
+    setMajor("");
+    setDegree("");
+    setEnrollment("");
+    setGraduation("");
+    setMajorCredit("");
+    setCompletingMajorCredit("");
+    setCredit("");
+    setMaxCredit("");
+    setCompletingCredit("");
+  };
+
+  // 취득 자격증
+  const updateLicense = () => {
     setDate([...Date, Date]);
     setName([...Name, Name]);
     setInfo([...Info, Info]);
@@ -103,9 +186,10 @@ function Profile() {
     setDate("");
     setName("");
     setInfo("");
-  }; //취득 자격증
+  };
 
-  const updateContent2 = () => {
+  // 수상 경력
+  const updateAward = () => {
     setDate2([...Date2, Date2]);
     setName2([...Name2, Name2]);
     setInfo2([...Info2, Info2]);
@@ -116,299 +200,48 @@ function Profile() {
     setDate2("");
     setName2("");
     setInfo2("");
-  }; //수상 경력
-
-  const updateContent3 = () => {
-    setType([...Type, Type]);
-    setMyInfo([...MyInfo, MyInfo]);
-
-    const con3 = { type: Type, myInfo: MyInfo };
-    setMyContent([...MyContent, con3]);
-
-    setType("");
-    setMyInfo("");
-  }; //인적사항
+  };
 
   return (
     <div style={{ width: "100%", height: "100vh", backgroundColor: "#eceff1" }}>
       <NavBar />
+      {/* ---------------------------------------------------------------- */}
       <div className="left-nav">
-        <div className="profile-img">
-          <img
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-            className="radius-img"
-          />
-        </div>
-        <div
-          style={{
-            borderBottom: "1px solid black",
-            width: "100%",
-            paddingLeft: "10px",
-            paddingTop: "5%",
-            marginLeft: "5%",
-            marginBottom: "10px",
-          }}
-        >
-          <h4>인적사항</h4>
-        </div>
-        <div
-          className="my-info"
-          style={{ overflow: "scroll", maxWidth: "100%" }}
-        >
-          <Modal
-            initialFocusRef={initialRef}
-            isOpen={isOpen3}
-            kjy
-            onClose={onClose3}
-          >
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>인적사항을 입력해주세요.</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody pb={6}>
-                <FormControl>
-                  <FormLabel>인적사항 종류</FormLabel>
-                  <Input
-                    ref={initialRef}
-                    value={Type}
-                    placeholder="ex) 이름"
-                    onChange={typeHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>내 정보</FormLabel>
-                  <Input
-                    placeholder="ex) 홍길동"
-                    value={MyInfo}
-                    onChange={myInfoHandler}
-                  />
-                </FormControl>
-              </ModalBody>
-
-              <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  onClick={() => {
-                    updateContent3();
-                    onClose3();
-                  }}
-                  mr={3}
-                >
-                  Save
-                </Button>
-                <Button onClick={onClose3}>Cancel</Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-
-          <div
-            className="contents"
-            style={{
-              display: "inline-block",
-              width: "40%",
-              height: "100%",
-              marginRight: "10px",
-            }}
-          >
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                marginTop: "5px",
-                marginBottom: "0",
-                backgroundColor: "#d9d9d9",
-                borderBottom: "1px solid black",
-              }}
-            >
-              인적사항 종류
-            </h6>
-            {MyContent &&
-              MyContent.map((contents, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    padding: "5px",
-                    borderBottom: "1px solid grey",
-                  }}
-                >
-                  {contents.type}
-                </div>
-              ))}
-          </div>
-
-          <div
-            className="contents"
-            style={{
-              display: "inline-block",
-              width: "45%",
-              height: "100%",
-              marginRight: "10px",
-            }}
-          >
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                borderBottom: "1px solid black",
-                marginBottom: "0",
-                marginTop: "5px",
-                backgroundColor: "#d9d9d9",
-              }}
-            >
-              내 정보
-            </h6>
-            {MyContent &&
-              MyContent.map((contents, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    borderBottom: "1px solid grey",
-                    padding: "5px",
-                  }}
-                >
-                  {contents.myInfo}
-                </div>
-              ))}
-          </div>
-          <Button
-            variant="outline"
-            colorScheme="gray"
-            onClick={onOpen3}
-            style={{
-              width: "8%",
-              height: "30px",
-            }}
-          >
-            추가
-          </Button>
-        </div>
-      </div>
-
-      <div className="right-nav">
-        <div className="type">
+        {/* info-title */}
+        <div className="info-title">
           <h4>취득 자격증</h4>
         </div>
+        {/* info-div */}
         <div
-          className="type-content"
-          style={{ overflow: "scroll", maxWidth: "100%" }}
-        >
-          <div
-            className="contents"
-            style={{
-              display: "inline-block",
-              width: "30%",
-              height: "100%",
-              marginRight: "10px",
-            }}
-          >
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                borderBottom: "1px solid black",
-                marginTop: "5px",
-                marginBottom: "0",
-                backgroundColor: "#d9d9d9",
-              }}
-            >
-              날짜
-            </h6>
-            {/* content에 정보가 있으면, 날짜값 출력 */}
-            {Content &&
-              Content.map((contents, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    borderBottom: "1px solid grey",
-                    padding: "5px",
-                  }}
-                >
-                  {contents.date}
-                </div>
-              ))}
-          </div>
-          <div
-            className="contents"
-            style={{
-              display: "inline-block",
-              width: "30%",
-              height: "100%",
-              marginRight: "10px",
-            }}
-          >
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                borderBottom: "1px solid black",
-                marginTop: "5px",
-                marginBottom: "0",
-                backgroundColor: "#d9d9d9",
-              }}
-            >
-              자격증명
-            </h6>
-            {Content &&
-              Content.map((contents, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    borderBottom: "1px solid grey",
-                    padding: "5px",
-                  }}
-                >
-                  {contents.name}
-                </div>
-              ))}
-          </div>
-          <div
-            className="contents"
-            style={{
-              display: "inline-block",
-              width: "30%",
-              height: "100%",
-              marginRight: "10px",
-            }}
-          >
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                borderBottom: "1px solid black",
-                marginTop: "5px",
-                marginBottom: "0",
-                backgroundColor: "#d9d9d9",
-              }}
-            >
-              상세정보
-            </h6>
-            {Content &&
-              Content.map((contents, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    borderBottom: "1px solid grey",
-                    padding: "5px",
-                  }}
-                >
-                  {contents.info}
-                </div>
-              ))}
+          className="info-div"
+          style={{ overflow: "scroll", maxWidth: "100%" }}>
+          <div className="info-type-myinfo">
+            {/* info-type */}
+            <div className="info-type">
+              <h6 className="info-type-contents">날짜</h6>
+              <h6 className="info-type-contents">자격증명</h6>
+              <h6 className="info-type-contents">상세정보</h6>
+            </div>
+
+            {/* info-myinfo */}
+            <div className="info-myinfo">
+              <div className="info-contents">
+                {Content &&
+                  Content.map((contents, index) => (
+                    <div className="asdf">
+                      <div className="info-myinfo-contents" key={index}>
+                        {contents.date}
+                      </div>
+                      <div className="info-myinfo-contents" key={index}>
+                        {contents.name}
+                      </div>
+                      <div className="info-myinfo-contents" key={index}>
+                        {contents.info}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
           </div>
 
           <Button
@@ -418,15 +251,13 @@ function Profile() {
             style={{
               width: "5%",
               height: "30px",
-            }}
-          >
+            }}>
             추가
           </Button>
           <Modal
             initialFocusRef={initialRef}
             isOpen={isOpen1}
-            onClose={onClose1}
-          >
+            onClose={onClose1}>
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>취득 자격증 정보를 입력해주세요.</ModalHeader>
@@ -452,7 +283,6 @@ function Profile() {
                 <FormControl mt={4}>
                   <FormLabel>상세정보</FormLabel>
                   <Input
-                    ref={initialRef}
                     placeholder="ex) 기사"
                     value={Info}
                     onChange={infoHandler}
@@ -464,11 +294,10 @@ function Profile() {
                 <Button
                   colorScheme="blue"
                   onClick={() => {
-                    updateContent();
+                    updateLicense();
                     onClose1();
                   }}
-                  mr={3}
-                >
+                  mr={3}>
                   Save
                 </Button>
                 <Button onClick={onClose1}>Cancel</Button>
@@ -477,123 +306,46 @@ function Profile() {
           </Modal>
         </div>
 
-        <div className="type">
+        {/* info-title */}
+        <div className="info-title">
           <h4>수상 경력</h4>
         </div>
+        {/* info-div */}
         <div
-          className="type-content"
-          style={{ overflow: "scroll", maxWidth: "100%" }}
-        >
-          <div
-            className="contents"
-            style={{
-              display: "inline-block",
-              width: "30%",
-              height: "100%",
-              marginRight: "10px",
-            }}
-          >
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                borderBottom: "1px solid black",
-                marginTop: "5px",
-                marginBottom: "0",
-                backgroundColor: "#d9d9d9",
-              }}
-            >
-              날짜
-            </h6>
-            {Content2 &&
-              Content2.map((contents2, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    borderBottom: "1px solid grey",
-                    padding: "5px",
-                  }}
-                >
-                  {contents2.date2}
-                </div>
-              ))}
+          className="info-div"
+          style={{ overflow: "scroll", maxWidth: "100%" }}>
+          {/* info-type */}
+          <div className="info-type">
+            <h6 className="info-type-contents">날짜</h6>
+            <h6 className="info-type-contents">대회명</h6>
+            <h6 className="info-type-contents">상세정보</h6>
           </div>
-          <div
-            className="contents"
-            style={{
-              display: "inline-block",
-              width: "30%",
-              height: "100%",
-              marginRight: "10px",
-            }}
-          >
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                borderBottom: "1px solid black",
-                marginTop: "5px",
-                marginBottom: "0",
-                backgroundColor: "#d9d9d9",
-              }}
-            >
-              대회명
-            </h6>
-            {Content2 &&
-              Content2.map((contents2, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    borderBottom: "1px solid grey",
-                    padding: "5px",
-                  }}
-                >
-                  {contents2.name2}
-                </div>
-              ))}
-          </div>
-          <div
-            className="contents"
-            style={{
-              display: "inline-block",
-              width: "30%",
-              height: "100%",
-              marginRight: "10px",
-            }}
-          >
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                borderBottom: "1px solid black",
-                marginTop: "5px",
-                marginBottom: "0",
-                backgroundColor: "#d9d9d9",
-              }}
-            >
-              상세정보
-            </h6>
-            {Content2 &&
-              Content2.map((contents2, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    borderBottom: "1px solid grey",
-                    padding: "5px",
-                  }}
-                >
-                  {contents2.info2}
-                </div>
-              ))}
+          {/* info-myinfo */}
+          <div className="info-myinfo">
+            <div>
+              {Content2 &&
+                Content2.map((contents, index) => (
+                  <div className="info-myinfo-contents" key={index}>
+                    {contents.date2}
+                  </div>
+                ))}
+            </div>
+            <div>
+              {Content2 &&
+                Content2.map((contents, index) => (
+                  <div className="info-myinfo-contents" key={index}>
+                    {contents.name2}
+                  </div>
+                ))}
+            </div>
+            <div>
+              {Content2 &&
+                Content2.map((contents, index) => (
+                  <div className="info-myinfo-contents" key={index}>
+                    {contents.info2}
+                  </div>
+                ))}
+            </div>
           </div>
 
           <Button
@@ -603,15 +355,13 @@ function Profile() {
             style={{
               width: "5%",
               height: "30px",
-            }}
-          >
+            }}>
             추가
           </Button>
           <Modal
             initialFocusRef={initialRef}
             isOpen={isOpen2}
-            onClose={onClose2}
-          >
+            onClose={onClose2}>
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>수상 경력 정보를 입력해주세요.</ModalHeader>
@@ -637,7 +387,6 @@ function Profile() {
                 <FormControl mt={4}>
                   <FormLabel>상세정보</FormLabel>
                   <Input
-                    ref={initialRef}
                     placeholder="ex) 대상"
                     value={Info2}
                     onChange={infoHandler2}
@@ -649,11 +398,10 @@ function Profile() {
                 <Button
                   colorScheme="blue"
                   onClick={() => {
-                    updateContent2();
+                    updateAward();
                     onClose2();
                   }}
-                  mr={3}
-                >
+                  mr={3}>
                   Save
                 </Button>
                 <Button onClick={onClose2}>Cancel</Button>
@@ -662,10 +410,182 @@ function Profile() {
           </Modal>
         </div>
 
-        <div className="type">
+        <div className="info-title">
+          <h4>어학 성적</h4>
+        </div>
+        <div
+          className="info-div"
+          style={{ overflow: "scroll", maxWidth: "100%" }}></div>
+      </div>
+      {/* ---------------------------------------------------------------- */}
+      <div className="right-nav">
+        <div className="right-title">
+          <h4>인적사항</h4>
+        </div>
+        <div
+          className="my-info"
+          style={{ overflow: "scroll", maxWidth: "100%" }}>
+          <Modal
+            initialFocusRef={initialRef}
+            isOpen={isOpen3}
+            kjy
+            onClose={onClose3}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>인적사항을 입력해주세요.</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody pb={6}>
+                <FormControl>
+                  <FormLabel>학교명</FormLabel>
+                  <Input
+                    ref={initialRef}
+                    value={School}
+                    onChange={schoolHandler}
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>전공</FormLabel>
+                  <Input value={Major} onChange={majorHandler} />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>학위</FormLabel>
+                  <Input value={Degree} onChange={degreeHandler} />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>입학일</FormLabel>
+                  <Input value={Enrollment} onChange={enrollmentHandler} />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>졸업일</FormLabel>
+                  <Input value={Graduation} onChange={graduationHandler} />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>전공 학점</FormLabel>
+                  <Input value={MajorCredit} onChange={majorCreditHandler} />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>전공 이수 학점</FormLabel>
+                  <Input
+                    value={CompletingMajorCredit}
+                    onChange={completingMajorCreditHandler}
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>학점</FormLabel>
+                  <Input value={Credit} onChange={creditHandler} />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>최대 학점</FormLabel>
+                  <Input value={MaxCredit} onChange={maxCreditHandler} />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>이수 학점</FormLabel>
+                  <Input
+                    value={CompletingCredit}
+                    onChange={completingCreditHandler}
+                  />
+                </FormControl>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  onClick={() => {
+                    updateMyinfo();
+                    onClose3();
+                  }}
+                  mr={3}>
+                  Save
+                </Button>
+                <Button onClick={onClose3}>Cancel</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          <div
+            style={{
+              display: "inline-block",
+              width: "40%",
+              height: "100%",
+              marginRight: "10px",
+            }}>
+            <h6
+              style={{
+                textAlign: "center",
+                paddingTop: "5px",
+                paddingBottom: "5px",
+                marginLeft: "5px",
+                marginTop: "5px",
+                marginBottom: "0",
+                backgroundColor: "#d9d9d9",
+                borderBottom: "1px solid black",
+              }}>
+              인적사항 종류
+            </h6>
+            {Type &&
+              Type.map((contents, index) => (
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    padding: "5px",
+                    borderBottom: "1px solid grey",
+                  }}>
+                  {Type[index]}
+                </div>
+              ))}
+          </div>
+
+          <div
+            style={{
+              display: "inline-block",
+              width: "45%",
+              height: "100%",
+              marginRight: "10px",
+            }}>
+            <h6
+              style={{
+                textAlign: "center",
+                paddingTop: "5px",
+                paddingBottom: "5px",
+                marginLeft: "5px",
+                borderBottom: "1px solid black",
+                marginBottom: "0",
+                marginTop: "5px",
+                backgroundColor: "#d9d9d9",
+              }}>
+              내 정보
+            </h6>
+            {MyInfo &&
+              MyInfo.map((contents, index) => (
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: "5px",
+                    borderBottom: "1px solid grey",
+                    padding: "5px",
+                  }}>
+                  {MyInfo[index]}
+                </div>
+              ))}
+          </div>
+
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            onClick={onOpen3}
+            style={{
+              width: "8%",
+              height: "30px",
+            }}>
+            추가
+          </Button>
+        </div>
+
+        <div className="right-title">
           <h4>메모장</h4>
         </div>
-        <div className="type-content">
+        <div className="memo">
           <textarea
             type="text"
             value={Memo}
@@ -676,8 +596,7 @@ function Profile() {
               resize: "none",
               border: "none",
               outline: "0",
-            }}
-          ></textarea>
+            }}></textarea>
           <Button
             variant="outline"
             colorScheme="gray"
@@ -685,8 +604,7 @@ function Profile() {
               setMemo([Memo]);
               console.log([Memo]);
             }}
-            style={{ float: "right", height: "30px", width: "5%" }}
-          >
+            style={{ float: "right", height: "30px", width: "5%" }}>
             저장
           </Button>
         </div>
