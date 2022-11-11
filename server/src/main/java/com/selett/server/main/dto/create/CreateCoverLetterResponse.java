@@ -13,5 +13,6 @@ public class CreateCoverLetterResponse {
     @JsonProperty("prev_id")
     private Integer prevId;
 
+    @JsonProperty("cover_letter")
     private CoverLetter coverLetter;
 }
