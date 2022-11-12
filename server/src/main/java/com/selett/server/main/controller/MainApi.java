@@ -23,6 +23,9 @@ import javax.validation.Valid;
 @RequestMapping("")
 public class MainApi {
     private final MainService mainService;
+    private final String errorTitle = "중복된 제목이 있습니다.";
+    private final String errorId = "없는 ID입니다.";
+
     @GetMapping("")
     public ResponseEntity<MainResponse> getListAndCoverLetter(@Valid MainRequest mainRequest) {
         MainResponse mainResponse = mainService.getListAndCoverLetter(mainRequest.getUserId());
@@ -33,7 +36,7 @@ public class MainApi {
     @PostMapping("/lists")
     public ResponseEntity<?> newList(@Valid @RequestBody CreateListRequest createListRequest) {
         if(mainService.existListTitle(createListRequest.getUserId(), createListRequest.getTitle())) {
-            return new ResponseEntity<>("중복된 제목이 있습니다.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorTitle, HttpStatus.BAD_REQUEST);
         }
 
         CreateListResponse createListResponse = mainService.createList(createListRequest.getUserId(), createListRequest.getTitle());
@@ -44,7 +47,7 @@ public class MainApi {
     @PostMapping("/cover-letters")
     public ResponseEntity<?> newCoverLetter(@Valid @RequestBody CreateCoverLetterRequest createCoverLetterRequest) {
         if(mainService.existCoverLetterTitle(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle())) {
-            return new ResponseEntity<>("중복된 제목이 있습니다.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorTitle, HttpStatus.BAD_REQUEST);
         }
 
         CreateCoverLetterResponse createCoverLetterResponse = mainService.createCoverLetter(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle());
@@ -53,22 +56,46 @@ public class MainApi {
     }
 
     @DeleteMapping("/lists")
-    public void deleteList(@Valid DeleteListRequest deleteListRequest) {
+    public ResponseEntity<?> deleteList(@Valid DeleteListRequest deleteListRequest) {
+        if(!mainService.existList(deleteListRequest.getListId())) {
+            return new ResponseEntity<>(errorId, HttpStatus.BAD_REQUEST);
+        }
+
         mainService.deleteList(deleteListRequest.getListId());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/cover-letters")
-    public void deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
+    public ResponseEntity<?> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
+        if(!mainService.existCoverLetter(deleteCoverLetterRequest.getId())) {
+            return new ResponseEntity<>(errorId, HttpStatus.BAD_REQUEST);
+        }
+
         mainService.deleteCoverLetter(deleteCoverLetterRequest.getId());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/lists")
-    public void updateList(@Valid @RequestBody UpdateListRequest updateListRequest) {
+    public ResponseEntity<?> updateList(@Valid @RequestBody UpdateListRequest updateListRequest) {
+        if(!mainService.existList(updateListRequest.getListId())) {
+            return new ResponseEntity<>(errorId, HttpStatus.BAD_REQUEST);
+        }
+
         mainService.updateList(updateListRequest);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/cover-letters")
-    public void updateCoverLetter(@Valid @RequestBody UpdateCoverLetterRequest updateCoverLetterRequest) {
+    public ResponseEntity<?> updateCoverLetter(@Valid @RequestBody UpdateCoverLetterRequest updateCoverLetterRequest) {
+        if(!mainService.existCoverLetter(updateCoverLetterRequest.getId())) {
+            return new ResponseEntity<>(errorId, HttpStatus.BAD_REQUEST);
+        }
+
         mainService.updateCoverLetter(updateCoverLetterRequest);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

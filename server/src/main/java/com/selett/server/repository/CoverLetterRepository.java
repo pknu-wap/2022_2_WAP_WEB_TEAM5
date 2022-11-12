@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CoverLetterRepository extends JpaRepository<CoverLetterEntity, Integer> {
     List<CoverLetterEntity> findAllByListId(Integer listId);
-    boolean existsByListIdAndTitle(Integer listId, String title);
+    Boolean existsByListIdAndTitle(Integer listId, String title);
     Long countByListId(Integer listId);
     CoverLetterEntity findByListIdAndNext(Integer listId, Integer Next);
 }

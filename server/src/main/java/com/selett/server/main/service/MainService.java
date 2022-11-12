@@ -87,6 +87,14 @@ public class MainService {
         return coverLetterRepository.existsByListIdAndTitle(ListId, title);
     }
 
+    public boolean existList(Integer listId) {
+        return listRepository.existsByListId(listId);
+    }
+
+    public boolean existCoverLetter(Integer id) {
+        return coverLetterRepository.existsById(id);
+    }
+
     private CreateListResponse getListResponse(ListEntity newListEntity, CreateCoverLetterResponse coverLetter) {
         List<CoverLetter> coverLetters = new ArrayList<>();
         coverLetters.add(coverLetter.getCoverLetter());
