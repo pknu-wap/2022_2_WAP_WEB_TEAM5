@@ -161,4 +161,25 @@ public class MainService {
 
         return getCoverLetterResponse(newCoverLetterEntity.getPrev(), new CoverLetter(newCoverLetterEntity));
     }
+
+    public void deleteList(Integer listId) {
+        ListEntity deleteListEntity = listRepository.findByListId(listId);
+
+        Integer prevId = deleteListEntity.getPrev();
+        Integer nextId = deleteListEntity.getNext();
+
+        if(prevId != 0) {
+            ListEntity prevListEntity = listRepository.findByListId(prevId);
+            prevListEntity.setNext(nextId);
+            listRepository.save(prevListEntity);
+        }
+        if(nextId != 0) {
+            ListEntity nextListEntity = listRepository.findByListId(nextId);
+            nextListEntity.setPrev(prevId);
+            listRepository.save(nextListEntity);
+        }
+
+        listRepository.deleteById(listId);
+        listRepository.flush();
+    }
 }

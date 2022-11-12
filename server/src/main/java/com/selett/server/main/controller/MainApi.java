@@ -1,10 +1,12 @@
 package com.selett.server.main.controller;
 
-import com.selett.server.main.dto.*;
+import com.selett.server.main.dto.MainRequest;
+import com.selett.server.main.dto.MainResponse;
 import com.selett.server.main.dto.create.CreateCoverLetterRequest;
 import com.selett.server.main.dto.create.CreateCoverLetterResponse;
 import com.selett.server.main.dto.create.CreateListRequest;
 import com.selett.server.main.dto.create.CreateListResponse;
+import com.selett.server.main.dto.delete.DeleteListRequest;
 import com.selett.server.main.service.MainService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,5 +48,10 @@ public class MainApi {
         CreateCoverLetterResponse createCoverLetterResponse = mainService.createCoverLetter(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle());
 
         return new ResponseEntity<>(createCoverLetterResponse, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/lists")
+    public void deleteList(@Valid DeleteListRequest deleteListRequest) {
+        mainService.deleteList(deleteListRequest.getListId());
     }
 }
