@@ -6,6 +6,7 @@ import com.selett.server.main.dto.MainResponse;
 import com.selett.server.main.dto.create.CreateCoverLetterResponse;
 import com.selett.server.main.dto.create.CreateListResponse;
 import com.selett.server.main.dto.update.UpdateCoverLetterRequest;
+import com.selett.server.main.dto.update.UpdateListRequest;
 import com.selett.server.mapper.CoverLetterEntity;
 import com.selett.server.mapper.ListEntity;
 import com.selett.server.repository.CoverLetterRepository;
@@ -204,6 +205,17 @@ public class MainService {
         coverLetterRepository.flush();
     }
 
+    public void updateList(UpdateListRequest updateListRequest) {
+        Integer listId = updateListRequest.getListId();
+
+        ListEntity updateListEntity = listRepository.findByListId(listId);
+
+        if(updateListEntity.getTitle() != null) {
+            updateListEntity.setTitle(updateListRequest.getTitle());
+        }
+
+        listRepository.saveAndFlush(updateListEntity);
+    }
     public void updateCoverLetter(UpdateCoverLetterRequest updateCoverLetterRequest) {
         Integer id = updateCoverLetterRequest.getId();
 
@@ -222,9 +234,10 @@ public class MainService {
             updateCoverLetterEntity.get().setDescription(updateCoverLetterRequest.getDescription());
         }
         if(updateCoverLetterRequest.getDescriptionLock() != null) {
-            updateCoverLetterEntity.get().setQuestionLock(updateCoverLetterRequest.getDescriptionLock());
+            updateCoverLetterEntity.get().setDescriptionLock(updateCoverLetterRequest.getDescriptionLock());
         }
 
         coverLetterRepository.saveAndFlush(updateCoverLetterEntity.get());
     }
+
 }

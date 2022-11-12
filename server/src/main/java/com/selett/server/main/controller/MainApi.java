@@ -8,6 +8,7 @@ import com.selett.server.main.dto.create.CreateListResponse;
 import com.selett.server.main.dto.delete.DeleteCoverLetterRequest;
 import com.selett.server.main.dto.delete.DeleteListRequest;
 import com.selett.server.main.dto.update.UpdateCoverLetterRequest;
+import com.selett.server.main.dto.update.UpdateListRequest;
 import com.selett.server.main.service.MainService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,11 @@ public class MainApi {
     @DeleteMapping("/cover-letters")
     public void deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
         mainService.deleteCoverLetter(deleteCoverLetterRequest.getId());
+    }
+
+    @PutMapping("/lists")
+    public void updateList(@Valid @RequestBody UpdateListRequest updateListRequest) {
+        mainService.updateList(updateListRequest);
     }
 
     @PutMapping("/cover-letters")
