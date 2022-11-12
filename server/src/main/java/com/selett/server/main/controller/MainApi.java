@@ -1,11 +1,11 @@
 package com.selett.server.main.controller;
 
-import com.selett.server.main.dto.MainRequest;
-import com.selett.server.main.dto.MainResponse;
+import com.selett.server.main.dto.*;
 import com.selett.server.main.dto.create.CreateCoverLetterRequest;
 import com.selett.server.main.dto.create.CreateCoverLetterResponse;
 import com.selett.server.main.dto.create.CreateListRequest;
 import com.selett.server.main.dto.create.CreateListResponse;
+import com.selett.server.main.dto.delete.DeleteCoverLetterRequest;
 import com.selett.server.main.dto.delete.DeleteListRequest;
 import com.selett.server.main.service.MainService;
 import lombok.AllArgsConstructor;
@@ -53,5 +53,10 @@ public class MainApi {
     @DeleteMapping("/lists")
     public void deleteList(@Valid DeleteListRequest deleteListRequest) {
         mainService.deleteList(deleteListRequest.getListId());
+    }
+
+    @DeleteMapping("/cover-letters")
+    public void deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
+        mainService.deleteCoverLetter(deleteCoverLetterRequest.getId());
     }
 }

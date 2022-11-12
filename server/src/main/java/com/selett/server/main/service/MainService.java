@@ -1,6 +1,8 @@
 package com.selett.server.main.service;
 
-import com.selett.server.main.dto.*;
+import com.selett.server.main.dto.CoverLetter;
+import com.selett.server.main.dto.FolderList;
+import com.selett.server.main.dto.MainResponse;
 import com.selett.server.main.dto.create.CreateCoverLetterResponse;
 import com.selett.server.main.dto.create.CreateListResponse;
 import com.selett.server.mapper.CoverLetterEntity;
@@ -10,10 +12,7 @@ import com.selett.server.repository.ListRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -181,5 +180,26 @@ public class MainService {
 
         listRepository.deleteById(listId);
         listRepository.flush();
+    }
+
+    public void deleteCoverLetter(Integer id) {
+        Optional<CoverLetterEntity> deleteCoverLetterEntity = coverLetterRepository.findById(id);
+
+        Integer prevId = deleteCoverLetterEntity.get().getPrev();
+        Integer nextId = deleteCoverLetterEntity.get().getNext();
+
+        if(prevId != 0) {
+            Optional<CoverLetterEntity> prevCoverLetterEntity = coverLetterRepository.findById(prevId);
+            prevCoverLetterEntity.get().setNext(nextId);
+            coverLetterRepository.save(prevCoverLetterEntity.get());
+        }
+        if(nextId != 0) {
+            Optional<CoverLetterEntity> nextCoverLetterEntity = coverLetterRepository.findById(nextId);
+            nextCoverLetterEntity.get().setPrev(prevId);
+            coverLetterRepository.save(nextCoverLetterEntity.get());
+        }
+
+        coverLetterRepository.deleteById(id);
+        coverLetterRepository.flush();
     }
 }
