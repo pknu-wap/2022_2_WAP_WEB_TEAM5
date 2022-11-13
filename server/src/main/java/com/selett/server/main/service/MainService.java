@@ -5,10 +5,7 @@ import com.selett.server.main.dto.FolderList;
 import com.selett.server.main.dto.MainResponse;
 import com.selett.server.main.dto.create.CreateCoverLetterResponse;
 import com.selett.server.main.dto.create.CreateListResponse;
-import com.selett.server.main.dto.update.UpdateCoverLetterRequest;
-import com.selett.server.main.dto.update.UpdateListRequest;
-import com.selett.server.main.dto.update.UpdatePositionCoverLetterRequest;
-import com.selett.server.main.dto.update.UpdatePositionListRequest;
+import com.selett.server.main.dto.update.*;
 import com.selett.server.mapper.CoverLetterEntity;
 import com.selett.server.mapper.ListEntity;
 import com.selett.server.repository.CoverLetterRepository;
@@ -81,6 +78,16 @@ public class MainService {
 
     public boolean existCoverLetterTitle(Integer ListId, String title) {
         return coverLetterRepository.existsByListIdAndTitle(ListId, title);
+    }
+
+    public boolean isOnlyOne(Integer id) {
+        Optional<CoverLetterEntity> coverLetter = coverLetterRepository.findById(id);
+        Integer listId = coverLetter.get().getListId();
+
+        if(coverLetterRepository.findAllByListId(listId).size() == 1) {
+            return true;
+        }
+        return false;
     }
 
     public MainResponse getListAndCoverLetter(Integer userId) {
@@ -304,5 +311,24 @@ public class MainService {
         updateCoverLetterEntity.get().setNext(toMoveNextId);
 
         coverLetterRepository.flush();
+    }
+
+    public void updatePositionCoverLetterDiffList(UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest) {
+        Optional<CoverLetterEntity> moveCoverLetter = coverLetterRepository.findById(updatePositionCoverLetterDiffListRequest.getId());
+
+        deleteCoverLetter(updatePositionCoverLetterDiffListRequest.getId());
+        CreateCoverLetterResponse createCoverLetterResponse = createCoverLetter(updatePositionCoverLetterDiffListRequest.getToMoveListId(), "");
+        CoverLetter newCoverLetter = createCoverLetterResponse.getCoverLetter();
+
+        UpdateCoverLetterRequest updateCoverLetterRequest = new UpdateCoverLetterRequest(
+                newCoverLetter.getId(),
+                moveCoverLetter.get().getTitle(),
+                moveCoverLetter.get().getQuestion(),
+                moveCoverLetter.get().getQuestionLock(),
+                moveCoverLetter.get().getDescription(),
+                moveCoverLetter.get().getDescriptionLock()
+        );
+
+        updateCoverLetter(updateCoverLetterRequest);
     }
 }

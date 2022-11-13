@@ -7,10 +7,7 @@ import com.selett.server.main.dto.create.CreateListRequest;
 import com.selett.server.main.dto.create.CreateListResponse;
 import com.selett.server.main.dto.delete.DeleteCoverLetterRequest;
 import com.selett.server.main.dto.delete.DeleteListRequest;
-import com.selett.server.main.dto.update.UpdateCoverLetterRequest;
-import com.selett.server.main.dto.update.UpdateListRequest;
-import com.selett.server.main.dto.update.UpdatePositionCoverLetterRequest;
-import com.selett.server.main.dto.update.UpdatePositionListRequest;
+import com.selett.server.main.dto.update.*;
 import com.selett.server.main.service.MainService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +23,7 @@ import javax.validation.Valid;
 public class MainApi {
     private final MainService mainService;
     private final String errorTitle = "중복된 제목이 있습니다.";
+    private final String errorRemainOne = "자기소개서가 하나는 있어야합니다.";
 
     @GetMapping("")
     public ResponseEntity<?> getListAndCoverLetter(@Valid MainRequest mainRequest) {
@@ -65,6 +63,10 @@ public class MainApi {
 
     @DeleteMapping("/cover-letters")
     public ResponseEntity<?> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
+        if(mainService.isOnlyOne(deleteCoverLetterRequest.getId())) {
+            return new ResponseEntity<>(errorRemainOne, HttpStatus.BAD_REQUEST);
+        }
+
         mainService.deleteCoverLetter(deleteCoverLetterRequest.getId());
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -94,6 +96,16 @@ public class MainApi {
     @PutMapping("/cover-letters/position")
     public ResponseEntity<?> updatePositionCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
         mainService.updatePositionCoverLetter(updatePositionCoverLetterRequest);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/cover-letters/position/lists")
+    public ResponseEntity<?> updatePositionCoverLetterDiffList(@Valid @RequestBody UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest) {
+        if(mainService.isOnlyOne(updatePositionCoverLetterDiffListRequest.getId())) {
+            return new ResponseEntity<>(errorRemainOne, HttpStatus.BAD_REQUEST);
+        }
+        mainService.updatePositionCoverLetterDiffList(updatePositionCoverLetterDiffListRequest);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
