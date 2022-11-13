@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Modal,
@@ -16,10 +16,21 @@ import {
 } from "@chakra-ui/react";
 import QuestionList from "./QuestionList";
 
-function Question({ CompanyList, Cover, setCover, refreshFunction }) {
+function Question({
+  CompanyList,
+  Cover,
+  setCover,
+  refreshFunction,
+  setFileId,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
+  const [fileId, setfileId] = useState(0);
+
+  useEffect(() => {
+    setFileId(fileId);
+  }, [fileId]);
 
   const ContentHandler = (event) => {
     setContent(event.currentTarget.value);
@@ -49,19 +60,12 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
     setContent("");
   };
 
-  // const deleteClick = (id) => {
-  //   if (window.confirm("정말 삭제하시겠습니까?")) {
-  //     setCover(Cover.filter((content) => content.id !== id));
-  //   }
-  // };
-
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-      }}
-    >
+      }}>
       <div
         style={{
           display: "flex",
@@ -70,8 +74,7 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
           height: "80px",
           borderBottom: "1px solid black",
           justifyContent: "space-between",
-        }}
-      >
+        }}>
         <div
           style={{
             paddingLeft: "25px",
@@ -82,8 +85,7 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
             fontWeight: "bold",
             lineHeight: "85px",
             overflow: "hidden",
-          }}
-        >
+          }}>
           {CompanyList[0].title}
         </div>
         <AddIcon
@@ -96,8 +98,7 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
             height: "80px",
             paddingTop: "2%",
             marginRight: "10%",
-          }}
-        ></AddIcon>
+          }}></AddIcon>
       </div>
 
       {Cover &&
@@ -107,6 +108,7 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
             content={content}
             setCover={setCover}
             Cover={Cover}
+            setfileId={setfileId}
           />
         ))}
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
@@ -136,8 +138,7 @@ function Question({ CompanyList, Cover, setCover, refreshFunction }) {
               onClick={() => {
                 // onClose();
                 contentclickHandler();
-              }}
-            >
+              }}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>

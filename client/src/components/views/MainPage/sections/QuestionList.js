@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
-import Question from "./Question";
 
-function QuestionList({ content, setCover, Cover }) {
+function QuestionList({ content, setCover, Cover, fileOnClick, setfileId }) {
   const [Edit, setEdit] = useState(false);
   const [Text, setText] = useState(content.title);
 
@@ -30,7 +29,10 @@ function QuestionList({ content, setCover, Cover }) {
     setCover(editCover);
     setEdit(false);
   };
-  //   console.log(Cover);
+
+  const questionClick = (id) => {
+    setfileId(id);
+  };
 
   return (
     <div style={{ width: "100%" }}>
@@ -51,8 +53,7 @@ function QuestionList({ content, setCover, Cover }) {
               // float: "left",
               border: "none",
               outline: "0",
-            }}
-          ></input>
+            }}></input>
           <CheckIcon
             style={{
               color: "white",
@@ -82,7 +83,7 @@ function QuestionList({ content, setCover, Cover }) {
               border: "none",
               outline: "0",
             }}
-          >
+            onClick={() => questionClick(content.id)}>
             {content.title}
           </Button>
           <EditIcon

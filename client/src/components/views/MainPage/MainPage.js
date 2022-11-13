@@ -18,6 +18,8 @@ function MainPage() {
   const [Grammer, setGrammer] = useState(false);
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
 
+  const [FileId, setFileId] = useState("1");
+
   const [CompanyList, setCompanyList] = useState([
     {
       cover_letter: [],
@@ -30,8 +32,6 @@ function MainPage() {
   const [Loading, setLoading] = useState(false);
   // Loading 여부 판단
 
-  // const [circleId, setCircleId] = useState(0);
-
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
     setLoading(true);
@@ -42,13 +42,14 @@ function MainPage() {
       .then((response) => {
         // console.log(response.data.list);
         console.log(response.data);
-        // data.list : 폴더, cover_letter : 파일
-        // setCover(response.data.list[0].cover_letter);
         setCompanyList(response.data.list);
-        // console.log(CompanyList);
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    setFileId(FileId);
+  });
 
   let nextId = CompanyList.length; // id를 현재 배열에 저장되어있는 길이를 구해줌
 
@@ -124,9 +125,11 @@ function MainPage() {
             Cover={Cover} // 폴더 내용을 받아올 수 있도록 함
             setCover={setCover}
             refreshFunction={onfileUpdate}
+            setFileId={setFileId}
           />
         </GridItem>
         {Grammer ? (
+          // 문법이 켜져있다면,
           <GridItem
             colSpan={16}
             // height="10px"
@@ -135,7 +138,7 @@ function MainPage() {
               height: "100%",
             }}>
             <div style={{ display: "flex", height: "100%" }}>
-              <Form />
+              <Form FileId={FileId} Cover={Cover} />
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
               <div // 네모
                 style={{
@@ -177,7 +180,7 @@ function MainPage() {
               height: "100%",
             }}>
             <div style={{ display: "flex", height: "100%" }}>
-              <Form grammer="no" />
+              <Form grammer="no" FileId={FileId} Cover={Cover} />
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
             </div>
           </GridItem>

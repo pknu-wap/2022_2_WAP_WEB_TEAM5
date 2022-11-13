@@ -4,22 +4,29 @@ import Count from "./Count";
 import { LockIcon } from "@chakra-ui/icons";
 import axios from "axios";
 
-function FormG(props) {
+function Form(props) {
   // 맞춤법 검사가 꺼져있음
   const [Title, setTitle] = useState("");
   let [Text, setText] = useState("");
   const [Grammer, setGrammer] = useState(false);
+  const [fileId, setfileId] = useState(0);
+  const [cov, setCov] = useState("");
 
   useEffect(() => {
-    axios
-      .get(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-      )
-      .then((response) => {
-        setTitle(response.data.list[0].cover_letter[0].question);
-        setText(response.data.list[0].cover_letter[0].description);
-      });
+    setTitle("");
+    setText("");
   }, []);
+
+  useEffect(() => {
+    const cov = props.Cover.filter((cover) => cover.id === props.FileId);
+
+    console.log(cov[0]);
+    if (cov[0].question === null || cov[0].question === undefined) {
+      setTitle("");
+    } else {
+      setTitle(cov[0].question);
+    }
+  }, [props.FileId]);
 
   const titleHandler = (event) => {
     setTitle(event.currentTarget.value);
@@ -110,8 +117,7 @@ function FormG(props) {
             // justifyContent: "center",
             alignItems: "center",
             color: "black",
-          }}
-        >
+          }}>
           <div // 제목
             style={{
               width: "93%",
@@ -121,22 +127,24 @@ function FormG(props) {
               borderRadius: "5px",
               display: "flex",
               // paddingTop: "10px", // 글자가 움직이네
-            }}
-          >
-            <input // 제목 input
-              type="text"
-              style={{
-                marginLeft: "10px",
-                width: "95%",
-                height: "99%",
-                border: "none",
-                outline: "0",
-              }}
-              value={Title}
-              onChange={titleHandler}
-              placeholder="제목을 입력해주세요"
-              maxLength="200"
-            ></input>
+            }}>
+            {cov[0].question ? (
+              <input // 제목 input
+                type="text"
+                style={{
+                  marginLeft: "10px",
+                  width: "95%",
+                  height: "99%",
+                  border: "none",
+                  outline: "0",
+                }}
+                value={Title}
+                onChange={titleHandler}
+                placeholder="제목을 입력해주세요"
+                maxLength="200"></input>
+            ) : (
+              ""
+            )}
             <Button // 제목 버튼
               colorScheme="gray"
               variant="ghost"
@@ -151,8 +159,7 @@ function FormG(props) {
                 border: "none",
                 outline: "0",
               }}
-              onClick={titlebuttonHandler}
-            >
+              onClick={titlebuttonHandler}>
               <LockIcon />
             </Button>
           </div>
@@ -165,8 +172,7 @@ function FormG(props) {
               marginTop: "20px",
               display: "flex",
               flexDirection: "column",
-            }}
-          >
+            }}>
             <div style={{ display: "flex", width: "100%", height: "100%" }}>
               <textarea // 내용 입력 칸
                 type="text"
@@ -181,14 +187,12 @@ function FormG(props) {
                 }}
                 placeholder="내용을 입력해주세요"
                 value={Text}
-                onChange={textHandler}
-              ></textarea>
+                onChange={textHandler}></textarea>
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                }}
-              >
+                }}>
                 <Button // 내용 버튼
                   colorScheme="gray"
                   variant="ghost"
@@ -203,8 +207,7 @@ function FormG(props) {
                     border: "none",
                     outline: "0",
                   }}
-                  onClick={textbuttonHandler}
-                >
+                  onClick={textbuttonHandler}>
                   <LockIcon />
                 </Button>
                 <Button // 내용 버튼
@@ -222,8 +225,7 @@ function FormG(props) {
                     // border: "none",
                     // outline: "0",
                   }}
-                  onClick={saveHandler}
-                >
+                  onClick={saveHandler}>
                   저장
                 </Button>
               </div>
@@ -246,8 +248,7 @@ function FormG(props) {
             flexDirection: "column",
             // justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <div // 제목
             style={{
               width: "93%",
@@ -257,8 +258,7 @@ function FormG(props) {
               borderRadius: "5px",
               display: "flex",
               // paddingTop: "10px", // 글자가 움직이네
-            }}
-          >
+            }}>
             <input // 제목 input
               type="text"
               style={{
@@ -270,8 +270,7 @@ function FormG(props) {
               }}
               value={Title}
               onChange={titleHandler}
-              placeholder="제목을 입력해주세요"
-            ></input>
+              placeholder="제목을 입력해주세요"></input>
 
             <Button // 제목 버튼
               colorScheme="gray"
@@ -287,8 +286,7 @@ function FormG(props) {
                 border: "none",
                 outline: "0",
               }}
-              onClick={titlebuttonHandler}
-            >
+              onClick={titlebuttonHandler}>
               <LockIcon />
             </Button>
           </div>
@@ -302,8 +300,7 @@ function FormG(props) {
               marginTop: "20px",
               display: "flex",
               flexDirection: "column",
-            }}
-          >
+            }}>
             <div style={{ display: "flex", width: "100%", height: "100%" }}>
               <textarea // 내용 입력 칸
                 type="text"
@@ -318,8 +315,7 @@ function FormG(props) {
                 }}
                 placeholder="내용을 입력해주세요"
                 value={Text}
-                onChange={textHandler}
-              ></textarea>
+                onChange={textHandler}></textarea>
               <Button // 내용 버튼
                 colorScheme="gray"
                 variant="ghost"
@@ -334,8 +330,7 @@ function FormG(props) {
                   border: "none",
                   outline: "0",
                 }}
-                onClick={textbuttonHandler}
-              >
+                onClick={textbuttonHandler}>
                 <LockIcon />
               </Button>
             </div>
@@ -347,4 +342,4 @@ function FormG(props) {
   );
 }
 
-export default FormG;
+export default Form;
