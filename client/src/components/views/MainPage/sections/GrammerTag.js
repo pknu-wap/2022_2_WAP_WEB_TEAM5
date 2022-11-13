@@ -11,7 +11,7 @@ function GrammerTag({ Grammer, setGrammer }) {
         backgroundColor: "#303136",
         color: "white",
         height: "min-content",
-        width: "2%",
+        width: "1.5%",
         marginTop: "50px",
         overflow: "hidden",
         fontSize: "13px",
@@ -19,8 +19,7 @@ function GrammerTag({ Grammer, setGrammer }) {
         padding: "0.1%",
         textAlign: "center",
       }}
-      onClick={grammerHandler}
-    >
+      onClick={grammerHandler}>
       맞춤법검사
     </div>
   );

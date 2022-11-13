@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Button } from "@chakra-ui/react";
 import Count from "./Count";
-import { LockIcon } from "@chakra-ui/icons";
+import { LockIcon, UnlockIcon } from "@chakra-ui/icons";
 
 function Form(props) {
   // 맞춤법 검사가 꺼져있음
@@ -59,12 +59,14 @@ function Form(props) {
   const titlebuttonHandler = () => {
     setTitle(Title);
     setquestionLock(!questionLock);
+    console.log(questionLock);
     // 질문 자물쇠
   };
 
   const textbuttonHandler = () => {
     setText(Text);
     setdescriptionLock(!descriptionLock);
+    console.log(descriptionLock);
     // 내용 자물쇠
   };
 
@@ -137,23 +139,19 @@ function Form(props) {
               display: "flex",
               // paddingTop: "10px", // 글자가 움직이네
             }}>
-            {cov[0].question ? (
-              <input // 제목 input
-                type="text"
-                style={{
-                  marginLeft: "10px",
-                  width: "95%",
-                  height: "99%",
-                  border: "none",
-                  outline: "0",
-                }}
-                value={Title}
-                onChange={titleHandler}
-                placeholder="제목을 입력해주세요"
-                maxLength="200"></input>
-            ) : (
-              ""
-            )}
+            <input // 제목 input
+              type="text"
+              style={{
+                marginLeft: "10px",
+                width: "95%",
+                height: "99%",
+                border: "none",
+                outline: "0",
+              }}
+              value={Title}
+              onChange={titleHandler}
+              placeholder="제목을 입력해주세요"
+              readOnly={questionLock ? true : false}></input>
             <Button // 제목 버튼
               colorScheme="gray"
               variant="ghost"
@@ -169,7 +167,8 @@ function Form(props) {
                 outline: "0",
               }}
               onClick={titlebuttonHandler}>
-              <LockIcon />
+              {questionLock ? <LockIcon /> : <UnlockIcon />}
+
               {/* 제목 버튼 안에 자물쇠 아이콘 */}
             </Button>
           </div>
@@ -213,7 +212,7 @@ function Form(props) {
                   outline: "0",
                 }}
                 onClick={textbuttonHandler}>
-                <LockIcon />
+                {descriptionLock ? <LockIcon /> : <UnlockIcon />}
                 {/* 내용 버튼안의 자물쇠 아이콘 */}
               </Button>
             </div>
@@ -255,7 +254,8 @@ function Form(props) {
               }}
               value={Title}
               onChange={titleHandler}
-              placeholder="제목을 입력해주세요"></input>
+              placeholder="제목을 입력해주세요"
+              readOnly={questionLock ? true : false}></input>
 
             <Button // 제목 버튼
               colorScheme="gray"
@@ -272,7 +272,7 @@ function Form(props) {
                 outline: "0",
               }}
               onClick={titlebuttonHandler}>
-              <LockIcon />
+              {questionLock ? <LockIcon /> : <UnlockIcon />}
               {/* 자물쇠 */}
             </Button>
           </div>
@@ -302,7 +302,10 @@ function Form(props) {
                 }}
                 placeholder="내용을 입력해주세요"
                 value={Text}
-                onChange={textHandler}></textarea>
+                onChange={textHandler}
+                readOnly={descriptionLock ? true : false}>
+                {/* Lock이 걸려있으면 수정 불가 */}
+              </textarea>
               <Button // 내용 버튼
                 colorScheme="gray"
                 variant="ghost"
@@ -318,7 +321,7 @@ function Form(props) {
                   outline: "0",
                 }}
                 onClick={textbuttonHandler}>
-                <LockIcon />
+                {descriptionLock ? <LockIcon /> : <UnlockIcon />}
               </Button>
             </div>
             <Count calc={calc} Text={Text} byteCounter={byteCounter} />
