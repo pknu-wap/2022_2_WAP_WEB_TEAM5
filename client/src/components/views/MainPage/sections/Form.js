@@ -13,18 +13,14 @@ function Form(props) {
   const [cov, setCov] = useState("");
 
   useEffect(() => {
-    setTitle("");
-    setText("");
-  }, []);
+    if (props.Cover[0]) {
+      const cov = props.Cover.filter((cover) => cover.id === props.FileId);
 
-  useEffect(() => {
-    const cov = props.Cover.filter((cover) => cover.id === props.FileId);
-
-    console.log(cov[0]);
-    if (cov[0].question === null || cov[0].question === undefined) {
-      setTitle("");
-    } else {
-      setTitle(cov[0].question);
+      if (cov[0].question === null || cov[0].question === undefined) {
+        setTitle("");
+      } else {
+        setTitle(cov[0].question);
+      }
     }
   }, [props.FileId]);
 
