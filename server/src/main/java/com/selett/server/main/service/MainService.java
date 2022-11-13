@@ -275,14 +275,17 @@ public class MainService {
         Integer currentPrevListId = updateListEntity.getPrev();
         Integer currentNextListId = updateListEntity.getNext();
 
-        setListNext(currentPrevListId, currentNextListId);
         setListPrev(currentNextListId, currentPrevListId);
+        setListNext(currentPrevListId, currentNextListId);
 
         Integer toMovePrevListId = updatePositionListRequest.getToMovePrevListId();
         Integer toMoveNextListId = updatePositionListRequest.getToMoveNextListId();
 
-        setListNext(toMovePrevListId, listId);
         setListPrev(toMoveNextListId, listId);
+        setListNext(toMovePrevListId, listId);
+
+        updateListEntity.setPrev(toMovePrevListId);
+        updateListEntity.setNext(toMoveNextListId);
 
         listRepository.flush();
     }
@@ -295,14 +298,17 @@ public class MainService {
         Integer currentPrevId = updateCoverLetterEntity.get().getPrev();
         Integer currentNextId = updateCoverLetterEntity.get().getNext();
 
-        setCoverLetterNext(currentPrevId, currentNextId);
         setCoverLetterPrev(currentNextId, currentPrevId);
+        setCoverLetterNext(currentPrevId, currentNextId);
 
         Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
         Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
 
-        setCoverLetterNext(toMovePrevId, id);
         setCoverLetterPrev(toMoveNextId, id);
+        setCoverLetterNext(toMovePrevId, id);
+
+        updateCoverLetterEntity.get().setPrev(toMovePrevId);
+        updateCoverLetterEntity.get().setNext(toMoveNextId);
 
         coverLetterRepository.flush();
     }
