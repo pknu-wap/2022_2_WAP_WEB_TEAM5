@@ -29,6 +29,8 @@ function MainPage() {
   ]);
   // 폴더의 list가 저장됨
 
+  const [circleId, setcircleId] = useState(0);
+
   const [Loading, setLoading] = useState(false);
   // Loading 여부 판단
 
@@ -66,6 +68,7 @@ function MainPage() {
   };
 
   const circleClick = (id) => {
+    setcircleId(id);
     const cov = CompanyList.filter((company) => company.list_id === id);
     // CompanyList에 담겨져있는 폴더들을 살피면서 클릭한 id와 같은 것을 추출해냄
     setCover(cov[0].cover_letter);
@@ -126,6 +129,7 @@ function MainPage() {
             setCover={setCover}
             refreshFunction={onfileUpdate}
             setFileId={setFileId}
+            circleId={circleId}
           />
         </GridItem>
         {Grammer ? (

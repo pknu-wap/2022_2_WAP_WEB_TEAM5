@@ -22,11 +22,13 @@ function Question({
   setCover,
   refreshFunction,
   setFileId,
+  circleId,
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
   const [fileId, setfileId] = useState(0);
+  const [Cov, setCov] = useState(0);
 
   useEffect(() => {
     setFileId(fileId);
@@ -60,6 +62,14 @@ function Question({
     setContent("");
   };
 
+  useEffect(() => {
+    const cov = CompanyList.filter((company) => company.list_id === circleId);
+
+    if (cov[0]) {
+      setCov(cov[0].title);
+    }
+  }, [circleId]);
+
   return (
     <div
       style={{
@@ -86,7 +96,7 @@ function Question({
             lineHeight: "85px",
             overflow: "hidden",
           }}>
-          {CompanyList[0].title}
+          {Cov}
         </div>
         <AddIcon
           onClick={onOpen}
