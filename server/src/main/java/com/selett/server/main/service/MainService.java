@@ -7,6 +7,7 @@ import com.selett.server.main.dto.create.CreateCoverLetterResponse;
 import com.selett.server.main.dto.create.CreateListResponse;
 import com.selett.server.main.dto.update.UpdateCoverLetterRequest;
 import com.selett.server.main.dto.update.UpdateListRequest;
+import com.selett.server.main.dto.update.UpdatePositionCoverLetterRequest;
 import com.selett.server.mapper.CoverLetterEntity;
 import com.selett.server.mapper.ListEntity;
 import com.selett.server.repository.CoverLetterRepository;
@@ -21,6 +22,25 @@ import java.util.*;
 public class MainService {
     private final ListRepository listRepository;
     private final CoverLetterRepository coverLetterRepository;
+
+    private CreateListResponse getListResponse(ListEntity newListEntity, CreateCoverLetterResponse coverLetter) {
+        List<CoverLetter> coverLetters = new ArrayList<>();
+        coverLetters.add(coverLetter.getCoverLetter());
+        FolderList newList = new FolderList(newListEntity, coverLetters);
+
+        CreateListResponse createListResponse = new CreateListResponse();
+        createListResponse.setList(newList);
+
+        return createListResponse;
+    }
+
+    private CreateCoverLetterResponse getCoverLetterResponse(Integer prevId, CoverLetter coverLetter) {
+        CreateCoverLetterResponse createCoverLetterResponse = new CreateCoverLetterResponse();
+        createCoverLetterResponse.setPrevId(prevId);
+        createCoverLetterResponse.setCoverLetter(coverLetter);
+
+        return createCoverLetterResponse;
+    }
 
     public MainResponse getListAndCoverLetter(Integer userId) {
         MainResponse response = new MainResponse(new ArrayList<>());
@@ -95,16 +115,6 @@ public class MainService {
         return coverLetterRepository.existsById(id);
     }
 
-    private CreateListResponse getListResponse(ListEntity newListEntity, CreateCoverLetterResponse coverLetter) {
-        List<CoverLetter> coverLetters = new ArrayList<>();
-        coverLetters.add(coverLetter.getCoverLetter());
-        FolderList newList = new FolderList(newListEntity, coverLetters);
-
-        CreateListResponse createListResponse = new CreateListResponse();
-        createListResponse.setList(newList);
-
-        return createListResponse;
-    }
     public CreateListResponse createList(Integer userId, String title) {
         ListEntity newListEntity = new ListEntity();
         newListEntity.setTitle(title);
@@ -131,14 +141,6 @@ public class MainService {
         CreateCoverLetterResponse createCoverLetterResponse = createCoverLetter(newListEntity.getListId(), "새 자기소개서");
 
         return getListResponse(newListEntity, createCoverLetterResponse);
-    }
-
-    private CreateCoverLetterResponse getCoverLetterResponse(Integer prevId, CoverLetter coverLetter) {
-        CreateCoverLetterResponse createCoverLetterResponse = new CreateCoverLetterResponse();
-        createCoverLetterResponse.setPrevId(prevId);
-        createCoverLetterResponse.setCoverLetter(coverLetter);
-
-        return createCoverLetterResponse;
     }
 
     public CreateCoverLetterResponse createCoverLetter(Integer listId, String title) {
@@ -248,4 +250,39 @@ public class MainService {
         coverLetterRepository.saveAndFlush(updateCoverLetterEntity.get());
     }
 
+    public void updatePositionCoverLetter(UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
+        Integer id = updatePositionCoverLetterRequest.getId();
+
+        Optional<CoverLetterEntity> updateCoverLetterEntity = coverLetterRepository.findById(id);
+
+        Integer currentPrevId = updateCoverLetterEntity.get().getPrev();
+        Integer currentNextId = updateCoverLetterEntity.get().getNext();
+
+        if(currentPrevId != 0) {
+            Optional<CoverLetterEntity> currentPrevCoverLetterEntity = coverLetterRepository.findById(currentPrevId);
+            currentPrevCoverLetterEntity.get().setNext(currentNextId);
+            coverLetterRepository.save(currentPrevCoverLetterEntity.get());
+        }
+        if(currentNextId != 0) {
+            Optional<CoverLetterEntity> currentNextCoverLetterEntity = coverLetterRepository.findById(currentNextId);
+            currentNextCoverLetterEntity.get().setPrev(currentPrevId);
+            coverLetterRepository.save(currentNextCoverLetterEntity.get());
+        }
+
+        Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
+        Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
+
+        if(toMovePrevId != 0) {
+            Optional<CoverLetterEntity> toMovePrevCoverLetterEntity = coverLetterRepository.findById(toMovePrevId);
+            toMovePrevCoverLetterEntity.get().setNext(id);
+            coverLetterRepository.save(toMovePrevCoverLetterEntity.get());
+        }
+        if(toMoveNextId != 0) {
+            Optional<CoverLetterEntity> toMoverNextCoverLetterEntity = coverLetterRepository.findById(toMoveNextId);
+            toMoverNextCoverLetterEntity.get().setPrev(id);
+            coverLetterRepository.save(toMoverNextCoverLetterEntity.get());
+        }
+
+        coverLetterRepository.flush();
+    }
 }
