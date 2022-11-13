@@ -237,7 +237,7 @@ public class MainService {
 
         ListEntity updateListEntity = listRepository.findByListId(listId);
 
-        if(updateListEntity.getTitle() != null) {
+        if(updateListRequest.getTitle() != null) {
             updateListEntity.setTitle(updateListRequest.getTitle());
         }
 
