@@ -8,8 +8,7 @@ export default function Count(props) {
         display: "flex",
         justifyContent: "right",
         marginBottom: "10px",
-      }}
-    >
+      }}>
       <div // 공백 포함과 바이트 묶는 div
         style={{
           display: "flex",
@@ -19,8 +18,7 @@ export default function Count(props) {
           width: "100px",
           height: "100px",
           marginRight: "150px",
-        }}
-      >
+        }}>
         <div // 공백 포함
           style={{
             color: "black",
@@ -31,8 +29,7 @@ export default function Count(props) {
             height: "40px",
             fontWeight: "bold",
             paddingTop: "10px",
-          }}
-        >
+          }}>
           공백 포함(글자/바이트)
         </div>
         <Text
@@ -44,12 +41,10 @@ export default function Count(props) {
             fontSize: "30px",
             border: "none",
             outline: "0",
-          }}
-        >
-          <Highlight
+          }}>
+          <Highlight // 0/0을 찐하게 만들어줌
             query={["자", "/", "byte"]}
-            styles={{ py: "1", fontWeight: "normal" }}
-          >
+            styles={{ py: "1", fontWeight: "normal" }}>
             {`${props.calc(props.Text, 1)}/${props.byteCounter(
               props.Text,
               1
@@ -66,8 +61,7 @@ export default function Count(props) {
           width: "100px",
           height: "100px",
           marginRight: "80px",
-        }}
-      >
+        }}>
         <div // 공백 포함
           style={{
             color: "black",
@@ -78,8 +72,7 @@ export default function Count(props) {
             height: "40px",
             fontWeight: "bold",
             paddingTop: "10px",
-          }}
-        >
+          }}>
           공백 미포함(글자/바이트)
         </div>
         <Text
@@ -91,12 +84,10 @@ export default function Count(props) {
             fontSize: "30px",
             border: "none",
             outline: "0",
-          }}
-        >
+          }}>
           <Highlight
             query={["/", "byte"]}
-            styles={{ py: "1", fontWeight: "normal" }}
-          >
+            styles={{ py: "1", fontWeight: "normal" }}>
             {`${props.calc(props.Text, 0)}/${props.byteCounter(
               props.Text,
               0

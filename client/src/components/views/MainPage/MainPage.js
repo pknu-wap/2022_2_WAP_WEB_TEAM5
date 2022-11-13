@@ -179,7 +179,7 @@ function MainPage() {
             </div>
           </GridItem>
         ) : (
-          <GridItem
+          <GridItem // 맞춤법 검사 탭이 안 열려 있을 때
             colSpan={16} // 20칸 중에서 16칸을 차지함
             style={{
               backgroundColor: "#d9d9d9",
@@ -187,7 +187,9 @@ function MainPage() {
             }}>
             <div style={{ display: "flex", height: "100%" }}>
               <Form grammer="no" FileId={FileId} Cover={Cover} />
+              {/* 제목과 내용이 있는 폼과 */}
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
+              {/* 오른쪽에 달려있는 태그 */}
             </div>
           </GridItem>
         )}
