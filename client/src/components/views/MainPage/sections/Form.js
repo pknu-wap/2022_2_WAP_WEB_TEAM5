@@ -2,14 +2,12 @@ import React, { Fragment, useState, useEffect } from "react";
 import { Button } from "@chakra-ui/react";
 import Count from "./Count";
 import { LockIcon } from "@chakra-ui/icons";
-import axios from "axios";
 
 function Form(props) {
   // 맞춤법 검사가 꺼져있음
   const [Title, setTitle] = useState("");
   let [Text, setText] = useState("");
   const [Grammer, setGrammer] = useState(false);
-  const [fileId, setfileId] = useState(0);
   const [cov, setCov] = useState("");
 
   useEffect(() => {
@@ -20,6 +18,12 @@ function Form(props) {
         setTitle("");
       } else {
         setTitle(cov[0].question);
+      }
+
+      if (cov[0].description === null || cov[0].description === undefined) {
+        setText("");
+      } else {
+        setText(cov[0].description);
       }
     }
   }, [props.FileId]);
