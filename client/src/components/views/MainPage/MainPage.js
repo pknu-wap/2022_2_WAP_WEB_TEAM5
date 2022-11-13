@@ -14,20 +14,10 @@ import Folder from "./sections/Folder";
 // 사전 기능 ,
 
 function MainPage() {
-  const [Cover, setCover] = useState([
-    // 파일을 저장
-    {
-      description: "",
-      descriptionLock: false,
-      id: 0,
-      question: "",
-      questionLock: false,
-      title: "",
-    },
-  ]);
+  const [Cover, setCover] = useState([]); // 파일을 저장
   const [Grammer, setGrammer] = useState(false);
-
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
+
   const [CompanyList, setCompanyList] = useState([
     {
       cover_letter: [],
@@ -35,14 +25,12 @@ function MainPage() {
       title: "",
     },
   ]);
-  const [Loading, setLoading] = useState(false);
   // 폴더의 list가 저장됨
 
-  // const [Forms, setForms] = useState([
-  //   {
+  const [Loading, setLoading] = useState(false);
+  // Loading 여부 판단
 
-  //   }
-  // ]);
+  // const [circleId, setCircleId] = useState(0);
 
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
@@ -52,10 +40,12 @@ function MainPage() {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
       )
       .then((response) => {
+        // console.log(response.data.list);
         console.log(response.data);
         // data.list : 폴더, cover_letter : 파일
-        setCover(response.data.list[0].cover_letter);
+        // setCover(response.data.list[0].cover_letter);
         setCompanyList(response.data.list);
+        // console.log(CompanyList);
         setLoading(false);
       });
   }, []);
@@ -65,6 +55,8 @@ function MainPage() {
   const onUpdate = (company) => {
     // 자식에서 return 받은 company 값을 state에 저장시켜준다.
     const body = {
+      // if(CompanyList.filter((company) => company.list_id === ))
+      // cover_letter: CompanyList[circleId].cover_letter,
       cover_letter: [],
       list_id: nextId,
       title: company,
@@ -72,13 +64,20 @@ function MainPage() {
     setCompanyList([...CompanyList, body]);
   };
 
-  let fileId = Cover.length; // id를 현재 배열에 저장되어있는 길이를 구해줌
+  const circleClick = (id) => {
+    const cov = CompanyList.filter((company) => company.list_id === id);
+    // CompanyList에 담겨져있는 폴더들을 살피면서 클릭한 id와 같은 것을 추출해냄
+    setCover(cov[0].cover_letter);
+    // 클릭한 id에 해당하는 파일들을 Cover에 담음
+  };
+
+  // let fileId = CompanyList[id].cover_letter.length; // id를 현재 배열에 저장되어있는 길이를 구해줌
   const onfileUpdate = (content) => {
     // 자식에서 return 받은 title 값을 state에 저장 시킨다.
     const body = {
       description: "",
       descriptionLock: false,
-      id: fileId,
+      // id: fileId,
       question: "",
       questionLock: false,
       title: content,
@@ -109,6 +108,7 @@ function MainPage() {
             CompanyList={CompanyList}
             setCompanyList={setCompanyList}
             refreshFunction={onUpdate}
+            circleOnClick={circleClick}
           />
         </GridItem>
 
@@ -120,8 +120,8 @@ function MainPage() {
             height: "100%",
           }}>
           <Question
-            CompanyList={CompanyList}
-            Cover={Cover}
+            CompanyList={CompanyList} // CompanyList를 넘겨줘서 젤 위의 회사 명이 출력되도록 함
+            Cover={Cover} // 폴더 내용을 받아올 수 있도록 함
             setCover={setCover}
             refreshFunction={onfileUpdate}
           />

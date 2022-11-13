@@ -17,7 +17,12 @@ import {
   AvatarBadge,
 } from "@chakra-ui/react";
 
-function Folder({ CompanyList, setCompanyList, refreshFunction }) {
+function Folder({
+  CompanyList,
+  setCompanyList,
+  refreshFunction,
+  circleOnClick,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
@@ -29,42 +34,45 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
 
   const companyclickHandler = () => {
     // save 버튼을 눌렀을 때 작동하는 코드
-    let va = false;
+
+    let va = false; // 일단 false로 저장해놓음(중복 여부 / 중복일 시 true)
 
     if (Company) {
+      // 만약에 폴더 이름을 적는 칸에 문자가 있으면
       CompanyList.map((list, index) => {
+        // map 시켜서
         if (list.title === Company) {
-          va = true;
+          // 이전에 있던 것들과 중복인지 검사
+          va = true; // 중복이라면 true로 바꿔줌
           return va;
         }
       });
       if (va === false) {
-        refreshFunction(Company);
-        onClose();
+        // 중복이 아니라면
+        refreshFunction(Company); // mainPage로 폴더 이름을 보내줌
+        onClose(); // 모달창을 닫아주는 코드
       } else {
-        alert("중복되는 폴더가 존재합니다.");
+        alert("중복되는 폴더가 존재합니다."); // 중복이라면 alert창을 띄움
       }
     } else {
-      alert("값을 입력해주세요");
+      alert("값을 입력해주세요"); // 값이 입력되지 않았다면 alert 창을 띄움
     }
 
-    // setCompanyList([...CompanyList, Company]); // 현재 회사 리스트에 방금 적은 회사를 추가함
     setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
   };
-  // console.log(CompanyList);
 
-  const folderHandler = () => {
-    // 폴더의 동그라미를 눌렀을 때 작동하는 코드
-    // setCompanyList([]);
+  const deleteHandler = (id) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      // 삭제 버튼을 누르면 확인창 띄움
+      setCompanyList(CompanyList.filter((company) => company.list_id !== id));
+      // 확인을 눌렀다면, 누른 id와 리스트의 id를 비교해서 다른 것들로만 추출하여 CompanyList에 다시 담음
+    }
   };
 
-  const deleteHandler = (id) =>
-    // (CompanyList.list_id) =>
-    {
-      if (window.confirm("정말 삭제하시겠습니까?")) {
-        setCompanyList(CompanyList.filter((company) => company.list_id !== id));
-      }
-    };
+  const circleClick = (id) => {
+    circleOnClick(id);
+    // 폴더를 클릭했을 때 id를 mainPage로 보내줌
+  };
 
   return (
     <Fragment>
@@ -73,6 +81,7 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
           <Avatar // 폴더의 동그라미
             type="button"
             className="rounded-circle"
+            onClick={() => circleClick(company.list_id)}
             name={company.title}
             getInitials={() => `${company.title}`}
             key={index}
@@ -85,14 +94,8 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
               marginTop: "40px",
               cursor: "pointer",
               fontWeight: "bold",
-            }}
-          >
-            <AvatarBadge
-              borderColor="white"
-              bg="white"
-              boxSize="1.25em"
-              onClick={folderHandler}
-            >
+            }}>
+            <AvatarBadge borderColor="white" bg="white" boxSize="1.25em">
               <DeleteIcon
                 style={{ width: "90%", height: "90%" }}
                 onClick={() => deleteHandler(company.list_id)}
@@ -111,8 +114,7 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-        }}
-      >
+        }}>
         <AddIcon />
       </button>
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
@@ -142,8 +144,7 @@ function Folder({ CompanyList, setCompanyList, refreshFunction }) {
               onClick={() => {
                 companyclickHandler();
                 // onClose();
-              }}
-            >
+              }}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>
