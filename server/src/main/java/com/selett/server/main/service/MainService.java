@@ -42,6 +42,22 @@ public class MainService {
         return createCoverLetterResponse;
     }
 
+    private void setCoverLetterNext(Integer id, Integer to) {
+        if(id != 0) {
+            Optional<CoverLetterEntity> fromCoverLetterEntity = coverLetterRepository.findById(id);
+            fromCoverLetterEntity.get().setNext(to);
+            coverLetterRepository.save(fromCoverLetterEntity.get());
+        }
+    }
+
+    private void setCoverLetterPrev(Integer id, Integer to) {
+        if(id != 0) {
+            Optional<CoverLetterEntity> fromCoverLetterEntity = coverLetterRepository.findById(id);
+            fromCoverLetterEntity.get().setPrev(to);
+            coverLetterRepository.save(fromCoverLetterEntity.get());
+        }
+    }
+
     public MainResponse getListAndCoverLetter(Integer userId) {
         MainResponse response = new MainResponse(new ArrayList<>());
 
@@ -258,30 +274,14 @@ public class MainService {
         Integer currentPrevId = updateCoverLetterEntity.get().getPrev();
         Integer currentNextId = updateCoverLetterEntity.get().getNext();
 
-        if(currentPrevId != 0) {
-            Optional<CoverLetterEntity> currentPrevCoverLetterEntity = coverLetterRepository.findById(currentPrevId);
-            currentPrevCoverLetterEntity.get().setNext(currentNextId);
-            coverLetterRepository.save(currentPrevCoverLetterEntity.get());
-        }
-        if(currentNextId != 0) {
-            Optional<CoverLetterEntity> currentNextCoverLetterEntity = coverLetterRepository.findById(currentNextId);
-            currentNextCoverLetterEntity.get().setPrev(currentPrevId);
-            coverLetterRepository.save(currentNextCoverLetterEntity.get());
-        }
+        setCoverLetterNext(currentPrevId, currentNextId);
+        setCoverLetterPrev(currentNextId, currentPrevId);
 
         Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
         Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
 
-        if(toMovePrevId != 0) {
-            Optional<CoverLetterEntity> toMovePrevCoverLetterEntity = coverLetterRepository.findById(toMovePrevId);
-            toMovePrevCoverLetterEntity.get().setNext(id);
-            coverLetterRepository.save(toMovePrevCoverLetterEntity.get());
-        }
-        if(toMoveNextId != 0) {
-            Optional<CoverLetterEntity> toMoverNextCoverLetterEntity = coverLetterRepository.findById(toMoveNextId);
-            toMoverNextCoverLetterEntity.get().setPrev(id);
-            coverLetterRepository.save(toMoverNextCoverLetterEntity.get());
-        }
+        setCoverLetterNext(toMovePrevId, id);
+        setCoverLetterPrev(toMoveNextId, id);
 
         coverLetterRepository.flush();
     }
