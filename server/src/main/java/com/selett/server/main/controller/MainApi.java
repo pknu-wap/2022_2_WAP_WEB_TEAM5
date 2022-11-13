@@ -10,6 +10,7 @@ import com.selett.server.main.dto.delete.DeleteListRequest;
 import com.selett.server.main.dto.update.UpdateCoverLetterRequest;
 import com.selett.server.main.dto.update.UpdateListRequest;
 import com.selett.server.main.dto.update.UpdatePositionCoverLetterRequest;
+import com.selett.server.main.dto.update.UpdatePositionListRequest;
 import com.selett.server.main.service.MainService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -100,8 +101,19 @@ public class MainApi {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/lists/position")
+    public ResponseEntity<?> updatePostionList(@Valid @RequestBody UpdatePositionListRequest updatePositionListRequest) {
+        if(!mainService.existList(updatePositionListRequest.getListId())) {
+            return new ResponseEntity<>(errorId, HttpStatus.BAD_REQUEST);
+        }
+
+        mainService.updatePositionList(updatePositionListRequest);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PutMapping("/cover-letters/position")
-    public ResponseEntity<?> updateCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
+    public ResponseEntity<?> updatePositionCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
         if(!mainService.existCoverLetter(updatePositionCoverLetterRequest.getId())) {
             return new ResponseEntity<>(errorId, HttpStatus.BAD_REQUEST);
         }

@@ -8,6 +8,7 @@ import com.selett.server.main.dto.create.CreateListResponse;
 import com.selett.server.main.dto.update.UpdateCoverLetterRequest;
 import com.selett.server.main.dto.update.UpdateListRequest;
 import com.selett.server.main.dto.update.UpdatePositionCoverLetterRequest;
+import com.selett.server.main.dto.update.UpdatePositionListRequest;
 import com.selett.server.mapper.CoverLetterEntity;
 import com.selett.server.mapper.ListEntity;
 import com.selett.server.repository.CoverLetterRepository;
@@ -264,6 +265,26 @@ public class MainService {
         }
 
         coverLetterRepository.saveAndFlush(updateCoverLetterEntity.get());
+    }
+
+    public void updatePositionList(UpdatePositionListRequest updatePositionListRequest) {
+        Integer listId = updatePositionListRequest.getListId();
+
+        ListEntity updateListEntity = listRepository.findByListId(listId);
+
+        Integer currentPrevListId = updateListEntity.getPrev();
+        Integer currentNextListId = updateListEntity.getNext();
+
+        setListNext(currentPrevListId, currentNextListId);
+        setListPrev(currentNextListId, currentPrevListId);
+
+        Integer toMovePrevListId = updatePositionListRequest.getToMovePrevListId();
+        Integer toMoveNextListId = updatePositionListRequest.getToMoveNextListId();
+
+        setListNext(toMovePrevListId, listId);
+        setListPrev(toMoveNextListId, listId);
+
+        listRepository.flush();
     }
 
     public void updatePositionCoverLetter(UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
