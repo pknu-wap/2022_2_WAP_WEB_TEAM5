@@ -9,6 +9,8 @@ function Form(props) {
   let [Text, setText] = useState("");
   const [Grammer, setGrammer] = useState(false);
   const [cov, setCov] = useState("");
+  const [questionLock, setquestionLock] = useState(false);
+  const [descriptionLock, setdescriptionLock] = useState(false);
 
   useEffect(() => {
     if (props.Cover[0]) {
@@ -25,6 +27,8 @@ function Form(props) {
       } else {
         setText(cov[0].description);
       }
+      setquestionLock(cov[0].question_lock);
+      setdescriptionLock(cov[0].description_lock);
     }
   }, [props.FileId]);
 
@@ -54,10 +58,12 @@ function Form(props) {
 
   const titlebuttonHandler = () => {
     setTitle(Title);
+    setquestionLock(!questionLock);
   };
 
   const textbuttonHandler = () => {
     setText(Text);
+    setdescriptionLock(!descriptionLock);
   };
 
   const saveHandler = () => {

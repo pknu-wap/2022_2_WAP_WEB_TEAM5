@@ -130,17 +130,22 @@ function MainPage() {
         </GridItem>
         {Grammer ? (
           // 문법이 켜져있다면,
-          <GridItem
+          <GridItem // 나머지 20칸 중에서 16칸을 차지함
             colSpan={16}
-            // height="10px"
             style={{
               backgroundColor: "#d9d9d9",
               height: "100%",
             }}>
             <div style={{ display: "flex", height: "100%" }}>
+              {/* 제목, 내용 입력 칸이랑 맞춤법 검사 태그를 묶는 태그 */}
+
               <Form FileId={FileId} Cover={Cover} />
+              {/* 제목과 내용 입력칸 */}
+
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
-              <div // 네모
+              {/* 맞춤법 검사 태그 */}
+
+              <div // 맞춤법 검사 칸의 제일 큰 흰색 네모
                 style={{
                   marginLeft: "0.5%",
                   backgroundColor: "white",
@@ -165,6 +170,7 @@ function MainPage() {
                   맞춤법 검사
                 </div>
                 <GrammerForm />
+                {/* 맞춤법 검사 내용들(나중에는 map으로 해야할 거 같음..?!) */}
                 <GrammerForm />
                 <GrammerForm />
                 <GrammerForm />
@@ -174,7 +180,7 @@ function MainPage() {
           </GridItem>
         ) : (
           <GridItem
-            colSpan={16}
+            colSpan={16} // 20칸 중에서 16칸을 차지함
             style={{
               backgroundColor: "#d9d9d9",
               height: "100%",
