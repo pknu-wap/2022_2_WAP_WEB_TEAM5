@@ -44,17 +44,33 @@ public class MainService {
 
     private void setCoverLetterNext(Integer id, Integer to) {
         if(id != 0) {
-            Optional<CoverLetterEntity> fromCoverLetterEntity = coverLetterRepository.findById(id);
-            fromCoverLetterEntity.get().setNext(to);
-            coverLetterRepository.save(fromCoverLetterEntity.get());
+            Optional<CoverLetterEntity> coverLetterEntity = coverLetterRepository.findById(id);
+            coverLetterEntity.get().setNext(to);
+            coverLetterRepository.save(coverLetterEntity.get());
         }
     }
 
     private void setCoverLetterPrev(Integer id, Integer to) {
         if(id != 0) {
-            Optional<CoverLetterEntity> fromCoverLetterEntity = coverLetterRepository.findById(id);
-            fromCoverLetterEntity.get().setPrev(to);
-            coverLetterRepository.save(fromCoverLetterEntity.get());
+            Optional<CoverLetterEntity> coverLetterEntity = coverLetterRepository.findById(id);
+            coverLetterEntity.get().setPrev(to);
+            coverLetterRepository.save(coverLetterEntity.get());
+        }
+    }
+
+    private void setListNext(Integer id, Integer to) {
+        if(id != 0) {
+            ListEntity listEntity = listRepository.findByListId(id);
+            listEntity.setNext(to);
+            listRepository.save(listEntity);
+        }
+    }
+
+    private void setListPrev(Integer id, Integer to) {
+        if(id != 0) {
+            ListEntity listEntity = listRepository.findByListId(id);
+            listEntity.setPrev(to);
+            listRepository.save(listEntity);
         }
     }
 
@@ -195,16 +211,8 @@ public class MainService {
         Integer prevId = deleteListEntity.getPrev();
         Integer nextId = deleteListEntity.getNext();
 
-        if(prevId != 0) {
-            ListEntity prevListEntity = listRepository.findByListId(prevId);
-            prevListEntity.setNext(nextId);
-            listRepository.save(prevListEntity);
-        }
-        if(nextId != 0) {
-            ListEntity nextListEntity = listRepository.findByListId(nextId);
-            nextListEntity.setPrev(prevId);
-            listRepository.save(nextListEntity);
-        }
+        setListNext(prevId, nextId);
+        setListPrev(nextId, prevId);
 
         listRepository.deleteById(listId);
         listRepository.flush();
@@ -216,16 +224,8 @@ public class MainService {
         Integer prevId = deleteCoverLetterEntity.get().getPrev();
         Integer nextId = deleteCoverLetterEntity.get().getNext();
 
-        if(prevId != 0) {
-            Optional<CoverLetterEntity> prevCoverLetterEntity = coverLetterRepository.findById(prevId);
-            prevCoverLetterEntity.get().setNext(nextId);
-            coverLetterRepository.save(prevCoverLetterEntity.get());
-        }
-        if(nextId != 0) {
-            Optional<CoverLetterEntity> nextCoverLetterEntity = coverLetterRepository.findById(nextId);
-            nextCoverLetterEntity.get().setPrev(prevId);
-            coverLetterRepository.save(nextCoverLetterEntity.get());
-        }
+        setCoverLetterNext(prevId, nextId);
+        setCoverLetterPrev(nextId, prevId);
 
         coverLetterRepository.deleteById(id);
         coverLetterRepository.flush();
