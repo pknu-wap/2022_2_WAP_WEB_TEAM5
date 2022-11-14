@@ -203,7 +203,7 @@ function Profile() {
   };
 
   return (
-    <div style={{ width: "100%", height: "100vh", backgroundColor: "#eceff1" }}>
+    <div style={{ width: "100%", height: "100vh", backgroundColor: "#d9d9d9" }}>
       <NavBar />
       {/* ---------------------------------------------------------------- */}
       <div className="left-nav">
@@ -228,7 +228,7 @@ function Profile() {
               <div className="info-contents">
                 {Content &&
                   Content.map((contents, index) => (
-                    <div className="asdf">
+                    <div className="infoCard">
                       <div className="info-myinfo-contents" key={index}>
                         {contents.date}
                       </div>
@@ -238,23 +238,12 @@ function Profile() {
                       <div className="info-myinfo-contents" key={index}>
                         {contents.info}
                       </div>
-                      {/* dfkjaslfkasjdkl */}
                     </div>
                   ))}
               </div>
             </div>
           </div>
 
-          <Button
-            variant="outline"
-            colorScheme="gray"
-            onClick={onOpen1}
-            style={{
-              width: "5%",
-              height: "30px",
-            }}>
-            추가
-          </Button>
           <Modal
             initialFocusRef={initialRef}
             isOpen={isOpen1}
@@ -306,6 +295,19 @@ function Profile() {
             </ModalContent>
           </Modal>
         </div>
+        <Button
+          variant="outline"
+          colorScheme="gray"
+          onClick={onOpen1}
+          style={{
+            float: "right",
+            marginTop: "10px",
+            border: "1px solid gray",
+            width: "5%",
+            height: "30px",
+          }}>
+          추가
+        </Button>
 
         {/* info-title */}
         <div className="info-title">
@@ -315,50 +317,33 @@ function Profile() {
         <div
           className="info-div"
           style={{ overflow: "scroll", maxWidth: "100%" }}>
-          {/* info-type */}
-          <div className="info-type">
-            <h6 className="info-type-contents">날짜</h6>
-            <h6 className="info-type-contents">대회명</h6>
-            <h6 className="info-type-contents">상세정보</h6>
-          </div>
-          {/* info-myinfo */}
-          <div className="info-myinfo">
-            <div>
-              {Content2 &&
-                Content2.map((contents, index) => (
-                  <div className="info-myinfo-contents" key={index}>
-                    {contents.date2}
-                  </div>
-                ))}
+          <div className="info-type-myinfo">
+            {/* info-type */}
+            <div className="info-type">
+              <h6 className="info-type-contents">날짜</h6>
+              <h6 className="info-type-contents">대회명</h6>
+              <h6 className="info-type-contents">상세정보</h6>
             </div>
-            <div>
-              {Content2 &&
-                Content2.map((contents, index) => (
-                  <div className="info-myinfo-contents" key={index}>
-                    {contents.name2}
-                  </div>
-                ))}
-            </div>
-            <div>
-              {Content2 &&
-                Content2.map((contents, index) => (
-                  <div className="info-myinfo-contents" key={index}>
-                    {contents.info2}
-                  </div>
-                ))}
+            {/* info-myinfo */}
+            <div className="info-myinfo">
+              <div className="info-contents">
+                {Content2 &&
+                  Content2.map((contents, index) => (
+                    <div className="infoCard">
+                      <div className="info-myinfo-contents" key={index}>
+                        {contents.date2}
+                      </div>
+                      <div className="info-myinfo-contents" key={index}>
+                        {contents.name2}
+                      </div>
+                      <div className="info-myinfo-contents" key={index}>
+                        {contents.info2}
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
-
-          <Button
-            variant="outline"
-            colorScheme="gray"
-            onClick={onOpen2}
-            style={{
-              width: "5%",
-              height: "30px",
-            }}>
-            추가
-          </Button>
           <Modal
             initialFocusRef={initialRef}
             isOpen={isOpen2}
@@ -410,6 +395,19 @@ function Profile() {
             </ModalContent>
           </Modal>
         </div>
+        <Button
+          variant="outline"
+          colorScheme="gray"
+          onClick={onOpen2}
+          style={{
+            float: "right",
+            marginTop: "10px",
+            border: "1px solid gray",
+            width: "5%",
+            height: "30px",
+          }}>
+          추가
+        </Button>
 
         <div className="info-title">
           <h4>어학 성적</h4>
