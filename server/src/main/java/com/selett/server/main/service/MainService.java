@@ -285,7 +285,7 @@ public class MainService {
         updateListEntity.setPrev(toMovePrevListId);
         updateListEntity.setNext(toMoveNextListId);
 
-        listRepository.flush();
+        listRepository.saveAndFlush(updateListEntity);
     }
 
     public void updatePositionCoverLetter(UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
@@ -308,25 +308,24 @@ public class MainService {
         updateCoverLetterEntity.get().setPrev(toMovePrevId);
         updateCoverLetterEntity.get().setNext(toMoveNextId);
 
-        coverLetterRepository.flush();
+        coverLetterRepository.saveAndFlush(updateCoverLetterEntity.get());
     }
 
     public void updatePositionCoverLetterDiffList(UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest) {
         Optional<CoverLetterEntity> moveCoverLetter = coverLetterRepository.findById(updatePositionCoverLetterDiffListRequest.getId());
+        CoverLetterEntity lastCoverLetter = coverLetterRepository.findByListIdAndNext(updatePositionCoverLetterDiffListRequest.getToMoveListId(), 0);
 
-        deleteCoverLetter(updatePositionCoverLetterDiffListRequest.getId());
-        CreateCoverLetterResponse createCoverLetterResponse = createCoverLetter(updatePositionCoverLetterDiffListRequest.getToMoveListId(), "");
-        CoverLetter newCoverLetter = createCoverLetterResponse.getCoverLetter();
+        Integer currentPrevId = moveCoverLetter.get().getPrev();
+        Integer currentNextId = moveCoverLetter.get().getNext();
 
-        UpdateCoverLetterRequest updateCoverLetterRequest = new UpdateCoverLetterRequest(
-                newCoverLetter.getId(),
-                moveCoverLetter.get().getTitle(),
-                moveCoverLetter.get().getQuestion(),
-                moveCoverLetter.get().getQuestionLock(),
-                moveCoverLetter.get().getDescription(),
-                moveCoverLetter.get().getDescriptionLock()
-        );
+        setCoverLetterPrev(currentNextId, currentPrevId);
+        setCoverLetterNext(currentPrevId, currentNextId);
 
-        updateCoverLetter(updateCoverLetterRequest);
+        lastCoverLetter.setNext(moveCoverLetter.get().getId());
+        moveCoverLetter.get().setListId(updatePositionCoverLetterDiffListRequest.getToMoveListId());
+        moveCoverLetter.get().setNext(0);
+
+        coverLetterRepository.save(lastCoverLetter);
+        coverLetterRepository.saveAndFlush(moveCoverLetter.get());
     }
 }
