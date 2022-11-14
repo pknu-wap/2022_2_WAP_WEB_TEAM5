@@ -86,11 +86,11 @@ function Folder({
             getInitials={() => `${company.title}`}
             key={index}
             size="50"
-            _hover={{ background: "gray" }}
+            width="55px"
+            height="55px"
+            _hover={{ width: "65px", height: "65px" }}
             bg="white"
             style={{
-              width: "55px",
-              height: "55px",
               color: "black",
               marginTop: "40px",
               cursor: "pointer",
