@@ -85,6 +85,9 @@ public class MainApi {
             "<br/>" +
             "삭제를 요청한 리스트와 해당 리스트에 자기소개서를 삭제해야함")
     public ResponseEntity<Void> deleteList(@Valid DeleteListRequest deleteListRequest) {
+        if(mainService.isOnlyOneList(deleteListRequest.getListId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         mainService.deleteList(deleteListRequest.getListId());
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -100,7 +103,7 @@ public class MainApi {
             "<br/>" +
             "삭제를 요청한 자기소개서를 삭제해야함")
     public ResponseEntity<Void> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
-        if(mainService.isOnlyOne(deleteCoverLetterRequest.getId())) {
+        if(mainService.isOnlyOneCoverLetter(deleteCoverLetterRequest.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -190,7 +193,7 @@ public class MainApi {
             "<br/>" +
             "Response로 받은 자기소개서의 prev 자기소개서에 next를 Response로 받은 자기소개서의 아이디로 변경해야함")
     public ResponseEntity<Void> updatePositionCoverLetterDiffList(@Valid @RequestBody UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest) {
-        if(mainService.isOnlyOne(updatePositionCoverLetterDiffListRequest.getId())) {
+        if(mainService.isOnlyOneCoverLetter(updatePositionCoverLetterDiffListRequest.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         mainService.updatePositionCoverLetterDiffList(updatePositionCoverLetterDiffListRequest);

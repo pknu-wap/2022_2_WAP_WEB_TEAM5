@@ -79,11 +79,21 @@ public class MainService {
         return coverLetterRepository.existsByListIdAndTitle(listId, title);
     }
 
-    public boolean isOnlyOne(Integer id) {
+    public boolean isOnlyOneCoverLetter(Integer id) {
         Optional<CoverLetterEntity> coverLetter = coverLetterRepository.findById(id);
         Integer listId = coverLetter.get().getListId();
 
         if(coverLetterRepository.findAllByListId(listId).size() == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isOnlyOneList(Integer listId) {
+        ListEntity listEntity = listRepository.findByListId(listId);
+        Integer userId = listEntity.getUserId();
+
+        if(listRepository.findAllByUserId(userId).size() == 1) {
             return true;
         }
         return false;
