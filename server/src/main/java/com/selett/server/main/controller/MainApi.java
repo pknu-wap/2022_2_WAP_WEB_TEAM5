@@ -48,7 +48,7 @@ public class MainApi {
             "<br/>" +
             "Response로 받은 리스트의 prev 리스트에 next를 Response로 받은 리스트의 아이디로 변경해야함")
     public ResponseEntity<CreateListResponse> newList(@Valid @RequestBody CreateListRequest createListRequest) {
-        if (!mainService.existListTitle(createListRequest.getUserId(), createListRequest.getTitle())) {
+        if (mainService.existListTitle(createListRequest.getUserId(), createListRequest.getTitle())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -67,7 +67,7 @@ public class MainApi {
             "<br/>" +
             "Response로 받은 자기소개서의 prev 자기소개서에 next를 Response로 받은 자기소개서의 아이디로 변경해야함")
     public ResponseEntity<CreateCoverLetterResponse> newCoverLetter(@Valid @RequestBody CreateCoverLetterRequest createCoverLetterRequest) {
-        if (!mainService.existCoverLetterTitle(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle())) {
+        if (mainService.existCoverLetterTitle(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 

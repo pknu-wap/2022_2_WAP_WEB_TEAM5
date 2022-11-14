@@ -75,8 +75,8 @@ public class MainService {
         return listRepository.existsByUserIdAndTitle(userId, title);
     }
 
-    public boolean existCoverLetterTitle(Integer ListId, String title) {
-        return coverLetterRepository.existsByListIdAndTitle(ListId, title);
+    public boolean existCoverLetterTitle(Integer listId, String title) {
+        return coverLetterRepository.existsByListIdAndTitle(listId, title);
     }
 
     public boolean isOnlyOne(Integer id) {
