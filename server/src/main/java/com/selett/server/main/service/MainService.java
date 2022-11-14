@@ -32,9 +32,8 @@ public class MainService {
         return createListResponse;
     }
 
-    private CreateCoverLetterResponse getCoverLetterResponse(Integer prevId, CoverLetter coverLetter) {
+    private CreateCoverLetterResponse getCoverLetterResponse(CoverLetter coverLetter) {
         CreateCoverLetterResponse createCoverLetterResponse = new CreateCoverLetterResponse();
-        createCoverLetterResponse.setPrevId(prevId);
         createCoverLetterResponse.setCoverLetter(coverLetter);
 
         return createCoverLetterResponse;
@@ -188,10 +187,9 @@ public class MainService {
             coverLetterRepository.saveAndFlush(newCoverLetterEntity);
 
             CreateCoverLetterResponse createCoverLetterResponse = new CreateCoverLetterResponse();
-            createCoverLetterResponse.setPrevId(newCoverLetterEntity.getPrev());
             createCoverLetterResponse.setCoverLetter(new CoverLetter(newCoverLetterEntity));
 
-            return getCoverLetterResponse(newCoverLetterEntity.getPrev(), new CoverLetter(newCoverLetterEntity));
+            return getCoverLetterResponse(new CoverLetter(newCoverLetterEntity));
         }
 
         CoverLetterEntity lastCoverLetterEntity = coverLetterRepository.findByListIdAndNext(listId, 0);
@@ -202,7 +200,7 @@ public class MainService {
         lastCoverLetterEntity.setNext(newCoverLetterEntity.getId());
         coverLetterRepository.saveAndFlush(lastCoverLetterEntity);
 
-        return getCoverLetterResponse(newCoverLetterEntity.getPrev(), new CoverLetter(newCoverLetterEntity));
+        return getCoverLetterResponse(new CoverLetter(newCoverLetterEntity));
     }
 
     public void deleteList(Integer listId) {
