@@ -11,5 +11,4 @@ public interface ListRepository extends JpaRepository<ListEntity, Integer> {
     ListEntity findByUserIdAndNext(Integer userId, Integer next);
     Long countByUserId(Integer userId);
     ListEntity findByListId(Integer listId);
-    Boolean existsByListId(Integer listId);
 }
