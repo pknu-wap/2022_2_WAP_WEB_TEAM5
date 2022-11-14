@@ -50,8 +50,7 @@ function NavBar(props) {
         boxShadow: "0px 4px 4px -4px black",
         height: "64px",
         paddingLeft: "20px",
-      }}
-    >
+      }}>
       <img // 로고 이미지
         src={logo_img}
         onClick={navHandler}
@@ -65,14 +64,13 @@ function NavBar(props) {
           style={{
             display: "flex",
             alignItems: "center",
-          }}
-        >
+          }}>
           {props.Loading ? (
             <Spinner
               thickness="4px"
               speed="0.65s"
               emptyColor="gray.200"
-              color="gray.700"
+              color="blue.700"
               size="xl"
               marginRight="20px"
             />
@@ -84,8 +82,7 @@ function NavBar(props) {
               // height: "40px",
               fontWeight: "bold",
             }}
-            onClick={logoutHandler}
-          >
+            onClick={logoutHandler}>
             logout
           </button>
           <Menu>
