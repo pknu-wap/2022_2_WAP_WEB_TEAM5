@@ -28,6 +28,7 @@ function MainPage() {
   const [Loading, setLoading] = useState(false);
   // Loading 여부 판단
   const [Cov, setCov] = useState("");
+  const [AddToggle, setAddToggle] = useState(false);
 
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
@@ -68,15 +69,26 @@ function MainPage() {
           alert("성공");
         } else if (response.status === 201) {
           alert("성공");
-          window.location.replace("/main");
         } else if (response.status === 400) {
           alert("중복된 제목");
         } else {
           alert("오류입니다.");
         }
       });
+    setAddToggle(!AddToggle);
     // setCompanyList([...CompanyList, body]);
   };
+
+  useEffect(() => {
+    axios
+      .get(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      )
+      .then((response) => {
+        setCompanyList(response.data.list);
+        setLoading(false);
+      });
+  }, [AddToggle]);
 
   const circleClick = (id) => {
     setcircleId(id);
