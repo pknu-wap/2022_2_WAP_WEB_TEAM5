@@ -79,7 +79,7 @@ function MainPage() {
     // setCompanyList([...CompanyList, body]);
   };
 
-  useEffect(() => {
+  const FolUpdate = () => {
     axios
       .get(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
@@ -88,6 +88,18 @@ function MainPage() {
         setCompanyList(response.data.list);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    // axios
+    //   .get(
+    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+    //   )
+    //   .then((response) => {
+    //     setCompanyList(response.data.list);
+    //     setLoading(false);
+    //   });
+    FolUpdate();
   }, [AddToggle]);
 
   const circleClick = (id) => {
@@ -168,6 +180,7 @@ function MainPage() {
             setCompanyList={setCompanyList}
             refreshFunction={onUpdate}
             circleOnClick={circleClick}
+            FolUpdate={FolUpdate}
           />
         </GridItem>
 

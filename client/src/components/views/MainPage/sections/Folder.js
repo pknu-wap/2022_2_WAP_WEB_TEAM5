@@ -1,5 +1,4 @@
-import React, { Fragment, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { Fragment, useEffect, useState } from "react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Modal,
@@ -24,11 +23,12 @@ function Folder({
   setCompanyList,
   refreshFunction,
   circleOnClick,
+  FolUpdate,
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
-  const navigate = useNavigate();
+  const [delFolderTog, setdelFolderTog] = useState(false);
 
   const companyHandler = (event) => {
     // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
@@ -81,11 +81,16 @@ function Folder({
         .then((response) => {
           if (response.status === 200) {
             alert("삭제 성공");
-            window.location.replace("/main");
+            // window.location.replace("/main");
           }
         });
+      setdelFolderTog(!delFolderTog);
     }
   };
+
+  useEffect(() => {
+    FolUpdate();
+  }, [delFolderTog]);
 
   const circleClick = (id) => {
     circleOnClick(id);
