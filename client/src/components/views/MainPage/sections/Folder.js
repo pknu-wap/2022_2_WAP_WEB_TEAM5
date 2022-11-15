@@ -108,7 +108,7 @@ function Folder({
             size="50"
             width="55px"
             height="55px"
-            _hover={{ width: "65px", height: "65px" }}
+            _hover={{ width: "60px", height: "60px" }}
             bg="white"
             style={{
               color: "black",
