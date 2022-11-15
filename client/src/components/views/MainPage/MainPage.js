@@ -68,6 +68,7 @@ function MainPage() {
           alert("성공");
         } else if (response.status === 201) {
           alert("성공");
+          window.location.replace("/main");
         } else if (response.status === 400) {
           alert("중복된 제목");
         } else {
@@ -104,6 +105,7 @@ function MainPage() {
           alert("성공");
         } else if (response.status === 201) {
           alert("리스트 생성 성공");
+          window.location.replace("/main");
         } else if (response.status === 400) {
           alert("중복된 제목");
         }

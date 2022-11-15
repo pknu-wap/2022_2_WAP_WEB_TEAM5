@@ -22,6 +22,7 @@ function QuestionList({ content, setCover, Cover, fileOnClick, setfileId }) {
         .then((response) => {
           if (response.status === 200) {
             alert("삭제 성공");
+            window.location.replace("/main");
           } else if (response.status === 400) {
             alert("자기소개서가 하나여서 삭제가 불가능합니다.");
           } else {
@@ -59,6 +60,7 @@ function QuestionList({ content, setCover, Cover, fileOnClick, setfileId }) {
       .then((response) => {
         if (response.status === 200) {
           alert("갱신 성공");
+          window.location.replace("/main");
         } else {
           alert("실패");
         }

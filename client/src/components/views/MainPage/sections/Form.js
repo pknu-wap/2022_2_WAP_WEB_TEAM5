@@ -101,6 +101,7 @@ function Form(props) {
         .then((response) => {
           if (response.status === 200) {
             alert("갱신 성공");
+            window.location.replace("/main");
           } else {
             alert("실패");
           }
@@ -126,6 +127,7 @@ function Form(props) {
         .then((response) => {
           if (response.status === 200) {
             alert("갱신 성공");
+            window.location.replace("/main");
           } else {
             alert("실패");
           }
