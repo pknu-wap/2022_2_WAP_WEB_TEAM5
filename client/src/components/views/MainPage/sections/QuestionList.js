@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
+import axios from "axios";
 
 function QuestionList({ content, setCover, Cover, fileOnClick, setfileId }) {
   const [Edit, setEdit] = useState(false);
@@ -8,7 +9,25 @@ function QuestionList({ content, setCover, Cover, fileOnClick, setfileId }) {
 
   const deleteClick = (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      setCover(Cover.filter((content) => content.id !== id));
+      // setCover(Cover.filter((content) => content.id !== id));
+      const body = {
+        id: id,
+      };
+
+      axios
+        .delete(
+          "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+          { params: body }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            alert("삭제 성공");
+          } else if (response.status === 400) {
+            alert("자기소개서가 하나여서 삭제가 불가능합니다.");
+          } else {
+            alert("오류");
+          }
+        });
     }
   };
 
@@ -22,11 +41,29 @@ function QuestionList({ content, setCover, Cover, fileOnClick, setfileId }) {
 
   const CheckOnClick = (id) => {
     // console.log(Cover.id);
-    const editCover = Cover.map((cover) => ({
-      ...cover,
-      title: cover.id === id ? Text : cover.title,
-    }));
-    setCover(editCover);
+    const body = {
+      id: id,
+      title: Text,
+    };
+    // const editCover = Cover.map((cover) => ({
+    //   ...cover,
+    //   title: cover.id === id ? Text : cover.title,
+    // }));
+    // setCover(editCover);
+
+    axios
+      .put(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+        body
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          alert("갱신 성공");
+        } else {
+          alert("실패");
+        }
+      });
+
     setEdit(false);
   };
 

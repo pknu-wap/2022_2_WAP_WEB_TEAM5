@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import { Button } from "@chakra-ui/react";
 import Count from "./Count";
 import { LockIcon, UnlockIcon } from "@chakra-ui/icons";
+import axios from "axios";
 
 function Form(props) {
   // 맞춤법 검사가 꺼져있음
@@ -13,8 +14,25 @@ function Form(props) {
 
   useEffect(() => {
     if (props.Cover[0]) {
-      setTitle(props.Cover[0].question);
-      setText(props.Cover[0].description);
+      if (
+        props.Cover[0].question === null ||
+        props.Cover[0].question === undefined
+      ) {
+        setTitle("");
+      } else {
+        setTitle(props.Cover[0].question);
+      }
+
+      if (
+        props.Cover[0].description === null ||
+        props.Cover[0].description === undefined
+      ) {
+        setText("");
+      } else {
+        setText(props.Cover[0].description);
+      }
+
+      console.log(props.Cover[0]);
     }
   }, [props.Cover]);
 
@@ -69,16 +87,53 @@ function Form(props) {
   };
 
   const titlebuttonHandler = () => {
-    setTitle(Title);
+    if (questionLock === false) {
+      const body = {
+        id: props.FileId,
+        question: Title,
+      };
+      // setTitle(Title);
+      axios
+        .put(
+          "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+          body
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            alert("갱신 성공");
+          } else {
+            alert("실패");
+          }
+        });
+    }
     setquestionLock(!questionLock);
     console.log(questionLock);
     // 질문 자물쇠
   };
 
   const textbuttonHandler = () => {
-    setText(Text);
+    // setText(Text);
+    if (descriptionLock === false) {
+      const body = {
+        id: props.FileId,
+        description: Text,
+      };
+      axios
+        .put(
+          "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+          body
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            alert("갱신 성공");
+          } else {
+            alert("실패");
+          }
+        });
+    }
+
     setdescriptionLock(!descriptionLock);
-    console.log(descriptionLock);
+    // console.log(descriptionLock);
     // 내용 자물쇠
   };
 

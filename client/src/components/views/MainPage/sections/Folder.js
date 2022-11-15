@@ -16,6 +16,7 @@ import {
   Avatar,
   AvatarBadge,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 function Folder({
   CompanyList,
@@ -64,14 +65,30 @@ function Folder({
   const deleteHandler = (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
       // 삭제 버튼을 누르면 확인창 띄움
-      setCompanyList(CompanyList.filter((company) => company.list_id !== id));
+      // setCompanyList(CompanyList.filter((company) => company.list_id !== id));
       // 확인을 눌렀다면, 누른 id와 리스트의 id를 비교해서 다른 것들로만 추출하여 CompanyList에 다시 담음
+      const body = {
+        listId: id,
+      };
+      console.log(body);
+
+      axios
+        .delete(
+          "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
+          { params: body }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            alert("삭제 성공");
+          }
+        });
     }
   };
 
   const circleClick = (id) => {
     circleOnClick(id);
     // 폴더를 클릭했을 때 id를 mainPage로 보내줌
+    console.log(CompanyList.filter((company) => company.list_id === id));
   };
 
   return (
@@ -108,8 +125,8 @@ function Folder({
         className="rounded-circle"
         onClick={onOpen}
         style={{
-          width: "55px",
-          height: "55px",
+          minWidth: "55px",
+          minHeight: "55px",
           backgroundColor: "white",
           marginTop: "40px",
           display: "flex",

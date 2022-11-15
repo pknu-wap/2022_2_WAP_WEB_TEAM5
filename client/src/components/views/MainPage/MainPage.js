@@ -48,18 +48,33 @@ function MainPage() {
     setFileId(FileId);
   });
 
-  let nextId = CompanyList.length; // id를 현재 배열에 저장되어있는 길이를 구해줌
+  // let nextId = CompanyList.length; // id를 현재 배열에 저장되어있는 길이를 구해줌
 
   const onUpdate = (company) => {
     // 자식에서 return 받은 company 값을 state에 저장시켜준다.
     const body = {
-      // if(CompanyList.filter((company) => company.list_id === ))
-      // cover_letter: CompanyList[circleId].cover_letter,
-      cover_letter: [],
-      list_id: nextId,
+      user_id: 1,
       title: company,
     };
-    setCompanyList([...CompanyList, body]);
+
+    axios
+      .post(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
+        body
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          alert("성공");
+        } else if (response.status === 201) {
+          alert("성공");
+        } else if (response.status === 400) {
+          alert("중복된 제목");
+        } else {
+          alert("오류입니다.");
+        }
+      });
+    // setCompanyList([...CompanyList, body]);
   };
 
   const circleClick = (id) => {
@@ -74,14 +89,25 @@ function MainPage() {
   const onfileUpdate = (content) => {
     // 자식에서 return 받은 title 값을 state에 저장 시킨다.
     const body = {
-      description: "",
-      descriptionLock: false,
-      // id: fileId,
-      question: "",
-      questionLock: false,
       title: content,
+      list_id: circleId,
     };
-    setCover([...Cover, body]);
+    console.log(body);
+    axios
+      .post(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+        body
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          alert("성공");
+        } else if (response.status === 201) {
+          alert("리스트 생성 성공");
+        } else if (response.status === 400) {
+          alert("중복된 제목");
+        }
+      });
   };
 
   return (
@@ -90,7 +116,7 @@ function MainPage() {
         <NavBar loc="main" Loading={Loading} />
         {/* 네비게이션 바 출력 */}
       </div>
-      <Grid templateColumns="repeat(20, 1fr)" h="90vh">
+      <Grid templateColumns="repeat(20, 1fr)" h="92vh">
         {/* chakra의 grid를 사용하는데, 총 메인 페이지의 열을 20개의 열로 나눔 */}
         <GridItem // 폴더 칸
           // 이 곳은 폴더의 전체칸으로, 20개의 열 중에 한 개의 열만 사용한다.
@@ -101,6 +127,7 @@ function MainPage() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            overflow: "scroll",
           }}>
           <Folder
             // 이곳은 폴더들의 내용이 담겨있음
@@ -117,6 +144,7 @@ function MainPage() {
           style={{
             backgroundColor: "#303136",
             height: "100%",
+            overflow: "scroll",
           }}>
           <Question
             CompanyList={CompanyList} // CompanyList를 넘겨줘서 젤 위의 회사 명이 출력되도록 함
