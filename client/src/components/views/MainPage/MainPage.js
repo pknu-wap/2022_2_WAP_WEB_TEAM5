@@ -33,6 +33,7 @@ function MainPage() {
 
   const [Loading, setLoading] = useState(false);
   // Loading 여부 판단
+  const [Cov, setCov] = useState("");
 
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
@@ -46,6 +47,8 @@ function MainPage() {
         console.log(response.data);
         setCompanyList(response.data.list);
         setLoading(false);
+        setCover(response.data.list[0].cover_letter);
+        setCov(response.data.list[0].title);
       });
   }, []);
 
@@ -130,6 +133,8 @@ function MainPage() {
             refreshFunction={onfileUpdate}
             setFileId={setFileId}
             circleId={circleId}
+            Cov={Cov}
+            setCov={setCov}
           />
         </GridItem>
         {Grammer ? (
