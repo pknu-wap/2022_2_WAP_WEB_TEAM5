@@ -29,7 +29,6 @@ function MainPage() {
   // Loading 여부 판단
   const [Cov, setCov] = useState("");
 
-  const [AddToggle, setAddToggle] = useState(false);
   const [FileaddToggle, setFileaddToggle] = useState(false);
 
   useEffect(() => {
@@ -51,35 +50,29 @@ function MainPage() {
     setFileId(FileId);
   });
 
-  const onUpdate = (company) => {
+  const onUpdate = async (company) => {
     // 자식에서 return 받은 company 값을 state에 저장시켜준다.
+    // 폴더의 모달창에서 save 버튼을 누르면 입력한 이름이 company로 반환되고 여기로 들어옴
+
     const body = {
       user_id: 1,
       title: company,
     };
 
-    axios
-      .post(
+    try {
+      await axios.post(
+        // 서버에게 요청하고,
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
         body
-      )
-      .then((response) => {
-        console.log(response);
-        if (response.status === 200) {
-          alert("성공");
-        } else if (response.status === 201) {
-          alert("성공");
-          setAddToggle(!AddToggle);
-        } else if (response.status === 400) {
-          alert("중복된 제목");
-        } else {
-          alert("오류입니다.");
-        }
-      });
-    // setCompanyList([...CompanyList, body]);
+      );
+      await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const FolUpdate = async () => {
+    // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
     setLoading(true);
     const result = await axios.get(
       "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
@@ -87,18 +80,6 @@ function MainPage() {
     setCompanyList(result.data.list);
     setLoading(false);
   };
-
-  useEffect(() => {
-    FolUpdate();
-    // axios
-    //   .get(
-    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-    //   )
-    //   .then((response) => {
-    //     setCompanyList(response.data.list);
-    //     setLoading(false);
-    //   });
-  }, [AddToggle]);
 
   const circleClick = (id) => {
     setcircleId(id);
@@ -110,6 +91,7 @@ function MainPage() {
 
   const onfileUpdate = (content) => {
     // 자식에서 return 받은 title 값을 state에 저장 시킨다.
+    // file 모달창에서 save 누르면 나오는 함수
     const body = {
       title: content,
       list_id: circleId,
@@ -138,12 +120,10 @@ function MainPage() {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
       )
       .then((response) => {
-        console.log(response);
         const fileList = response.data.list.filter(
           (company) => company.list_id === circleId
         );
         // 폴더의 list를 돌려서 circleId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
-        console.log(fileList);
 
         if (fileList[0]) {
           setCover(fileList[0].cover_letter);
