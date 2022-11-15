@@ -72,7 +72,6 @@ function Folder({
       const body = {
         listId: id,
       };
-      console.log(body);
 
       axios
         .delete(
@@ -91,7 +90,6 @@ function Folder({
   const circleClick = (id) => {
     circleOnClick(id);
     // 폴더를 클릭했을 때 id를 mainPage로 보내줌
-    console.log(CompanyList.filter((company) => company.list_id === id));
   };
 
   return (

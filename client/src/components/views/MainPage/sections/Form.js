@@ -31,8 +31,6 @@ function Form(props) {
       } else {
         setText(props.Cover[0].description);
       }
-
-      console.log(props.Cover[0]);
     }
   }, [props.Cover]);
 

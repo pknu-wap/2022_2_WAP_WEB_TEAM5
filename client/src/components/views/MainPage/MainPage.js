@@ -28,7 +28,9 @@ function MainPage() {
   const [Loading, setLoading] = useState(false);
   // Loading 여부 판단
   const [Cov, setCov] = useState("");
+
   const [AddToggle, setAddToggle] = useState(false);
+  const [FileaddToggle, setFileaddToggle] = useState(false);
 
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
@@ -48,8 +50,6 @@ function MainPage() {
   useEffect(() => {
     setFileId(FileId);
   });
-
-  // let nextId = CompanyList.length; // id를 현재 배열에 저장되어있는 길이를 구해줌
 
   const onUpdate = (company) => {
     // 자식에서 return 받은 company 값을 state에 저장시켜준다.
@@ -105,24 +105,43 @@ function MainPage() {
       title: content,
       list_id: circleId,
     };
-    console.log(body);
     axios
       .post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
         body
       )
       .then((response) => {
-        console.log(response);
         if (response.status === 200) {
           alert("성공");
         } else if (response.status === 201) {
           alert("리스트 생성 성공");
-          window.location.replace("/main");
+          // window.location.replace("/main");
         } else if (response.status === 400) {
           alert("중복된 제목");
         }
       });
+    setFileaddToggle(!FileaddToggle);
   };
+
+  useEffect(() => {
+    axios
+      .get(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      )
+      .then((response) => {
+        console.log(response);
+        const fileList = response.data.list.filter(
+          (company) => company.list_id === circleId
+        );
+        // 폴더의 list를 돌려서 circleId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
+        console.log(fileList);
+
+        if (fileList[0]) {
+          setCover(fileList[0].cover_letter);
+          setCov(fileList[0].title);
+        }
+      });
+  }, [FileaddToggle]);
 
   return (
     <div>
