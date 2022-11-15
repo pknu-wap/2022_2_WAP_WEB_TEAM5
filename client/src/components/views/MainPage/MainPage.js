@@ -69,13 +69,13 @@ function MainPage() {
           alert("성공");
         } else if (response.status === 201) {
           alert("성공");
+          setAddToggle(!AddToggle);
         } else if (response.status === 400) {
           alert("중복된 제목");
         } else {
           alert("오류입니다.");
         }
       });
-    setAddToggle(!AddToggle);
     // setCompanyList([...CompanyList, body]);
   };
 
@@ -91,6 +91,7 @@ function MainPage() {
   };
 
   useEffect(() => {
+    FolUpdate();
     // axios
     //   .get(
     //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
@@ -99,7 +100,6 @@ function MainPage() {
     //     setCompanyList(response.data.list);
     //     setLoading(false);
     //   });
-    FolUpdate();
   }, [AddToggle]);
 
   const circleClick = (id) => {
@@ -110,7 +110,6 @@ function MainPage() {
     // 클릭한 id에 해당하는 파일들을 Cover에 담음
   };
 
-  // let fileId = CompanyList[id].cover_letter.length; // id를 현재 배열에 저장되어있는 길이를 구해줌
   const onfileUpdate = (content) => {
     // 자식에서 return 받은 title 값을 state에 저장 시킨다.
     const body = {
@@ -127,15 +126,14 @@ function MainPage() {
           alert("성공");
         } else if (response.status === 201) {
           alert("리스트 생성 성공");
-          // window.location.replace("/main");
+          setFileaddToggle(!FileaddToggle);
         } else if (response.status === 400) {
           alert("중복된 제목");
         }
       });
-    setFileaddToggle(!FileaddToggle);
   };
 
-  useEffect(() => {
+  const fileUd = () => {
     axios
       .get(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
@@ -153,6 +151,10 @@ function MainPage() {
           setCov(fileList[0].title);
         }
       });
+  };
+
+  useEffect(() => {
+    fileUd();
   }, [FileaddToggle]);
 
   return (
@@ -201,6 +203,7 @@ function MainPage() {
             circleId={circleId}
             Cov={Cov}
             setCov={setCov}
+            fileUd={fileUd}
           />
         </GridItem>
         {Grammer ? (
