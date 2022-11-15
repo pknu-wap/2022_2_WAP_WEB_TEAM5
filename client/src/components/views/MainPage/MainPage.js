@@ -139,12 +139,11 @@ function MainPage() {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         const fileList = response.data.list.filter(
           (company) => company.list_id === circleId
         );
         // 폴더의 list를 돌려서 circleId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
-        console.log(fileList);
 
         if (fileList[0]) {
           setCover(fileList[0].cover_letter);

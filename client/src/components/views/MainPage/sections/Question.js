@@ -25,6 +25,7 @@ function Question({
   circleId,
   Cov,
   setCov,
+  fileUd,
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
@@ -70,6 +71,10 @@ function Question({
       setCov(cov[0].title);
     }
   }, [circleId]);
+
+  const fileUpdate = () => {
+    fileUd();
+  };
 
   return (
     <div
@@ -120,6 +125,7 @@ function Question({
             setCover={setCover}
             Cover={Cover}
             setfileId={setfileId}
+            fileUpdate={fileUpdate}
           />
         ))}
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
