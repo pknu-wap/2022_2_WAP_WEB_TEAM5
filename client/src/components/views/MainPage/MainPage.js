@@ -79,15 +79,13 @@ function MainPage() {
     // setCompanyList([...CompanyList, body]);
   };
 
-  const FolUpdate = () => {
-    axios
-      .get(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-      )
-      .then((response) => {
-        setCompanyList(response.data.list);
-        setLoading(false);
-      });
+  const FolUpdate = async () => {
+    setLoading(true);
+    const result = await axios.get(
+      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+    );
+    setCompanyList(result.data.list);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -116,6 +114,7 @@ function MainPage() {
       title: content,
       list_id: circleId,
     };
+
     axios
       .post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
@@ -139,11 +138,12 @@ function MainPage() {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
       )
       .then((response) => {
-        // console.log(response);
+        console.log(response);
         const fileList = response.data.list.filter(
           (company) => company.list_id === circleId
         );
         // 폴더의 list를 돌려서 circleId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
+        console.log(fileList);
 
         if (fileList[0]) {
           setCover(fileList[0].cover_letter);

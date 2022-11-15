@@ -28,7 +28,6 @@ function Folder({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
-  const [delFolderTog, setdelFolderTog] = useState(false);
 
   const companyHandler = (event) => {
     // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
@@ -64,7 +63,7 @@ function Folder({
     setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
   };
 
-  const deleteHandler = (id) => {
+  const deleteHandler = async (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
       // 삭제 버튼을 누르면 확인창 띄움
       // setCompanyList(CompanyList.filter((company) => company.list_id !== id));
@@ -72,25 +71,17 @@ function Folder({
       const body = {
         listId: id,
       };
-
-      axios
-        .delete(
+      try {
+        const result = await axios.delete(
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
           { params: body }
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            alert("삭제 성공");
-            // window.location.replace("/main");
-          }
-        });
-      setdelFolderTog(!delFolderTog);
+        );
+        await FolUpdate();
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
-
-  useEffect(() => {
-    FolUpdate();
-  }, [delFolderTog]);
 
   const circleClick = (id) => {
     circleOnClick(id);
