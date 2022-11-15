@@ -8,29 +8,41 @@ function Form(props) {
   const [Title, setTitle] = useState("");
   let [Text, setText] = useState("");
   const [Grammer, setGrammer] = useState(false);
-  const [cov, setCov] = useState("");
   const [questionLock, setquestionLock] = useState(false);
   const [descriptionLock, setdescriptionLock] = useState(false);
 
   useEffect(() => {
     if (props.Cover[0]) {
+      setTitle(props.Cover[0].question);
+      setText(props.Cover[0].description);
+    }
+  }, [props.Cover]);
+
+  useEffect(() => {
+    if (props.Cover[0]) {
+      // Cover가 하나라도 존재하는 상태에서
       const cov = props.Cover.filter((cover) => cover.id === props.FileId);
+      // Question 파일에서 클릭한 아이디와 현재 cover에 있는 id가 동일한 것을 cov에 담음
 
       if (cov[0].question === null || cov[0].question === undefined) {
+        // cov에 담겨있는 것 중 질문이 null이거나 undefined면 Title을 공백으로 설정
         setTitle("");
       } else {
         setTitle(cov[0].question);
+        // 아니라면, 질문에 있는 값을 출력
       }
 
       if (cov[0].description === null || cov[0].description === undefined) {
+        // cov에 담겨있는 것중 description이 null이거나 undefined면 공백으로 설정
         setText("");
       } else {
         setText(cov[0].description);
+        // 아니라면, description에 있는 값을 출력
       }
-      setquestionLock(cov[0].question_lock);
+      setquestionLock(cov[0].question_lock); // 잠금 유무 정보도 받아옴
       setdescriptionLock(cov[0].description_lock);
     }
-  }, [props.FileId]);
+  }, [props.FileId]); // 클릭한 파일의 아이디가 바뀔 때마다 실행
 
   const titleHandler = (event) => {
     setTitle(event.currentTarget.value);

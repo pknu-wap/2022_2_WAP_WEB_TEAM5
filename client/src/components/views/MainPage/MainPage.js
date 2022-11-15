@@ -20,13 +20,7 @@ function MainPage() {
 
   const [FileId, setFileId] = useState("1");
 
-  const [CompanyList, setCompanyList] = useState([
-    {
-      cover_letter: [],
-      list_id: 0,
-      title: "",
-    },
-  ]);
+  const [CompanyList, setCompanyList] = useState([]);
   // 폴더의 list가 저장됨
 
   const [circleId, setcircleId] = useState(0);
@@ -43,8 +37,6 @@ function MainPage() {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
       )
       .then((response) => {
-        // console.log(response.data.list);
-        console.log(response.data);
         setCompanyList(response.data.list);
         setLoading(false);
         setCover(response.data.list[0].cover_letter);
@@ -148,7 +140,7 @@ function MainPage() {
             <div style={{ display: "flex", height: "100%" }}>
               {/* 제목, 내용 입력 칸이랑 맞춤법 검사 태그를 묶는 태그 */}
 
-              <Form FileId={FileId} Cover={Cover} />
+              <Form FileId={FileId} Cover={Cover} CompanyList={CompanyList} />
               {/* 제목과 내용 입력칸 */}
 
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
@@ -195,7 +187,12 @@ function MainPage() {
               height: "100%",
             }}>
             <div style={{ display: "flex", height: "100%" }}>
-              <Form grammer="no" FileId={FileId} Cover={Cover} />
+              <Form
+                grammer="no"
+                FileId={FileId}
+                Cover={Cover}
+                CompanyList={CompanyList}
+              />
               {/* 제목과 내용이 있는 폼과 */}
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
               {/* 오른쪽에 달려있는 태그 */}

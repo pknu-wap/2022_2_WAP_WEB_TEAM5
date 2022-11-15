@@ -30,7 +30,6 @@ function Question({
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
   const [fileId, setfileId] = useState(0);
-  // const [Cov, setCov] = useState(0);
 
   useEffect(() => {
     setFileId(fileId);
