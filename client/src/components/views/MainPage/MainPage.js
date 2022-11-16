@@ -13,7 +13,7 @@ import Question from "./sections/Question";
 import Folder from "./sections/Folder";
 // 사전 기능 ,
 
-import { CoverState, CompanyListState, folderClickIdState } from "./Atom";
+import { CoverState, CompanyListState } from "./Atom";
 import { useRecoilState } from "recoil";
 
 function MainPage() {
@@ -23,8 +23,6 @@ function MainPage() {
 
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   // 폴더의 list가 저장됨
-
-  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
 
   const [Loading, setLoading] = useState(false);
   // Loading 여부 판단
@@ -51,75 +49,6 @@ function MainPage() {
     first();
   }, []);
 
-  const onUpdate = async (company) => {
-    // 자식에서 return 받은 company 값을 state에 저장시켜준다.
-    // 폴더의 모달창에서 save 버튼을 누르면 입력한 이름이 company로 반환되고 여기로 들어옴
-
-    const body = {
-      user_id: 1,
-      title: company,
-    };
-
-    try {
-      await axios.post(
-        // 서버에게 요청하고,
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
-        body
-      );
-      await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const FolUpdate = async () => {
-    // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
-    setLoading(true);
-    const response = await axios.get(
-      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-    );
-    setCompanyList(response.data.list);
-    setLoading(false);
-  };
-
-  const onfileUpdate = async (content) => {
-    // 자식에서 return 받은 title 값을 state에 저장 시킨다.
-    // file 모달창에서 save 누르면 나오는 함수
-    const body = {
-      title: content,
-      list_id: folderClickId === 0 ? CompanyList[0].list_id : folderClickId,
-      // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
-    };
-
-    try {
-      await axios.post(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-        body
-      );
-      await fileUd();
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const fileUd = async () => {
-    const response = await axios.get(
-      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-    );
-    const fileList = await response.data.list.filter(
-      (company) =>
-        company.list_id ===
-        (folderClickId === 0 ? CompanyList[0].list_id : folderClickId)
-      // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
-    );
-    // 폴더의 list를 돌려서 folderClickId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
-    setCompanyList(response.data.list);
-    if (fileList[0]) {
-      setCover(fileList[0].cover_letter);
-      setCov(fileList[0].title);
-    }
-  };
-
   return (
     <div>
       <div>
@@ -140,12 +69,7 @@ function MainPage() {
             overflow: "scroll",
           }}>
           <Folder
-            // 이곳은 폴더들의 내용이 담겨있음
-            CompanyList={CompanyList}
-            setCompanyList={setCompanyList}
-            refreshFunction={onUpdate}
-            // circleOnClick={circleClick}
-            FolUpdate={FolUpdate}
+          // 이곳은 폴더들의 내용이 담겨있음
           />
         </GridItem>
 
@@ -157,15 +81,7 @@ function MainPage() {
             height: "100%",
             overflow: "scroll",
           }}>
-          <Question
-            CompanyList={CompanyList} // CompanyList를 넘겨줘서 젤 위의 회사 명이 출력되도록 함
-            Cover={Cover} // 폴더 내용을 받아올 수 있도록 함
-            setCover={setCover}
-            refreshFunction={onfileUpdate}
-            Cov={Cov}
-            setCov={setCov}
-            fileUd={fileUd}
-          />
+          <Question Cov={Cov} setCov={setCov} />
         </GridItem>
         {Grammer ? (
           // 문법이 켜져있다면,

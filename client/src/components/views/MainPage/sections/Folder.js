@@ -20,20 +20,21 @@ import {
 import axios from "axios";
 import { folderClickIdState, CoverState, CompanyListState } from "../Atom";
 
-function Folder({ refreshFunction, FolUpdate }) {
+function Folder() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
   const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
   const [Cover, setCover] = useRecoilState(CoverState);
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
+  const [Loading, setLoading] = useState(false);
 
   const companyHandler = (event) => {
     // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
     setCompany(event.currentTarget.value);
   };
 
-  const companyclickHandler = () => {
+  const companyclickHandler = async () => {
     // save 버튼을 눌렀을 때 작동하는 코드
 
     let va = false; // 일단 false로 저장해놓음(중복 여부 / 중복일 시 true)
@@ -50,7 +51,24 @@ function Folder({ refreshFunction, FolUpdate }) {
       });
       if (va === false) {
         // 중복이 아니라면
-        refreshFunction(Company); // mainPage로 폴더 이름을 보내줌
+        // 자식에서 return 받은 company 값을 state에 저장시켜준다.
+        // 폴더의 모달창에서 save 버튼을 누르면 입력한 이름이 company로 반환되고 여기로 들어옴
+
+        const body = {
+          user_id: 1,
+          title: Company,
+        };
+
+        try {
+          await axios.post(
+            // 서버에게 요청하고,
+            "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
+            body
+          );
+          await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
+        } catch (e) {
+          console.log(e);
+        }
         onClose(); // 모달창을 닫아주는 코드
       } else {
         alert("중복되는 폴더가 존재합니다."); // 중복이라면 alert창을 띄움
@@ -80,6 +98,16 @@ function Folder({ refreshFunction, FolUpdate }) {
         console.log(e);
       }
     }
+  };
+
+  const FolUpdate = async () => {
+    // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
+    setLoading(true);
+    const response = await axios.get(
+      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+    );
+    setCompanyList(response.data.list);
+    setLoading(false);
   };
 
   const circleClick = (id) => {

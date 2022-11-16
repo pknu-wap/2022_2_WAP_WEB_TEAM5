@@ -17,15 +17,9 @@ import {
 } from "@chakra-ui/react";
 import QuestionList from "./QuestionList";
 import { CoverState, CompanyListState, folderClickIdState } from "../Atom";
+import axios from "axios";
 
-function Question({
-  // CompanyList,
-  refreshFunction,
-  circleId,
-  Cov,
-  setCov,
-  fileUd,
-}) {
+function Question({ Cov, setCov }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
@@ -37,7 +31,7 @@ function Question({
     setContent(event.currentTarget.value);
   };
 
-  const contentclickHandler = () => {
+  const contentclickHandler = async () => {
     let va = false;
 
     if (Content) {
@@ -49,7 +43,23 @@ function Question({
       });
 
       if (va === false) {
-        refreshFunction(Content);
+        // 자식에서 return 받은 title 값을 state에 저장 시킨다.
+        // file 모달창에서 save 누르면 나오는 함수
+        const body = {
+          title: Content,
+          list_id: folderClickId === 0 ? CompanyList[0].list_id : folderClickId,
+          // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
+        };
+
+        try {
+          await axios.post(
+            "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+            body
+          );
+          await fileUd();
+        } catch (e) {
+          console.log(e);
+        }
         onClose();
       } else {
         alert("중복되는 파일이 존재합니다.");
@@ -62,7 +72,6 @@ function Question({
   };
 
   useEffect(() => {
-    // CompanyList[0] &&
     const cov = CompanyList.filter(
       (company) => company.list_id === folderClickId
     );
@@ -72,8 +81,22 @@ function Question({
     }
   }, [folderClickId]);
 
-  const fileUpdate = () => {
-    fileUd();
+  const fileUd = async () => {
+    const response = await axios.get(
+      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+    );
+    const fileList = await response.data.list.filter(
+      (company) =>
+        company.list_id ===
+        (folderClickId === 0 ? CompanyList[0].list_id : folderClickId)
+      // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
+    );
+    // 폴더의 list를 돌려서 folderClickId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
+    setCompanyList(response.data.list);
+    if (fileList[0]) {
+      setCover(fileList[0].cover_letter);
+      setCov(fileList[0].title);
+    }
   };
 
   return (
@@ -124,7 +147,7 @@ function Question({
             content={content}
             setCover={setCover}
             Cover={Cover}
-            fileUpdate={fileUpdate}
+            fileUd={fileUd}
           />
         ))}
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>

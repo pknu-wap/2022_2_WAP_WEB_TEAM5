@@ -5,32 +5,27 @@ import { Button } from "@chakra-ui/react";
 import axios from "axios";
 import { fileClickIdState } from "../Atom";
 
-function QuestionList({ content, fileOnClick, fileUpdate }) {
+function QuestionList({ content, fileUd }) {
   const [Edit, setEdit] = useState(false);
   const [Text, setText] = useState(content.title);
   const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
 
-  const deleteClick = (id) => {
+  const deleteClick = async (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
       // setCover(Cover.filter((content) => content.id !== id));
       const body = {
         id: id,
       };
 
-      axios
-        .delete(
+      try {
+        await axios.delete(
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
           { params: body }
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            alert("삭제 성공");
-          } else if (response.status === 400) {
-            alert("자기소개서가 하나여서 삭제가 불가능합니다.");
-          } else {
-            alert("오류");
-          }
-        });
+        );
+        await fileUd();
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -42,7 +37,7 @@ function QuestionList({ content, fileOnClick, fileUpdate }) {
     setEdit(true);
   };
 
-  const CheckOnClick = (id) => {
+  const CheckOnClick = async (id) => {
     // console.log(Cover.id);
     const body = {
       id: id,
@@ -53,20 +48,15 @@ function QuestionList({ content, fileOnClick, fileUpdate }) {
     //   title: cover.id === id ? Text : cover.title,
     // }));
     // setCover(editCover);
-
-    axios
-      .put(
+    try {
+      await axios.put(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
         body
-      )
-      .then((response) => {
-        if (response.status === 200) {
-          alert("갱신 성공");
-          window.location.replace("/main");
-        } else {
-          alert("실패");
-        }
-      });
+      );
+      await fileUd();
+    } catch (e) {
+      console.log(e);
+    }
 
     setEdit(false);
   };
