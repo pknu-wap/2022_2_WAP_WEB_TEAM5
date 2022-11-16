@@ -4,7 +4,13 @@ import { Button } from "@chakra-ui/react";
 import Count from "./Count";
 import { LockIcon, UnlockIcon } from "@chakra-ui/icons";
 import axios from "axios";
-import { CoverState, fileClickIdState } from "../Atom";
+import {
+  CoverState,
+  fileClickIdState,
+  folderClickIdState,
+  CompanyListState,
+  FormState,
+} from "../Atom";
 
 function Form(props) {
   // 맞춤법 검사가 꺼져있음
@@ -15,22 +21,9 @@ function Form(props) {
   const [descriptionLock, setdescriptionLock] = useState(false);
   const [Cover, setCover] = useRecoilState(CoverState);
   const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
-
-  useEffect(() => {
-    if (Cover[0]) {
-      if (Cover[0].question === null || Cover[0].question === undefined) {
-        setTitle("");
-      } else {
-        setTitle(Cover[0].question);
-      }
-
-      if (Cover[0].description === null || Cover[0].description === undefined) {
-        setText("");
-      } else {
-        setText(Cover[0].description);
-      }
-    }
-  }, [Cover]);
+  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
+  const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
+  const [Form, setForm] = useRecoilState(FormState);
 
   useEffect(() => {
     if (Cover[0]) {
@@ -53,8 +46,10 @@ function Form(props) {
         setText(cov[0].description);
         // 아니라면, description에 있는 값을 출력
       }
-      setquestionLock(cov[0].question_lock); // 잠금 유무 정보도 받아옴
-      setdescriptionLock(cov[0].description_lock);
+      // FormUpdate();
+
+      // setquestionLock(cov[0].question_lock); // 잠금 유무 정보도 받아옴
+      // setdescriptionLock(cov[0].description_lock);
     }
   }, [fileClickId]); // 클릭한 파일의 아이디가 바뀔 때마다 실행
 
@@ -82,61 +77,76 @@ function Form(props) {
     }
   };
 
-  const titlebuttonHandler = () => {
+  const titlebuttonHandler = async () => {
     if (questionLock === false) {
       const body = {
         id: fileClickId,
         question: Title,
       };
       // setTitle(Title);
-      axios
-        .put(
+      try {
+        await axios.put(
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
           body
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            alert("갱신 성공");
-            window.location.replace("/main");
-          } else {
-            alert("실패");
-          }
-        });
+        );
+        await FormUpdate();
+      } catch (e) {
+        console.log(e);
+      }
     }
     setquestionLock(!questionLock);
-    console.log(questionLock);
     // 질문 자물쇠
   };
 
-  const textbuttonHandler = () => {
+  const textbuttonHandler = async () => {
     // setText(Text);
     if (descriptionLock === false) {
       const body = {
-        id: props.FileId,
+        id: fileClickId,
         description: Text,
       };
-      axios
-        .put(
+
+      try {
+        await axios.put(
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
           body
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            alert("갱신 성공");
-            window.location.replace("/main");
-          } else {
-            alert("실패");
-          }
-        });
+        );
+        await FormUpdate();
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     setdescriptionLock(!descriptionLock);
-    // console.log(descriptionLock);
     // 내용 자물쇠
   };
 
-  const saveHandler = () => {
-    setText(Text);
+  const FormUpdate = async () => {
+    // console.log(Cover);
+    const response = await axios.get(
+      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+    );
+    setCompanyList(response.data.list);
+    const fileList = await response.data.list.filter(
+      (company) =>
+        company.list_id ===
+        (folderClickId === 0 ? CompanyList[0].list_id : folderClickId)
+      // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
+    );
+
+    if (fileList[0]) {
+      const co = fileList[0].cover_letter;
+      setCover(fileList[0].cover_letter);
+
+      const FormList = co.filter(
+        (form) => form.id === (fileClickId === 0 ? co[0].id : fileClickId)
+      );
+
+      if (FormList[0]) {
+        setTitle(FormList[0].question);
+        setText(FormList[0].description);
+      }
+    }
   };
 
   const calc = (text, blank = 0) => {
@@ -149,8 +159,6 @@ function Form(props) {
     if (text !== 0) {
       word = text.length;
     }
-    // setWord(Text.length);
-    // console.log(Text.length);
     return word;
   };
 

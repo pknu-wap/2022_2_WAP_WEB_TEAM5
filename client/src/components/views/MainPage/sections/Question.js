@@ -56,7 +56,7 @@ function Question({ Cov, setCov }) {
             "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
             body
           );
-          await fileUd();
+          await fileUpdate();
         } catch (e) {
           console.log(e);
         }
@@ -81,10 +81,11 @@ function Question({ Cov, setCov }) {
     }
   }, [folderClickId]);
 
-  const fileUd = async () => {
+  const fileUpdate = async () => {
     const response = await axios.get(
       "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
     );
+    setCompanyList(response.data.list);
     const fileList = await response.data.list.filter(
       (company) =>
         company.list_id ===
@@ -92,7 +93,6 @@ function Question({ Cov, setCov }) {
       // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
     );
     // 폴더의 list를 돌려서 folderClickId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
-    setCompanyList(response.data.list);
     if (fileList[0]) {
       setCover(fileList[0].cover_letter);
       setCov(fileList[0].title);
@@ -147,7 +147,7 @@ function Question({ Cov, setCov }) {
             content={content}
             setCover={setCover}
             Cover={Cover}
-            fileUd={fileUd}
+            fileUpdate={fileUpdate}
           />
         ))}
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>

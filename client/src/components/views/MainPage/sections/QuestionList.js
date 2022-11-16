@@ -5,7 +5,7 @@ import { Button } from "@chakra-ui/react";
 import axios from "axios";
 import { fileClickIdState } from "../Atom";
 
-function QuestionList({ content, fileUd }) {
+function QuestionList({ content, fileUpdate }) {
   const [Edit, setEdit] = useState(false);
   const [Text, setText] = useState(content.title);
   const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
@@ -22,7 +22,7 @@ function QuestionList({ content, fileUd }) {
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
           { params: body }
         );
-        await fileUd();
+        await fileUpdate();
       } catch (e) {
         console.log(e);
       }
@@ -53,7 +53,7 @@ function QuestionList({ content, fileUd }) {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
         body
       );
-      await fileUd();
+      await fileUpdate();
     } catch (e) {
       console.log(e);
     }
