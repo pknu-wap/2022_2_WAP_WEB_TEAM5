@@ -1,8 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
 import { Button } from "@chakra-ui/react";
 import Count from "./Count";
 import { LockIcon, UnlockIcon } from "@chakra-ui/icons";
 import axios from "axios";
+import { CoverState, fileClickIdState } from "../Atom";
 
 function Form(props) {
   // 맞춤법 검사가 꺼져있음
@@ -11,33 +13,29 @@ function Form(props) {
   const [Grammer, setGrammer] = useState(false);
   const [questionLock, setquestionLock] = useState(false);
   const [descriptionLock, setdescriptionLock] = useState(false);
+  const [Cover, setCover] = useRecoilState(CoverState);
+  const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
 
   useEffect(() => {
-    if (props.Cover[0]) {
-      if (
-        props.Cover[0].question === null ||
-        props.Cover[0].question === undefined
-      ) {
+    if (Cover[0]) {
+      if (Cover[0].question === null || Cover[0].question === undefined) {
         setTitle("");
       } else {
-        setTitle(props.Cover[0].question);
+        setTitle(Cover[0].question);
       }
 
-      if (
-        props.Cover[0].description === null ||
-        props.Cover[0].description === undefined
-      ) {
+      if (Cover[0].description === null || Cover[0].description === undefined) {
         setText("");
       } else {
-        setText(props.Cover[0].description);
+        setText(Cover[0].description);
       }
     }
-  }, [props.Cover]);
+  }, [Cover]);
 
   useEffect(() => {
-    if (props.Cover[0]) {
+    if (Cover[0]) {
       // Cover가 하나라도 존재하는 상태에서
-      const cov = props.Cover.filter((cover) => cover.id === props.FileId);
+      const cov = Cover.filter((cover) => cover.id === fileClickId);
       // Question 파일에서 클릭한 아이디와 현재 cover에 있는 id가 동일한 것을 cov에 담음
 
       if (cov[0].question === null || cov[0].question === undefined) {
@@ -58,7 +56,7 @@ function Form(props) {
       setquestionLock(cov[0].question_lock); // 잠금 유무 정보도 받아옴
       setdescriptionLock(cov[0].description_lock);
     }
-  }, [props.FileId]); // 클릭한 파일의 아이디가 바뀔 때마다 실행
+  }, [fileClickId]); // 클릭한 파일의 아이디가 바뀔 때마다 실행
 
   const titleHandler = (event) => {
     setTitle(event.currentTarget.value);
@@ -87,7 +85,7 @@ function Form(props) {
   const titlebuttonHandler = () => {
     if (questionLock === false) {
       const body = {
-        id: props.FileId,
+        id: fileClickId,
         question: Title,
       };
       // setTitle(Title);

@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import { DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
 import axios from "axios";
+import { fileClickIdState } from "../Atom";
 
-function QuestionList({
-  content,
-  setCover,
-  Cover,
-  fileOnClick,
-  setfileId,
-  fileUpdate,
-}) {
+function QuestionList({ content, fileOnClick, fileUpdate }) {
   const [Edit, setEdit] = useState(false);
   const [Text, setText] = useState(content.title);
-  const [delFileTog, setdelFileTog] = useState(false);
+  const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
 
   const deleteClick = (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
@@ -30,7 +25,6 @@ function QuestionList({
         .then((response) => {
           if (response.status === 200) {
             alert("삭제 성공");
-            setdelFileTog(!delFileTog);
           } else if (response.status === 400) {
             alert("자기소개서가 하나여서 삭제가 불가능합니다.");
           } else {
@@ -39,10 +33,6 @@ function QuestionList({
         });
     }
   };
-
-  useEffect(() => {
-    fileUpdate();
-  }, [delFileTog]);
 
   const onChangeHandler = (event) => {
     setText(event.currentTarget.value);
@@ -82,7 +72,7 @@ function QuestionList({
   };
 
   const questionClick = (id) => {
-    setfileId(id);
+    setfileClickId(id);
   };
 
   return (

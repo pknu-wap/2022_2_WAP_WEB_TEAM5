@@ -13,42 +13,43 @@ import Question from "./sections/Question";
 import Folder from "./sections/Folder";
 // 사전 기능 ,
 
+import { CoverState, CompanyListState, folderClickIdState } from "./Atom";
+import { useRecoilState } from "recoil";
+
 function MainPage() {
-  const [Cover, setCover] = useState([]); // 파일을 저장
+  // const [Cover, setCover] = useState([]); // 파일을 저장
   const [Grammer, setGrammer] = useState(false);
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
 
-  const [FileId, setFileId] = useState("1");
-
-  const [CompanyList, setCompanyList] = useState([]);
+  const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   // 폴더의 list가 저장됨
 
-  const [circleId, setcircleId] = useState(0);
+  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
 
   const [Loading, setLoading] = useState(false);
   // Loading 여부 판단
   const [Cov, setCov] = useState("");
 
-  const [FileaddToggle, setFileaddToggle] = useState(false);
+  const [Cover, setCover] = useRecoilState(CoverState);
 
+  const first = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      );
+      setCompanyList(response.data.list);
+      setCover(response.data.list[0].cover_letter);
+      setLoading(false);
+      setCov(response.data.list[0].title);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
-    setLoading(true);
-    axios
-      .get(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-      )
-      .then((response) => {
-        setCompanyList(response.data.list);
-        setLoading(false);
-        setCover(response.data.list[0].cover_letter);
-        setCov(response.data.list[0].title);
-      });
+    first();
   }, []);
-
-  useEffect(() => {
-    setFileId(FileId);
-  });
 
   const onUpdate = async (company) => {
     // 자식에서 return 받은 company 값을 state에 저장시켜준다.
@@ -74,67 +75,50 @@ function MainPage() {
   const FolUpdate = async () => {
     // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
     setLoading(true);
-    const result = await axios.get(
+    const response = await axios.get(
       "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
     );
-    setCompanyList(result.data.list);
+    setCompanyList(response.data.list);
     setLoading(false);
   };
 
-  const circleClick = (id) => {
-    setcircleId(id);
-    const cov = CompanyList.filter((company) => company.list_id === id);
-    // CompanyList에 담겨져있는 폴더들을 살피면서 클릭한 id와 같은 것을 추출해냄
-    setCover(cov[0].cover_letter);
-    // 클릭한 id에 해당하는 파일들을 Cover에 담음
-  };
-
-  const onfileUpdate = (content) => {
+  const onfileUpdate = async (content) => {
     // 자식에서 return 받은 title 값을 state에 저장 시킨다.
     // file 모달창에서 save 누르면 나오는 함수
     const body = {
       title: content,
-      list_id: circleId,
+      list_id: folderClickId === 0 ? CompanyList[0].list_id : folderClickId,
+      // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
     };
 
-    axios
-      .post(
+    try {
+      await axios.post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
         body
-      )
-      .then((response) => {
-        if (response.status === 200) {
-          alert("성공");
-        } else if (response.status === 201) {
-          alert("리스트 생성 성공");
-          setFileaddToggle(!FileaddToggle);
-        } else if (response.status === 400) {
-          alert("중복된 제목");
-        }
-      });
+      );
+      await fileUd();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const fileUd = () => {
-    axios
-      .get(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-      )
-      .then((response) => {
-        const fileList = response.data.list.filter(
-          (company) => company.list_id === circleId
-        );
-        // 폴더의 list를 돌려서 circleId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
-
-        if (fileList[0]) {
-          setCover(fileList[0].cover_letter);
-          setCov(fileList[0].title);
-        }
-      });
+  const fileUd = async () => {
+    const response = await axios.get(
+      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+    );
+    const fileList = await response.data.list.filter(
+      (company) =>
+        company.list_id ===
+        (folderClickId === 0 ? CompanyList[0].list_id : folderClickId)
+      // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
+    );
+    // 폴더의 list를 돌려서 folderClickId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
+    setCompanyList(response.data.list);
+    if (fileList[0]) {
+      setCover(fileList[0].cover_letter);
+      setCov(fileList[0].title);
+    }
   };
-
-  useEffect(() => {
-    fileUd();
-  }, [FileaddToggle]);
 
   return (
     <div>
@@ -160,7 +144,7 @@ function MainPage() {
             CompanyList={CompanyList}
             setCompanyList={setCompanyList}
             refreshFunction={onUpdate}
-            circleOnClick={circleClick}
+            // circleOnClick={circleClick}
             FolUpdate={FolUpdate}
           />
         </GridItem>
@@ -178,8 +162,6 @@ function MainPage() {
             Cover={Cover} // 폴더 내용을 받아올 수 있도록 함
             setCover={setCover}
             refreshFunction={onfileUpdate}
-            setFileId={setFileId}
-            circleId={circleId}
             Cov={Cov}
             setCov={setCov}
             fileUd={fileUd}
@@ -196,7 +178,7 @@ function MainPage() {
             <div style={{ display: "flex", height: "100%" }}>
               {/* 제목, 내용 입력 칸이랑 맞춤법 검사 태그를 묶는 태그 */}
 
-              <Form FileId={FileId} Cover={Cover} CompanyList={CompanyList} />
+              <Form Cover={Cover} CompanyList={CompanyList} />
               {/* 제목과 내용 입력칸 */}
 
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
@@ -243,12 +225,7 @@ function MainPage() {
               height: "100%",
             }}>
             <div style={{ display: "flex", height: "100%" }}>
-              <Form
-                grammer="no"
-                FileId={FileId}
-                Cover={Cover}
-                CompanyList={CompanyList}
-              />
+              <Form grammer="no" Cover={Cover} CompanyList={CompanyList} />
               {/* 제목과 내용이 있는 폼과 */}
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
               {/* 오른쪽에 달려있는 태그 */}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Modal,
@@ -15,13 +16,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import QuestionList from "./QuestionList";
+import { CoverState, CompanyListState, folderClickIdState } from "../Atom";
 
 function Question({
-  CompanyList,
-  Cover,
-  setCover,
+  // CompanyList,
   refreshFunction,
-  setFileId,
   circleId,
   Cov,
   setCov,
@@ -30,11 +29,9 @@ function Question({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
-  const [fileId, setfileId] = useState(0);
-
-  useEffect(() => {
-    setFileId(fileId);
-  }, [fileId]);
+  const [Cover, setCover] = useRecoilState(CoverState);
+  const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
+  const [folderClickId, setFolderClickId] = useRecoilState(folderClickIdState);
 
   const ContentHandler = (event) => {
     setContent(event.currentTarget.value);
@@ -65,12 +62,15 @@ function Question({
   };
 
   useEffect(() => {
-    const cov = CompanyList.filter((company) => company.list_id === circleId);
+    // CompanyList[0] &&
+    const cov = CompanyList.filter(
+      (company) => company.list_id === folderClickId
+    );
 
     if (cov[0]) {
       setCov(cov[0].title);
     }
-  }, [circleId]);
+  }, [folderClickId]);
 
   const fileUpdate = () => {
     fileUd();
@@ -124,7 +124,6 @@ function Question({
             content={content}
             setCover={setCover}
             Cover={Cover}
-            setfileId={setfileId}
             fileUpdate={fileUpdate}
           />
         ))}

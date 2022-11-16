@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Modal,
@@ -17,17 +18,15 @@ import {
   AvatarBadge,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { folderClickIdState, CoverState, CompanyListState } from "../Atom";
 
-function Folder({
-  CompanyList,
-  setCompanyList,
-  refreshFunction,
-  circleOnClick,
-  FolUpdate,
-}) {
+function Folder({ refreshFunction, FolUpdate }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
+  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
+  const [Cover, setCover] = useRecoilState(CoverState);
+  const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
 
   const companyHandler = (event) => {
     // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
@@ -72,7 +71,7 @@ function Folder({
         listId: id,
       };
       try {
-        const result = await axios.delete(
+        await axios.delete(
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
           { params: body }
         );
@@ -84,7 +83,10 @@ function Folder({
   };
 
   const circleClick = (id) => {
-    circleOnClick(id);
+    const cov = CompanyList.filter((company) => company.list_id === id);
+    // CompanyList에 담겨져있는 폴더들을 살피면서 클릭한 id와 같은 것을 추출해냄
+    setCover(cov[0].cover_letter);
+    setfolderClickId(id);
     // 폴더를 클릭했을 때 id를 mainPage로 보내줌
   };
 
