@@ -20,7 +20,11 @@
     height: 45%;
     text-align: left;
     background-color: white;
+    -ms-overflow-style: none;
 } 
+.my-info::-webkit-scrollbar{
+    display: none;
+}
 
 .memo {
     margin-left: 5%;
@@ -41,43 +45,29 @@
 
 .info-div{
     width: 100%;
-    height: 15%;
+    height: 20%;
     background-color: white;
-}
+    -ms-overflow-style: none;
 
-.info-type {
-    display: inline-block;
-    width: 12%;
+}
+.info-div::-webkit-scrollbar{
+    display: none;
 }
 
 .info-myinfo {
     display: inline-block;
-    width: 20%
 }
 
 .info-contents {
     display: flex;
 }
 
-.info-type-myinfo {
-    display: flex;
-}
-
-.info-type-contents {
-    text-align: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-left: 5px;
-    margin-top: 5%;
-    background-color: #d9d9d9;
-}
-
 .info-myinfo-contents {
-    text-align: left;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    text-align: center;
+    padding: 5px 10px 5px 10px;
     width: 100%;
-    margin-top: 5%;
+    height: 100%;
+    margin: 5% 0 5% 0;
 }
 
 .right-title {
@@ -89,6 +79,11 @@
         margin-bottom: 10px;
 }
 
+/* 카드 div */
 .infoCard {
-    padding: 0 10% 0 10%;
+    width: 200px;
+    height: 100%;
+    margin-right: 20px;
+    border-radius: 10%;
+    background-color: #d9d9d9;
 }

@@ -35,6 +35,11 @@ function Profile() {
     onOpen: onOpen3,
     onClose: onClose3,
   } = useDisclosure();
+  const {
+    isOpen: isOpen4,
+    onOpen: onOpen4,
+    onClose: onClose4,
+  } = useDisclosure();
 
   const initialRef = React.useRef(null);
 
@@ -62,6 +67,16 @@ function Profile() {
   };
   const infoHandler2 = (event) => {
     setInfo2(event.currentTarget.value);
+  };
+  //어학 성적
+  const dateHandler3 = (event) => {
+    setDate3(event.currentTarget.value);
+  };
+  const nameHandler3 = (event) => {
+    setName3(event.currentTarget.value);
+  };
+  const infoHandler3 = (event) => {
+    setInfo3(event.currentTarget.value);
   };
   //인적사항
   const schoolHandler = (event) => {
@@ -121,6 +136,11 @@ function Profile() {
   let [Name2, setName2] = useState("");
   let [Info2, setInfo2] = useState("");
   let [Content2, setContent2] = useState([]);
+  //어학 성적
+  let [Date3, setDate3] = useState("");
+  let [Name3, setName3] = useState("");
+  let [Info3, setInfo3] = useState("");
+  let [Content3, setContent3] = useState([]);
   //메모
   let [Memo, setMemo] = useState("");
 
@@ -202,8 +222,22 @@ function Profile() {
     setInfo2("");
   };
 
+  //어학 성적
+  const updateLen = () => {
+    setDate3([...Date3, Date3]);
+    setName3([...Name3, Name3]);
+    setInfo3([...Info3, Info3]);
+
+    const con3 = { date3: Date3, name3: Name3, info3: Info3 };
+    setContent3([...Content3, con3]);
+
+    setDate3("");
+    setName3("");
+    setInfo3("");
+  };
+
   return (
-    <div style={{ width: "100%", height: "100vh", backgroundColor: "#d9d9d9" }}>
+    <div style={{ width: "100%", height: "100vh", backgroundColor: "white" }}>
       <NavBar />
       {/* ---------------------------------------------------------------- */}
       <div className="left-nav">
@@ -211,36 +245,25 @@ function Profile() {
         <div className="info-title">
           <h4>취득 자격증</h4>
         </div>
-        {/* info-div */}
-        <div
-          className="info-div"
-          style={{ overflow: "scroll", maxWidth: "100%" }}>
-          <div className="info-type-myinfo">
-            {/* info-type */}
-            <div className="info-type">
-              <h6 className="info-type-contents">날짜</h6>
-              <h6 className="info-type-contents">자격증명</h6>
-              <h6 className="info-type-contents">상세정보</h6>
-            </div>
-
-            {/* info-myinfo */}
-            <div className="info-myinfo">
-              <div className="info-contents">
-                {Content &&
-                  Content.map((contents, index) => (
-                    <div className="infoCard">
-                      <div className="info-myinfo-contents" key={index}>
-                        {contents.date}
-                      </div>
-                      <div className="info-myinfo-contents" key={index}>
-                        {contents.name}
-                      </div>
-                      <div className="info-myinfo-contents" key={index}>
-                        {contents.info}
-                      </div>
+        {/* 전체카드 감싸는 div */}
+        <div className="info-div" style={{ overflow: "scroll" }}>
+          {/* info-myinfo */}
+          <div className="info-myinfo">
+            <div className="info-contents">
+              {Content &&
+                Content.map((contents, index) => (
+                  <div className="infoCard">
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.date}
                     </div>
-                  ))}
-              </div>
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.name}
+                    </div>
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.info}
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -313,35 +336,25 @@ function Profile() {
         <div className="info-title">
           <h4>수상 경력</h4>
         </div>
-        {/* info-div */}
-        <div
-          className="info-div"
-          style={{ overflow: "scroll", maxWidth: "100%" }}>
-          <div className="info-type-myinfo">
-            {/* info-type */}
-            <div className="info-type">
-              <h6 className="info-type-contents">날짜</h6>
-              <h6 className="info-type-contents">대회명</h6>
-              <h6 className="info-type-contents">상세정보</h6>
-            </div>
-            {/* info-myinfo */}
-            <div className="info-myinfo">
-              <div className="info-contents">
-                {Content2 &&
-                  Content2.map((contents, index) => (
-                    <div className="infoCard">
-                      <div className="info-myinfo-contents" key={index}>
-                        {contents.date2}
-                      </div>
-                      <div className="info-myinfo-contents" key={index}>
-                        {contents.name2}
-                      </div>
-                      <div className="info-myinfo-contents" key={index}>
-                        {contents.info2}
-                      </div>
+        {/* 전체카드 감싸는 div */}
+        <div className="info-div" style={{ overflow: "scroll" }}>
+          {/* info-myinfo */}
+          <div className="info-myinfo">
+            <div className="info-contents">
+              {Content2 &&
+                Content2.map((contents, index) => (
+                  <div className="infoCard">
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.date2}
                     </div>
-                  ))}
-              </div>
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.name2}
+                    </div>
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.info2}
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
           <Modal
@@ -412,18 +425,97 @@ function Profile() {
         <div className="info-title">
           <h4>어학 성적</h4>
         </div>
-        <div
-          className="info-div"
-          style={{ overflow: "scroll", maxWidth: "100%" }}></div>
+        <div className="info-div" style={{ overflow: "scroll" }}>
+          {/* info-myinfo */}
+          <div className="info-myinfo">
+            <div className="info-contents">
+              {Content3 &&
+                Content3.map((contents, index) => (
+                  <div className="infoCard">
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.date3}
+                    </div>
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.name3}
+                    </div>
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.info3}
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+          <Modal
+            initialFocusRef={initialRef}
+            isOpen={isOpen4}
+            onClose={onClose4}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>어학 성적 정보를 입력해주세요.</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody pb={6}>
+                <FormControl>
+                  <FormLabel>날짜</FormLabel>
+                  <Input
+                    ref={initialRef}
+                    value={Date3}
+                    placeholder="ex) 2022.10.1"
+                    onChange={dateHandler3}
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>시험명</FormLabel>
+                  <Input
+                    placeholder="ex) 아이디어톤"
+                    value={Name3}
+                    onChange={nameHandler3}
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>등급</FormLabel>
+                  <Input
+                    placeholder="ex) 대상"
+                    value={Info3}
+                    onChange={infoHandler3}
+                  />
+                </FormControl>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  onClick={() => {
+                    updateLen();
+                    onClose4();
+                  }}
+                  mr={3}>
+                  Save
+                </Button>
+                <Button onClick={onClose4}>Cancel</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </div>
+        <Button
+          variant="outline"
+          colorScheme="gray"
+          onClick={onOpen4}
+          style={{
+            float: "right",
+            marginTop: "10px",
+            border: "1px solid gray",
+            width: "5%",
+            height: "30px",
+          }}>
+          추가
+        </Button>
       </div>
       {/* ---------------------------------------------------------------- */}
       <div className="right-nav">
         <div className="right-title">
           <h4>인적사항</h4>
         </div>
-        <div
-          className="my-info"
-          style={{ overflow: "scroll", maxWidth: "100%" }}>
+        <div className="my-info" style={{ overflow: "scroll" }}>
           <Modal
             initialFocusRef={initialRef}
             isOpen={isOpen3}
@@ -508,19 +600,6 @@ function Profile() {
               height: "100%",
               marginRight: "10px",
             }}>
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                marginTop: "5px",
-                marginBottom: "0",
-                backgroundColor: "#d9d9d9",
-                borderBottom: "1px solid black",
-              }}>
-              인적사항 종류
-            </h6>
             {Type &&
               Type.map((contents, index) => (
                 <div
@@ -542,19 +621,6 @@ function Profile() {
               height: "100%",
               marginRight: "10px",
             }}>
-            <h6
-              style={{
-                textAlign: "center",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                marginLeft: "5px",
-                borderBottom: "1px solid black",
-                marginBottom: "0",
-                marginTop: "5px",
-                backgroundColor: "#d9d9d9",
-              }}>
-              내 정보
-            </h6>
             {MyInfo &&
               MyInfo.map((contents, index) => (
                 <div
@@ -568,18 +634,20 @@ function Profile() {
                 </div>
               ))}
           </div>
-
-          <Button
-            variant="outline"
-            colorScheme="gray"
-            onClick={onOpen3}
-            style={{
-              width: "8%",
-              height: "30px",
-            }}>
-            추가
-          </Button>
         </div>
+        <Button
+          variant="outline"
+          colorScheme="gray"
+          onClick={onOpen3}
+          style={{
+            marginTop: "10px",
+            border: "1px solid gray",
+            width: "10%",
+            height: "30px",
+            float: "right",
+          }}>
+          추가
+        </Button>
 
         <div className="right-title">
           <h4>메모장</h4>
@@ -603,7 +671,12 @@ function Profile() {
               setMemo([Memo]);
               console.log([Memo]);
             }}
-            style={{ float: "right", height: "30px", width: "5%" }}>
+            style={{
+              float: "right",
+              border: "1px solid gray",
+              width: "10%",
+              height: "30px",
+            }}>
             저장
           </Button>
         </div>
