@@ -91,23 +91,31 @@ function Form(props) {
   };
 
   const titlebuttonHandler = async () => {
+    // if (questionLock === false) {
+    let body = {};
     if (questionLock === false) {
-      const body = {
+      body = {
         id: fileClickId,
         question: Title,
-        question_lock: questionLock,
+        question_lock: !questionLock,
       };
-      // setTitle(Title);
-      try {
-        await axios.put(
-          "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-          body
-        );
-        await FormUpdate();
-      } catch (e) {
-        console.log(e);
-      }
+    } else if (questionLock === true) {
+      body = {
+        id: fileClickId,
+        question_lock: !questionLock,
+      };
     }
+    // setTitle(Title);
+    try {
+      await axios.put(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+        body
+      );
+      await FormUpdate();
+    } catch (e) {
+      console.log(e);
+    }
+    // }
     setquestionLock(!questionLock);
     // 질문 자물쇠
   };
@@ -162,8 +170,8 @@ function Form(props) {
       if (FormList[0]) {
         setTitle(FormList[0].question);
         setText(FormList[0].description);
-        setquestionLock(FormList[0].question_lock);
         console.log(FormList[0].question_lock);
+        setquestionLock(FormList[0].question_lock);
         setdescriptionLock(FormList[0].description_lock);
       }
     }
