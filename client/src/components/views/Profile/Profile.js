@@ -61,7 +61,6 @@ const Profile = () => {
       return;
     }
 
-    setPlaceholderProps({});
     setCompanyList((items) =>
       reorder(items, result.source.index, result.destination.index)
     );

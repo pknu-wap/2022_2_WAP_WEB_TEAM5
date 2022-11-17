@@ -131,6 +131,10 @@ function Folder() {
       return;
     }
 
+    setCompanyList((items) =>
+      reorder(items, result.source.index, result.destination.index)
+    );
+
     setPlaceholderProps({});
   };
 
@@ -187,6 +191,14 @@ function Folder() {
     ...draggableStyle,
   });
 
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
   return (
     <Fragment>
       <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
@@ -203,9 +215,11 @@ function Folder() {
               {CompanyList &&
                 CompanyList.map((company, index) => (
                   <Draggable
-                    key={`item${company.list_id}`}
-                    draggableId={`item-${company.list_id}`}
+                    key={`${company.list_id}`}
+                    draggableId={`${company.list_id}`}
+                    // 달러로 안 하면 작동 안 함
                     index={index}>
+                    {/* index는 변하는 값, draggableId는 안 변함 */}
                     {(provided, snapshot) => (
                       <Avatar // 폴더의 동그라미
                         ref={provided.innerRef}
