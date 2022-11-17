@@ -24,6 +24,15 @@ function Form(props) {
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
 
   useEffect(() => {
+    if (CompanyList[0]) {
+      if (fileClickId === 0) {
+        setTitle(CompanyList[0].cover_letter[0].question);
+        setText(CompanyList[0].cover_letter[0].description);
+      }
+    }
+  });
+
+  useEffect(() => {
     if (Cover[0]) {
       if (Cover[0].question === null || Cover[0].question === undefined) {
         setTitle("");
@@ -95,13 +104,13 @@ function Form(props) {
     let body = {};
     if (questionLock === false) {
       body = {
-        id: fileClickId,
+        id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         question: Title,
         question_lock: !questionLock,
       };
     } else if (questionLock === true) {
       body = {
-        id: fileClickId,
+        id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         question_lock: !questionLock,
       };
     }
@@ -122,22 +131,29 @@ function Form(props) {
 
   const textbuttonHandler = async () => {
     // setText(Text);
+    let body = {};
+
     if (descriptionLock === false) {
-      const body = {
+      body = {
         id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         description: Text,
-        description_lock: descriptionLock,
+        description_lock: !descriptionLock,
       };
+    } else if (descriptionLock === true) {
+      body = {
+        id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
+        description_lock: !descriptionLock,
+      };
+    }
 
-      try {
-        await axios.put(
-          "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-          body
-        );
-        await FormUpdate();
-      } catch (e) {
-        console.log(e);
-      }
+    try {
+      await axios.put(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+        body
+      );
+      await FormUpdate();
+    } catch (e) {
+      console.log(e);
     }
 
     setdescriptionLock(!descriptionLock);
@@ -170,7 +186,6 @@ function Form(props) {
       if (FormList[0]) {
         setTitle(FormList[0].question);
         setText(FormList[0].description);
-        console.log(FormList[0].question_lock);
         setquestionLock(FormList[0].question_lock);
         setdescriptionLock(FormList[0].description_lock);
       }
