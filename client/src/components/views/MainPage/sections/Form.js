@@ -9,7 +9,6 @@ import {
   fileClickIdState,
   folderClickIdState,
   CompanyListState,
-  FormState,
 } from "../Atom";
 
 function Form(props) {
@@ -23,7 +22,22 @@ function Form(props) {
   const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
   const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
-  const [Form, setForm] = useRecoilState(FormState);
+
+  useEffect(() => {
+    if (Cover[0]) {
+      if (Cover[0].question === null || Cover[0].question === undefined) {
+        setTitle("");
+      } else {
+        setTitle(Cover[0].question);
+      }
+
+      if (Cover[0].description === null || Cover[0].description === undefined) {
+        setText("");
+      } else {
+        setText(Cover[0].description);
+      }
+    }
+  }, [folderClickId]);
 
   useEffect(() => {
     if (Cover[0]) {
@@ -46,10 +60,9 @@ function Form(props) {
         setText(cov[0].description);
         // 아니라면, description에 있는 값을 출력
       }
-      // FormUpdate();
 
-      // setquestionLock(cov[0].question_lock); // 잠금 유무 정보도 받아옴
-      // setdescriptionLock(cov[0].description_lock);
+      setquestionLock(cov[0].question_lock); // 잠금 유무 정보도 받아옴
+      setdescriptionLock(cov[0].description_lock);
     }
   }, [fileClickId]); // 클릭한 파일의 아이디가 바뀔 때마다 실행
 
@@ -82,6 +95,7 @@ function Form(props) {
       const body = {
         id: fileClickId,
         question: Title,
+        question_lock: questionLock,
       };
       // setTitle(Title);
       try {
@@ -102,8 +116,9 @@ function Form(props) {
     // setText(Text);
     if (descriptionLock === false) {
       const body = {
-        id: fileClickId,
+        id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         description: Text,
+        description_lock: descriptionLock,
       };
 
       try {
@@ -139,12 +154,17 @@ function Form(props) {
       setCover(fileList[0].cover_letter);
 
       const FormList = co.filter(
-        (form) => form.id === (fileClickId === 0 ? co[0].id : fileClickId)
+        (form) =>
+          form.id ===
+          (fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId)
       );
 
       if (FormList[0]) {
         setTitle(FormList[0].question);
         setText(FormList[0].description);
+        setquestionLock(FormList[0].question_lock);
+        console.log(FormList[0].question_lock);
+        setdescriptionLock(FormList[0].description_lock);
       }
     }
   };
@@ -152,11 +172,11 @@ function Form(props) {
   const calc = (text, blank = 0) => {
     let word = 0;
 
-    if (blank === 0) {
+    if (blank === 0 && text !== null && text !== undefined) {
       text = text.replace(/\s+/g, "");
     }
 
-    if (text !== 0) {
+    if (text !== 0 && text !== null && text !== undefined) {
       word = text.length;
     }
     return word;
@@ -165,11 +185,11 @@ function Form(props) {
   const byteCounter = (text, blank = 0) => {
     let byte = 0;
 
-    if (blank === 0) {
+    if (blank === 0 && text !== null && text !== undefined) {
       text = text.replace(/\s+/g, "");
     }
 
-    if (text !== 0) {
+    if (text !== 0 && text !== null && text !== undefined) {
       for (let i = 0; i < text.length; i++) {
         if (/[ㄱ-ㅎㅏ-ㅣ가-힣一-龥ぁ-ゔァ-ヴー々〆〤]/.test(text[i])) {
           byte = byte + 2;
@@ -194,11 +214,9 @@ function Form(props) {
             marginLeft: "25px",
             width: "70%",
             height: "90%",
-            //   borderRadius: "20px",
             overflow: "hidden",
             display: "flex",
             flexDirection: "column",
-            // justifyContent: "center",
             alignItems: "center",
             color: "black",
           }}>
@@ -210,7 +228,6 @@ function Form(props) {
               marginTop: "40px",
               borderRadius: "5px",
               display: "flex",
-              // paddingTop: "10px", // 글자가 움직이네
             }}>
             <input // 제목 input
               type="text"
@@ -221,7 +238,7 @@ function Form(props) {
                 border: "none",
                 outline: "0",
               }}
-              value={Title}
+              value={Title || ""}
               onChange={titleHandler}
               placeholder="제목을 입력해주세요"
               readOnly={questionLock ? true : false}></input>
@@ -268,7 +285,7 @@ function Form(props) {
                   outline: "0",
                 }}
                 placeholder="내용을 입력해주세요"
-                value={Text}
+                value={Text || ""}
                 onChange={textHandler}></textarea>
               <Button // 내용 버튼
                 colorScheme="gray"
@@ -325,7 +342,7 @@ function Form(props) {
                 border: "none",
                 outline: "0",
               }}
-              value={Title}
+              value={Title || ""}
               onChange={titleHandler}
               placeholder="제목을 입력해주세요"
               readOnly={questionLock ? true : false}></input>
@@ -374,7 +391,7 @@ function Form(props) {
                   outline: "0",
                 }}
                 placeholder="내용을 입력해주세요"
-                value={Text}
+                value={Text || ""}
                 onChange={textHandler}
                 readOnly={descriptionLock ? true : false}>
                 {/* Lock이 걸려있으면 수정 불가 */}

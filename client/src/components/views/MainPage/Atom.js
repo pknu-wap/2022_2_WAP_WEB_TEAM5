@@ -20,8 +20,3 @@ export const fileClickIdState = atom({
   key: "fileClick",
   default: 0,
 });
-
-export const FormState = atom({
-  key: "for",
-  default: [],
-});

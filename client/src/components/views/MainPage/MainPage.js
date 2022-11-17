@@ -94,7 +94,7 @@ function MainPage() {
             <div style={{ display: "flex", height: "100%" }}>
               {/* 제목, 내용 입력 칸이랑 맞춤법 검사 태그를 묶는 태그 */}
 
-              <Form Cover={Cover} CompanyList={CompanyList} />
+              <Form />
               {/* 제목과 내용 입력칸 */}
 
               <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
