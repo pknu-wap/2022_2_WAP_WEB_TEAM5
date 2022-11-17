@@ -67,6 +67,7 @@ function MainPage() {
             flexDirection: "column",
             alignItems: "center",
             overflow: "scroll",
+            minWidth: "100px",
           }}>
           <Folder
           // 이곳은 폴더들의 내용이 담겨있음
@@ -90,6 +91,7 @@ function MainPage() {
             style={{
               backgroundColor: "#d9d9d9",
               height: "100%",
+              minWidth: "800px",
             }}>
             <div style={{ display: "flex", height: "100%" }}>
               {/* 제목, 내용 입력 칸이랑 맞춤법 검사 태그를 묶는 태그 */}
@@ -139,6 +141,7 @@ function MainPage() {
             style={{
               backgroundColor: "#d9d9d9",
               height: "100%",
+              minWidth: "800px",
             }}>
             <div style={{ display: "flex", height: "100%" }}>
               <Form grammer="no" Cover={Cover} CompanyList={CompanyList} />

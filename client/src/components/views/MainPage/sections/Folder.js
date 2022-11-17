@@ -176,17 +176,17 @@ function Folder() {
   };
 
   const getListStyle = (isDraggingOver) => ({
-    // background: isDraggingOver ? "lightblue" : "lightgrey",
     width: "100%",
-    // height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   });
 
   const getItemStyle = (isDragging, draggableStyle) => ({
-    // background: isDragging ? "lightgreen" : "grey",
     color: "black",
-    marginTop: "40px",
     cursor: "pointer",
     fontWeight: "bold",
+    marginTop: "40px",
 
     ...draggableStyle,
   });
