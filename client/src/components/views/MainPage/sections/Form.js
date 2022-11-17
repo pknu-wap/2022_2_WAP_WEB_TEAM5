@@ -24,7 +24,7 @@ function Form(props) {
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
 
   useEffect(() => {
-    if (CompanyList[0]) {
+    if (CompanyList[0] && fileClickId === 0 && folderClickId === 0) {
       if (fileClickId === 0) {
         setTitle(CompanyList[0].cover_letter[0].question);
         setText(CompanyList[0].cover_letter[0].description);
