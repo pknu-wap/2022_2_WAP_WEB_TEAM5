@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { folderClickIdState, CoverState, CompanyListState } from "../Atom";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function Folder() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,6 +29,8 @@ function Folder() {
   const [Cover, setCover] = useRecoilState(CoverState);
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   const [Loading, setLoading] = useState(false);
+  const [placeholderProps, setPlaceholderProps] = useState({});
+  const queryAttr = "data-rbd-drag-handle-draggable-id";
 
   const companyHandler = (event) => {
     // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
@@ -118,36 +121,130 @@ function Folder() {
     // 폴더를 클릭했을 때 id를 mainPage로 보내줌
   };
 
+  const onDragEnd = (result) => {
+    // dropped outside the list
+    // drag 끝날 때 호출되는 함수
+    console.log(result);
+    if (!result.destination) {
+      // list밖으로 빠져나갔을 때 destination이 null로 설정됨
+      // => null일 때는 그냥 리턴해줌
+      return;
+    }
+
+    setPlaceholderProps({});
+  };
+
+  const onDragUpdate = (update) => {
+    // drag 도중에 변화가 생기면 호출되는 함수
+    if (!update.destination) {
+      // list 밖으로 빠져나갔을 때 null로 설정
+      return;
+    }
+    console.log(update);
+    const draggableId = update.draggableId;
+    const destinationIndex = update.destination.index;
+
+    const domQuery = `[${queryAttr}='${draggableId}']`;
+    const draggedDOM = document.querySelector(domQuery);
+    if (!draggedDOM) {
+      return;
+    }
+    const { clientHeight, clientWidth } = draggedDOM;
+
+    const clientY =
+      parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
+      [...draggedDOM.parentNode.children]
+        .slice(0, destinationIndex)
+        .reduce((total, curr) => {
+          const style = curr.currentStyle || window.getComputedStyle(curr);
+          const marginBottom = parseFloat(style.marginBottom);
+          return total + curr.clientHeight + marginBottom;
+        }, 0);
+
+    setPlaceholderProps({
+      clientHeight,
+      clientWidth,
+      clientY,
+      clientX: parseFloat(
+        window.getComputedStyle(draggedDOM.parentNode).paddingLeft
+      ),
+    });
+  };
+
+  const getListStyle = (isDraggingOver) => ({
+    // background: isDraggingOver ? "lightblue" : "lightgrey",
+    width: "100%",
+    // height: "100%",
+  });
+
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // background: isDragging ? "lightgreen" : "grey",
+    color: "black",
+    marginTop: "40px",
+    cursor: "pointer",
+    fontWeight: "bold",
+
+    ...draggableStyle,
+  });
+
   return (
     <Fragment>
-      {CompanyList &&
-        CompanyList.map((company, index) => (
-          <Avatar // 폴더의 동그라미
-            type="button"
-            className="rounded-circle"
-            onClick={() => circleClick(company.list_id)}
-            name={company.title}
-            getInitials={() => `${company.title}`}
-            key={index}
-            size="50"
-            width="55px"
-            height="55px"
-            _hover={{ width: "60px", height: "60px" }}
-            bg="white"
-            style={{
-              color: "black",
-              marginTop: "40px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}>
-            <AvatarBadge borderColor="white" bg="white" boxSize="1.25em">
-              <DeleteIcon
-                style={{ width: "90%", height: "90%" }}
-                onClick={() => deleteHandler(company.list_id)}
-              />
-            </AvatarBadge>
-          </Avatar>
-        ))}
+      <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={
+                // width: "100%",
+                // height: "100%",
+                getListStyle(snapshot.isDraggingOver)
+              }>
+              {CompanyList &&
+                CompanyList.map((company, index) => (
+                  <Draggable
+                    key={`item${company.list_id}`}
+                    draggableId={`item-${company.list_id}`}
+                    index={index}>
+                    {(provided, snapshot) => (
+                      <Avatar // 폴더의 동그라미
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        type="button"
+                        className="rounded-circle"
+                        onClick={() => circleClick(company.list_id)}
+                        name={company.title}
+                        getInitials={() => `${company.title}`}
+                        key={index}
+                        size="50"
+                        width="55px"
+                        height="55px"
+                        _hover={{ width: "60px", height: "60px" }}
+                        bg="white"
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style
+                        )}>
+                        <AvatarBadge
+                          borderColor="white"
+                          bg="white"
+                          boxSize="1.25em">
+                          <DeleteIcon
+                            style={{ width: "90%", height: "90%" }}
+                            onClick={() => deleteHandler(company.list_id)}
+                          />
+                        </AvatarBadge>
+                      </Avatar>
+                    )}
+                  </Draggable>
+                ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+
       <button // 폴더의 동그라미
         className="rounded-circle"
         onClick={onOpen}
