@@ -30,10 +30,8 @@ public class CoverLetterEntity {
     @NotNull
     private Boolean descriptionLock;
 
-    @NotNull
     private Integer prev;
 
-    @NotNull
     private Integer next;
 
     @NotNull

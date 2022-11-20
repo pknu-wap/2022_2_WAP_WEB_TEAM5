@@ -18,10 +18,8 @@ public class ListEntity {
 
     private String title;
 
-    @NotNull
     private Integer prev;
 
-    @NotNull
     private Integer next;
 
     @NotNull
