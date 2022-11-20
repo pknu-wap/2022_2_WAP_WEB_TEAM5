@@ -12,13 +12,17 @@ CREATE TABLE lists
 (
     list_id INT NOT NULL AUTO_INCREMENT,
     title   TINYTEXT,
-    prev    INT NOT NULL,
-    next    INT NOT NULL,
+    prev    INT,
+    next    INT,
     user_id INT NOT NULL,
     PRIMARY KEY (list_id),
     FOREIGN KEY (user_id)
         REFERENCES user_informations (user_id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (prev)
+        REFERENCES lists (list_id),
+    FOREIGN KEY (next)
+        REFERENCES lists (list_id)
 ) CHARSET = utf8;
 
 CREATE TABLE cover_letters
@@ -29,13 +33,17 @@ CREATE TABLE cover_letters
     question_lock    BOOL NOT NULL,
     description      TEXT,
     description_lock BOOL NOT NULL,
-    prev             INT  NOT NULL,
-    next             INT  NOT NULL,
+    prev             INT,
+    next             INT,
     list_id          INT  NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (list_id)
         REFERENCES lists (list_id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (prev)
+        REFERENCES cover_letters (id),
+    FOREIGN KEY (next)
+        REFERENCES cover_letters (id)
 ) CHARSET = utf8;
 
 CREATE TABLE educations
