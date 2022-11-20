@@ -40,6 +40,9 @@ function MainPage() {
       setCover(response.data.list[0].cover_letter);
       setLoading(false);
       setCov(response.data.list[0].title);
+      console.log(response.data.list);
+      console.log(response.data.list[0].cover_letter[0].description_lock);
+      console.log(response.data.list[1].cover_letter[0].description_lock);
     } catch (e) {
       console.log(e);
     }

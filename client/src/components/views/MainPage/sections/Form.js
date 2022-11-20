@@ -22,22 +22,40 @@ function Form(props) {
   const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
   const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
+  const [change, setchange] = useState(false);
 
   useEffect(() => {
-    if (CompanyList[0] && fileClickId === 0 && folderClickId === 0) {
+    // 제일 첫 화면에서 회사 목록이 불러진 후 실행
+    if (
+      CompanyList[0] &&
+      fileClickId === 0 &&
+      folderClickId === 0 &&
+      change === false
+    ) {
+      // 회사 목록이 존재하면서 파일 클릭이 되어있지 않고 폴더 클릭이 되어 있지 않을 때
       if (fileClickId === 0) {
+        // 폴더 클릭은 되어있고, 파일 클릭이 되지 않은 상태
+        setchange(true);
         setTitle(CompanyList[0].cover_letter[0].question);
         setText(CompanyList[0].cover_letter[0].description);
+        setdescriptionLock(CompanyList[0].cover_letter[0].description_lock);
+        setquestionLock(CompanyList[0].cover_letter[0].question_lock);
+        console.log("제일 첫 화면에서 회사 목록이 불러진 후 실행");
       }
     }
   });
 
   useEffect(() => {
-    if (Cover[0]) {
+    if (Cover[0] && folderClickId) {
+      // 파일 목록이 불러와졌고, 폴더 클릭이 있으면
+      console.log("파일 목록 불러와졌고, 폴더 클릭이 있으면 실행");
+
       if (Cover[0].question === null || Cover[0].question === undefined) {
+        // null일 땐 빈 칸
         setTitle("");
       } else {
-        setTitle(Cover[0].question);
+        // null 아니면
+        setTitle(Cover[0].question); // question 입력
       }
 
       if (Cover[0].description === null || Cover[0].description === undefined) {
@@ -46,11 +64,13 @@ function Form(props) {
         setText(Cover[0].description);
       }
     }
-  }, [folderClickId]);
+  }, [folderClickId]); // 폴더 클릭할 때마다 바뀜
 
   useEffect(() => {
-    if (Cover[0]) {
+    if (Cover[0] && fileClickId) {
       // Cover가 하나라도 존재하는 상태에서
+      console.log("파일 목록 불러와졌고, 파일 클릭이 있으면 실행");
+
       const cov = Cover.filter((cover) => cover.id === fileClickId);
       // Question 파일에서 클릭한 아이디와 현재 cover에 있는 id가 동일한 것을 cov에 담음
 
@@ -103,12 +123,14 @@ function Form(props) {
     // if (questionLock === false) {
     let body = {};
     if (questionLock === false) {
+      console.log("questionLock이 false-> true면 실행");
       body = {
         id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         question: Title,
         question_lock: !questionLock,
       };
     } else if (questionLock === true) {
+      console.log("questionLock이 true-> false면 실행");
       body = {
         id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         question_lock: !questionLock,
@@ -126,6 +148,7 @@ function Form(props) {
     }
     // }
     setquestionLock(!questionLock);
+    // console.log("실행");
     // 질문 자물쇠
   };
 
@@ -134,12 +157,16 @@ function Form(props) {
     let body = {};
 
     if (descriptionLock === false) {
+      console.log("descriptionLock false-> true면 실행");
+
       body = {
         id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         description: Text,
         description_lock: !descriptionLock,
       };
     } else if (descriptionLock === true) {
+      console.log("descriptionLock true-> false면 실행");
+
       body = {
         id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         description_lock: !descriptionLock,

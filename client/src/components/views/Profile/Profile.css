@@ -20,6 +20,10 @@
   height: 45%;
   text-align: left;
   background-color: white;
+  -ms-overflow-style: none;
+}
+.my-info::-webkit-scrollbar {
+  display: none;
 }
 
 .memo {
@@ -35,64 +39,51 @@
   border-bottom: 1px solid black;
   width: 100%;
   padding-left: 10px;
-  margin-top: 2%;
+  padding-top: 2%;
   margin-bottom: 10px;
 }
 
+/* 전체카드 감싸는 div */
 .info-div {
   width: 100%;
-  height: 15%;
+  height: 17%;
   background-color: white;
+  -ms-overflow-style: none;
 }
-
-.info-type {
-  display: inline-block;
-  width: 12%;
+.info-div::-webkit-scrollbar {
+  display: none;
 }
 
 .info-myinfo {
   display: inline-block;
-  width: 20%;
-}
-
-.info-type-myinfo {
-  display: flex;
-}
-
-.info-type-contents {
-  text-align: center;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  margin-left: 5px;
-  border-bottom: 1px solid black;
-  margin-top: 5px;
-  margin-bottom: 0;
-  background-color: #d9d9d9;
-}
-
-.info-myinfo-contents {
-  margin-left: 5px;
-  border-bottom: 1px solid grey;
-  padding: 5px;
-  width: 100px;
-  height: 35px;
 }
 
 .info-contents {
   display: flex;
-  /* background-color: aqua; */
 }
 
-.asdf {
-  background-color: aqua;
-  margin: 10px;
+.info-myinfo-contents {
+  text-align: center;
+  padding: 5px 10px 5px 10px;
+  width: 100%;
+  height: 100%;
+  margin: 5% 0 5% 0;
 }
 
 .right-title {
   border-bottom: 1px solid black;
   width: 100%;
   padding-left: 10px;
-  padding-top: 2%;
+  padding-top: 5%;
   margin-left: 5%;
   margin-bottom: 10px;
+}
+
+/* 카드 div */
+.infoCard {
+  width: 200px;
+  height: 100%;
+  margin-right: 20px;
+  border-radius: 10%;
+  background-color: #d9d9d9;
 }
