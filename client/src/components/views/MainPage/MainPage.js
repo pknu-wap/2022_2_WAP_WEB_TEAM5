@@ -13,6 +13,10 @@ import Question from "./sections/Question";
 import Folder from "./sections/Folder";
 // 사전 기능 ,
 
+import HiddenTag from "./sections/HiddenTag";
+import MemoForm from "./sections/MemoForm";
+import MemoTag from "./sections/MemoTag";
+
 import { CoverState, CompanyListState } from "./Atom";
 import { useRecoilState } from "recoil";
 
@@ -20,6 +24,7 @@ function MainPage() {
   // const [Cover, setCover] = useState([]); // 파일을 저장
   const [Grammer, setGrammer] = useState(false);
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
+  const [Memo, setMemo] = useState(false);
 
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   // 폴더의 list가 저장됨
@@ -87,24 +92,37 @@ function MainPage() {
           }}>
           <Question Cov={Cov} setCov={setCov} />
         </GridItem>
-        {Grammer ? (
-          // 문법이 켜져있다면,
-          <GridItem // 나머지 20칸 중에서 16칸을 차지함
-            colSpan={16}
-            style={{
-              backgroundColor: "#d9d9d9",
-              height: "100%",
-              minWidth: "800px",
-            }}>
-            <div style={{ display: "flex", height: "100%" }}>
-              {/* 제목, 내용 입력 칸이랑 맞춤법 검사 태그를 묶는 태그 */}
+        {/* {Grammer ? ( */}
+        {/* // 문법이 켜져있다면, */}
+        <GridItem // 나머지 20칸 중에서 16칸을 차지함
+          colSpan={16}
+          style={{
+            backgroundColor: "#d9d9d9",
+            height: "100%",
+            minWidth: "800px",
+          }}>
+          <div style={{ display: "flex", height: "100%" }}>
+            {/* 제목, 내용 입력 칸이랑 맞춤법 검사 태그를 묶는 태그 */}
 
-              <Form />
-              {/* 제목과 내용 입력칸 */}
+            <Form />
+            {/* 제목과 내용 입력칸 */}
 
-              <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
-              {/* 맞춤법 검사 태그 */}
+            <GrammerTag
+              Memo={Memo}
+              setMemo={setMemo}
+              Grammer={Grammer}
+              setGrammer={setGrammer}
+            />
+            {/* 맞춤법 검사 태그 */}
 
+            <MemoTag
+              Memo={Memo}
+              setMemo={setMemo}
+              Grammer={Grammer}
+              setGrammer={setGrammer}
+            />
+
+            {Grammer ? (
               <div // 맞춤법 검사 칸의 제일 큰 흰색 네모
                 style={{
                   marginLeft: "0.5%",
@@ -118,6 +136,8 @@ function MainPage() {
                   overflow: "scroll",
                   marginRight: "1%",
                 }}>
+                <MemoForm />
+
                 <div // 네모의 제일 상위 제목
                   style={{
                     fontWeight: "bold",
@@ -136,24 +156,12 @@ function MainPage() {
                 <GrammerForm />
                 <GrammerForm />
               </div>
-            </div>
-          </GridItem>
-        ) : (
-          <GridItem // 맞춤법 검사 탭이 안 열려 있을 때
-            colSpan={16} // 20칸 중에서 16칸을 차지함
-            style={{
-              backgroundColor: "#d9d9d9",
-              height: "100%",
-              minWidth: "800px",
-            }}>
-            <div style={{ display: "flex", height: "100%" }}>
-              <Form grammer="no" Cover={Cover} CompanyList={CompanyList} />
-              {/* 제목과 내용이 있는 폼과 */}
-              <GrammerTag Grammer={Grammer} setGrammer={setGrammer} />
-              {/* 오른쪽에 달려있는 태그 */}
-            </div>
-          </GridItem>
-        )}
+            ) : (
+              <div></div>
+            )}
+            {Memo ? <MemoForm /> : <div></div>}
+          </div>
+        </GridItem>
       </Grid>
     </div>
   );

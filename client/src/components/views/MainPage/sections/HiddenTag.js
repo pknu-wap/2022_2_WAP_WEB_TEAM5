@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
-function GrammerTag({ Grammer, setGrammer, Memo, setMemo }) {
-  const grammerHandler = () => {
-    setGrammer(!Grammer);
-    Memo && setMemo(!Memo);
+function HiddenTag() {
+  const [Hidden, setHidden] = useState(false);
+
+  const HiddenHandler = () => {
+    setHidden(!Hidden);
   };
 
   return (
@@ -20,10 +21,10 @@ function GrammerTag({ Grammer, setGrammer, Memo, setMemo }) {
         padding: "0.1%",
         textAlign: "center",
       }}
-      onClick={grammerHandler}>
-      맞춤법검사
+      onClick={HiddenHandler}>
+      숨기기
     </div>
   );
 }
 
-export default GrammerTag;
+export default HiddenTag;

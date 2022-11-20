@@ -1,9 +1,9 @@
 import React from "react";
 
-function GrammerTag({ Grammer, setGrammer, Memo, setMemo }) {
-  const grammerHandler = () => {
-    setGrammer(!Grammer);
-    Memo && setMemo(!Memo);
+function MemoTag({ Memo, setMemo, Grammer, setGrammer }) {
+  const memoHandler = () => {
+    setMemo(!Memo);
+    Grammer && setGrammer(!Grammer);
   };
 
   return (
@@ -20,10 +20,10 @@ function GrammerTag({ Grammer, setGrammer, Memo, setMemo }) {
         padding: "0.1%",
         textAlign: "center",
       }}
-      onClick={grammerHandler}>
-      맞춤법검사
+      onClick={memoHandler}>
+      메모장
     </div>
   );
 }
 
-export default GrammerTag;
+export default MemoTag;
