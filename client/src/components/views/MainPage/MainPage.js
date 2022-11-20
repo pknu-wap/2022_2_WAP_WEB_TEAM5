@@ -25,6 +25,7 @@ function MainPage() {
   const [Grammer, setGrammer] = useState(false);
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
   const [Memo, setMemo] = useState(false);
+  const [ListToggle, setListToggle] = useState(true);
 
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   // 폴더의 list가 저장됨
@@ -57,6 +58,10 @@ function MainPage() {
     first();
   }, []);
 
+  const toggleListFunction = () => {
+    setListToggle(!ListToggle);
+  };
+
   return (
     <div>
       <div>
@@ -81,21 +86,34 @@ function MainPage() {
           // 이곳은 폴더들의 내용이 담겨있음
           />
         </GridItem>
-
-        <GridItem // 파일 칸
-          colSpan={3}
-          height="10px"
-          style={{
-            backgroundColor: "#303136",
-            height: "100%",
-            overflow: "scroll",
-          }}>
-          <Question Cov={Cov} setCov={setCov} />
-        </GridItem>
+        {ListToggle ? (
+          <GridItem // 파일 칸
+            colSpan={ListToggle ? 3 : 0}
+            height="10px"
+            style={{
+              backgroundColor: "#303136",
+              height: "100%",
+              overflow: "scroll",
+            }}>
+            <Question Cov={Cov} setCov={setCov} />
+            <HiddenTag
+              ListToggle={ListToggle}
+              refreshfunction={toggleListFunction}
+            />
+          </GridItem>
+        ) : (
+          <GridItem colSpan={0}>
+            <HiddenTag
+              ListToggle={ListToggle}
+              refreshfunction={toggleListFunction}
+            />
+          </GridItem>
+        )}
         {/* {Grammer ? ( */}
         {/* // 문법이 켜져있다면, */}
+
         <GridItem // 나머지 20칸 중에서 16칸을 차지함
-          colSpan={16}
+          colSpan={ListToggle ? 16 : 18}
           style={{
             backgroundColor: "#d9d9d9",
             height: "100%",

@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 
-function HiddenTag() {
-  const [Hidden, setHidden] = useState(false);
-
+function HiddenTag(props) {
   const HiddenHandler = () => {
-    setHidden(!Hidden);
+    props.refreshfunction(props.ListToggle);
   };
 
   return (
@@ -13,7 +11,7 @@ function HiddenTag() {
         backgroundColor: "#303136",
         color: "white",
         height: "min-content",
-        width: "1.5%",
+        width: "25%",
         marginTop: "50px",
         overflow: "hidden",
         fontSize: "13px",
