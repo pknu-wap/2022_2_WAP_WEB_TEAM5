@@ -31,7 +31,10 @@ public class MainApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "불러오기 성공")
     })
-    @Operation(summary = "모든 자기소개서 불러오기", description = "해당 유저의 자기소개서 정보를 불러옵니다.")
+    @Operation(summary = "모든 자기소개서 불러오기", description = "해당 유저의 자기소개서 정보를 불러옵니다." +
+            "<br/>" +
+            "<br/>" +
+            "조회할 유저의 번호를 넣어주세요.")
     public ResponseEntity<MainResponse> getListAndCoverLetter(@Valid MainRequest mainRequest) {
         MainResponse mainResponse = mainService.getListAndCoverLetter(mainRequest.getUserId());
 
@@ -46,7 +49,7 @@ public class MainApi {
     @Operation(summary = "리스트 생성", description = "리스트를 생성합니다." +
             "<br/>" +
             "<br/>" +
-            "Response로 받은 리스트의 prev 리스트에 next를 Response로 받은 리스트의 아이디로 변경해야함")
+            "생성할 유저의 번호를 넣어주세요.")
     public ResponseEntity<CreateListResponse> newList(@Valid @RequestBody CreateListRequest createListRequest) {
         if (mainService.existListTitle(createListRequest.getUserId(), createListRequest.getTitle())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -65,7 +68,7 @@ public class MainApi {
     @Operation(summary = "자기소개서 생성", description = "자기소개서를 생성합니다." +
             "<br/>" +
             "<br/>" +
-            "Response로 받은 자기소개서의 prev 자기소개서에 next를 Response로 받은 자기소개서의 아이디로 변경해야함")
+            "생성항 리스트의 번호를 넣어주세요.")
     public ResponseEntity<CreateCoverLetterResponse> newCoverLetter(@Valid @RequestBody CreateCoverLetterRequest createCoverLetterRequest) {
         if (mainService.existCoverLetterTitle(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -83,7 +86,7 @@ public class MainApi {
     @Operation(summary = "리스트 삭제", description = "리스트를 삭제합니다." +
             "<br/>" +
             "<br/>" +
-            "삭제를 요청한 리스트와 해당 리스트에 자기소개서를 삭제해야함")
+            "삭제할 리스트의 번호를 넣어주세요.")
     public ResponseEntity<Void> deleteList(@Valid DeleteListRequest deleteListRequest) {
         if(mainService.isOnlyOneList(deleteListRequest.getListId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -101,7 +104,7 @@ public class MainApi {
     @Operation(summary = "자기소개서 삭제", description = "자기소개서를 삭제합니다." +
             "<br/>" +
             "<br/>" +
-            "삭제를 요청한 자기소개서를 삭제해야함")
+            "삭제할 자기소개서의 번호를 넣어주세요.")
     public ResponseEntity<Void> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
         if(mainService.isOnlyOneCoverLetter(deleteCoverLetterRequest.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -119,7 +122,7 @@ public class MainApi {
     @Operation(summary = "리스트 갱신", description = "리스트를 갱신합니다." +
             "<br/>" +
             "<br/>" +
-            "갱신 요청한 정보를 갱신해야함")
+            "갱신할 리스트의 번호와 갱신할 정보를 입력해주세요.")
     public ResponseEntity<Void> updateList(@Valid @RequestBody UpdateListRequest updateListRequest) {
         mainService.updateList(updateListRequest);
 
@@ -133,7 +136,7 @@ public class MainApi {
     @Operation(summary = "자기소개서 갱신", description = "자기소개서를 갱신합니다." +
             "<br/>" +
             "<br/>" +
-            "갱신 요청한 정보를 갱신해야함")
+            "갱신할 자기소개서의 번호와 갱신할 정보를 입력해주세요.")
     public ResponseEntity<Void> updateCoverLetter(@Valid @RequestBody UpdateCoverLetterRequest updateCoverLetterRequest) {
         mainService.updateCoverLetter(updateCoverLetterRequest);
 
@@ -147,13 +150,9 @@ public class MainApi {
     @Operation(summary = "리스트 위치 이동", description = "리스트 위치를 이동합니다." +
             "<br/>" +
             "<br/>" +
-            "원래 위치의 prev 리스트의 next를 원래 위치의 next로 저장함" +
+            "이동할 리스트 번호와 이동할 위치의 이전 리스트 번호와 다음 리스트 번호를 입력해주세요." +
             "<br/>" +
-            "원래 위치의 next 리스트의 prev를 원래 위치의 prev로 저장함" +
-            "<br/>" +
-            "이동할 위치의 prev 리스트의 next를 이동할 리스트의 id로 저장함" +
-            "<br/>" +
-            "이동할 위치의 next 리스트의 prev를 이동할 리스트의 id로 저장함")
+            "(끝은 null 입니다.)")
     public ResponseEntity<Void> updatePostionList(@Valid @RequestBody UpdatePositionListRequest updatePositionListRequest) {
         mainService.updatePositionList(updatePositionListRequest);
 
@@ -164,16 +163,12 @@ public class MainApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "자기소개서 위치 이동 성공")
     })
-    @Operation(summary = "리스트 위치 이동", description = "자기소개서를 이동합니다." +
+    @Operation(summary = "자기소개서 위치 이동", description = "자기소개서를 이동합니다." +
             "<br/>" +
             "<br/>" +
-            "원래 위치의 prev 자기소개서의 next를 원래 위치의 next로 저장함" +
+            "이동할 자기소개서 번호와 이동할 위치의 이전 자기소개서 번호와 다음 자기소개서 번호를 입력해주세요." +
             "<br/>" +
-            "원래 위치의 next 자기소개서의 prev를 원래 위치의 prev로 저장함" +
-            "<br/>" +
-            "이동할 위치의 prev 자기소개서의 next를 이동할 자기소개서의 id로 저장함" +
-            "<br/>" +
-            "이동할 위치의 next 자기소개서의 prev를 이동할 자기소개서의 id로 저장함")
+            "(끝은 null 입니다.)")
     public ResponseEntity<Void> updatePositionCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
         mainService.updatePositionCoverLetter(updatePositionCoverLetterRequest);
 
@@ -187,11 +182,8 @@ public class MainApi {
     })
     @Operation(summary = "자기소개서 리스트 이동", description = "자기소개서를 다른 리스트로 이동합니다." +
             "<br/>" +
-            "원래 리스트의 자기소개서를 삭제함" +
             "<br/>" +
-            "이동할 리스트에 Response로 받은 자기소개서를 추가함" +
-            "<br/>" +
-            "Response로 받은 자기소개서의 prev 자기소개서에 next를 Response로 받은 자기소개서의 아이디로 변경해야함")
+            "이동할 자기소개서 번호와 이동할 리스트의 번호를 입력해주세요.")
     public ResponseEntity<Void> updatePositionCoverLetterDiffList(@Valid @RequestBody UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest) {
         if(mainService.isOnlyOneCoverLetter(updatePositionCoverLetterDiffListRequest.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

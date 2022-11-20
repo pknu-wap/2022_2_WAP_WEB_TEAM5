@@ -40,7 +40,7 @@ public class MainService {
     }
 
     private void setCoverLetterNext(Integer id, Integer to) {
-        if (id != 0) {
+        if (id != null) {
             Optional<CoverLetterEntity> coverLetterEntity = coverLetterRepository.findById(id);
             coverLetterEntity.get().setNext(to);
             coverLetterRepository.save(coverLetterEntity.get());
@@ -48,7 +48,7 @@ public class MainService {
     }
 
     private void setCoverLetterPrev(Integer id, Integer to) {
-        if (id != 0) {
+        if (id != null) {
             Optional<CoverLetterEntity> coverLetterEntity = coverLetterRepository.findById(id);
             coverLetterEntity.get().setPrev(to);
             coverLetterRepository.save(coverLetterEntity.get());
@@ -56,7 +56,7 @@ public class MainService {
     }
 
     private void setListNext(Integer id, Integer to) {
-        if (id != 0) {
+        if (id != null) {
             ListEntity listEntity = listRepository.findByListId(id);
             listEntity.setNext(to);
             listRepository.save(listEntity);
@@ -64,7 +64,7 @@ public class MainService {
     }
 
     private void setListPrev(Integer id, Integer to) {
-        if (id != 0) {
+        if (id != null) {
             ListEntity listEntity = listRepository.findByListId(id);
             listEntity.setPrev(to);
             listRepository.save(listEntity);
@@ -112,7 +112,7 @@ public class MainService {
         for (ListEntity listEntity : listEntities) {
             listEntityMap.put(listEntity.getListId(), listEntity);
 
-            if (listEntity.getPrev() == 0)
+            if (listEntity.getPrev() == null)
                 nowList = listEntity;
         }
 
@@ -129,14 +129,14 @@ public class MainService {
             for (CoverLetterEntity coverLetterEntity : coverLetterEntities) {
                 coverLetterEntityMap.put(coverLetterEntity.getId(), coverLetterEntity);
 
-                if (coverLetterEntity.getPrev() == 0)
+                if (coverLetterEntity.getPrev() == null)
                     nowCoverLetter = coverLetterEntity;
             }
 
             while (true) {
                 coverLetters.add(new CoverLetter(nowCoverLetter));
 
-                if (nowCoverLetter.getNext() == 0)
+                if (nowCoverLetter.getNext() == null)
                     break;
 
                 nowCoverLetter = coverLetterEntityMap.get(nowCoverLetter.getNext());
@@ -145,7 +145,7 @@ public class MainService {
             FolderList nowFolder = new FolderList(nowList, coverLetters);
             folderLists.add(nowFolder);
 
-            if (nowList.getNext() == 0)
+            if (nowList.getNext() == null)
                 break;
 
             nowList = listEntityMap.get(nowList.getNext());
@@ -159,8 +159,8 @@ public class MainService {
     public CreateListResponse createList(Integer userId, String title) {
         ListEntity newListEntity = new ListEntity();
         newListEntity.setTitle(title);
-        newListEntity.setPrev(0);
-        newListEntity.setNext(0);
+        newListEntity.setPrev(null);
+        newListEntity.setNext(null);
         newListEntity.setUserId(userId);
 
         if (listRepository.countByUserId(userId) == 0) {
@@ -171,7 +171,7 @@ public class MainService {
             return getListResponse(newListEntity, createCoverLetterResponse);
         }
 
-        ListEntity lastListEntity = listRepository.findByUserIdAndNext(userId, 0);
+        ListEntity lastListEntity = listRepository.findByUserIdAndNext(userId, null);
 
         newListEntity.setPrev(lastListEntity.getListId());
         newListEntity = listRepository.save(newListEntity);
@@ -189,8 +189,8 @@ public class MainService {
         newCoverLetterEntity.setTitle(title);
         newCoverLetterEntity.setQuestionLock(false);
         newCoverLetterEntity.setDescriptionLock(false);
-        newCoverLetterEntity.setPrev(0);
-        newCoverLetterEntity.setNext(0);
+        newCoverLetterEntity.setPrev(null);
+        newCoverLetterEntity.setNext(null);
         newCoverLetterEntity.setListId(listId);
 
         if (coverLetterRepository.countByListId(listId) == 0) {
@@ -202,7 +202,7 @@ public class MainService {
             return getCoverLetterResponse(new CoverLetter(newCoverLetterEntity));
         }
 
-        CoverLetterEntity lastCoverLetterEntity = coverLetterRepository.findByListIdAndNext(listId, 0);
+        CoverLetterEntity lastCoverLetterEntity = coverLetterRepository.findByListIdAndNext(listId, null);
 
         newCoverLetterEntity.setPrev(lastCoverLetterEntity.getId());
         newCoverLetterEntity = coverLetterRepository.save(newCoverLetterEntity);
@@ -333,7 +333,7 @@ public class MainService {
 
         lastCoverLetter.setNext(moveCoverLetter.get().getId());
         moveCoverLetter.get().setListId(updatePositionCoverLetterDiffListRequest.getToMoveListId());
-        moveCoverLetter.get().setNext(0);
+        moveCoverLetter.get().setNext(null);
 
         coverLetterRepository.save(lastCoverLetter);
         coverLetterRepository.saveAndFlush(moveCoverLetter.get());
