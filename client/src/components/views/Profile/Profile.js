@@ -65,9 +65,16 @@ function Profile() {
   const nameHandler2 = (event) => {
     setName2(event.currentTarget.value);
   };
+  const orgHandler = (event) => {
+    setOrg(event.currentTarget.value);
+  };
+  const gradeHandler = (event) => {
+    setGrade(event.currentTarget.value);
+  };
   const infoHandler2 = (event) => {
     setInfo2(event.currentTarget.value);
   };
+
   //어학 성적
   const dateHandler3 = (event) => {
     setDate3(event.currentTarget.value);
@@ -134,6 +141,8 @@ function Profile() {
   //수상 경력
   let [Date2, setDate2] = useState("");
   let [Name2, setName2] = useState("");
+  let [Org, setOrg] = useState("");
+  let [Grade, setGrade] = useState("");
   let [Info2, setInfo2] = useState("");
   let [Content2, setContent2] = useState([]);
   //어학 성적
@@ -212,13 +221,23 @@ function Profile() {
   const updateAward = () => {
     setDate2([...Date2, Date2]);
     setName2([...Name2, Name2]);
+    setOrg([...Org, Org]);
+    setGrade([...Grade, Grade]);
     setInfo2([...Info2, Info2]);
 
-    const con2 = { date2: Date2, name2: Name2, info2: Info2 };
+    const con2 = {
+      date2: Date2,
+      name2: Name2,
+      org: Org,
+      grade: Grade,
+      info2: Info2,
+    };
     setContent2([...Content2, con2]);
 
     setDate2("");
     setName2("");
+    setOrg("");
+    setGrade("");
     setInfo2("");
   };
 
@@ -246,7 +265,9 @@ function Profile() {
           <h4>취득 자격증</h4>
         </div>
         {/* 전체카드 감싸는 div */}
-        <div className="info-div" style={{ overflow: "scroll" }}>
+        <div
+          className="info-div"
+          style={{ overflow: "auto", whiteSpace: "nowrap" }}>
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
@@ -331,13 +352,15 @@ function Profile() {
           }}>
           추가
         </Button>
-
+        {/* ------------------------------------------------------------------------------------ */}
         {/* info-title */}
         <div className="info-title">
           <h4>수상 경력</h4>
         </div>
         {/* 전체카드 감싸는 div */}
-        <div className="info-div" style={{ overflow: "scroll" }}>
+        <div
+          className="info-div"
+          style={{ overflow: "auto", whiteSpace: "nowrap", height: "28%" }}>
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
@@ -349,6 +372,12 @@ function Profile() {
                     </div>
                     <div className="info-myinfo-contents" key={index}>
                       {contents.name2}
+                    </div>
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.org}
+                    </div>
+                    <div className="info-myinfo-contents" key={index}>
+                      {contents.grade}
                     </div>
                     <div className="info-myinfo-contents" key={index}>
                       {contents.info2}
@@ -384,9 +413,25 @@ function Profile() {
                   />
                 </FormControl>
                 <FormControl mt={4}>
-                  <FormLabel>상세정보</FormLabel>
+                  <FormLabel>시상기관</FormLabel>
                   <Input
-                    placeholder="ex) 대상"
+                    placeholder="ex) 부경대"
+                    value={Org}
+                    onChange={orgHandler}
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>성적</FormLabel>
+                  <Input
+                    placeholder="ex) 최우수상"
+                    value={Grade}
+                    onChange={gradeHandler}
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>설명</FormLabel>
+                  <Input
+                    placeholder="ex) 아이디어 구상 및 발표"
                     value={Info2}
                     onChange={infoHandler2}
                   />
@@ -421,11 +466,13 @@ function Profile() {
           }}>
           추가
         </Button>
-
+        {/* ------------------------------------------------------------------------- */}
         <div className="info-title">
           <h4>어학 성적</h4>
         </div>
-        <div className="info-div" style={{ overflow: "scroll" }}>
+        <div
+          className="info-div"
+          style={{ overflow: "auto", whiteSpace: "nowrap" }}>
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
