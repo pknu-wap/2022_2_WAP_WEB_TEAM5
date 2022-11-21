@@ -37,4 +37,11 @@ public class RegisterService {
 
         return registerResponse;
     }
+
+    public void changePassword(Integer userId, String password) {
+        UserInfoEntity userInfoEntity = userInfoRepository.findById(userId).get();
+
+        userInfoEntity.setPassword(password);
+        userInfoRepository.saveAndFlush(userInfoEntity);
+    }
 }
