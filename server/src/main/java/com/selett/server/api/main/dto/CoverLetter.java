@@ -24,9 +24,6 @@ public class CoverLetter {
     @JsonProperty("description_lock")
     private Boolean descriptionLock;
 
-    private Integer prev;
-
-    private Integer next;
     public CoverLetter(CoverLetterEntity coverLetterEntity) {
         id = coverLetterEntity.getId();
         title = coverLetterEntity.getTitle();
@@ -34,7 +31,5 @@ public class CoverLetter {
         questionLock = coverLetterEntity.getQuestionLock();
         description = coverLetterEntity.getDescription();
         descriptionLock = coverLetterEntity.getDescriptionLock();
-        prev = coverLetterEntity.getPrev();
-        next = coverLetterEntity.getNext();
     }
 }

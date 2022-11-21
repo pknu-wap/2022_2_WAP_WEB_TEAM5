@@ -17,18 +17,12 @@ public class FolderList {
 
     private String title;
 
-    private Integer prev;
-
-    private Integer next;
-
     @JsonProperty("cover_letter")
     private List<CoverLetter> coverLetter;
 
     public FolderList(ListEntity listEntity, List<CoverLetter> coverLetter) {
         listId = listEntity.getListId();
         title = listEntity.getTitle();
-        prev = listEntity.getPrev();
-        next = listEntity.getNext();
         this.coverLetter = coverLetter;
     }
 }
