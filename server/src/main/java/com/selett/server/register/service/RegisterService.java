@@ -16,15 +16,13 @@ public class RegisterService {
 
         Boolean success = userInfoRepository.existsByIdentification(identification);
         if(success) {
-            registerResponse.setSuccess(false);
-            registerResponse.setMessage("중복된 아이디입니다.");
+            registerResponse.setStatus(1);
             return registerResponse;
         }
 
         success = userInfoRepository.existsByEmail(email);
         if(success) {
-            registerResponse.setSuccess(false);
-            registerResponse.setMessage("중복된 이메일입니다.");
+            registerResponse.setStatus(2);
             return registerResponse;
         }
 
@@ -35,8 +33,8 @@ public class RegisterService {
         user.setEmail(email);
         userInfoRepository.saveAndFlush(user);
 
-        registerResponse.setSuccess(true);
-        registerResponse.setMessage("회원가입 되었습니다.");
+        registerResponse.setStatus(0);
+
         return registerResponse;
     }
 }

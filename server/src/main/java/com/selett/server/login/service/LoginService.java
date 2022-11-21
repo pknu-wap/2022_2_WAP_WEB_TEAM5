@@ -17,11 +17,8 @@ public class LoginService {
         LoginResponse loginResponse = new LoginResponse();
         if(success) {
             UserInfoEntity user = userInfoRepository.findByIdentificationAndPassword(identification, password);
-            loginResponse.setSuccess(true);
             loginResponse.setUserId(user.getUser_id());
         }
-        else
-            loginResponse.setSuccess(false);
 
         return loginResponse;
     }

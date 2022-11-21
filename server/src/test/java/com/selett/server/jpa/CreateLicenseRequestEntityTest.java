@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class LicenseEntityTest {
+public class CreateLicenseRequestEntityTest {
 
     @Autowired
     private LicenseRepository licenseRepository;
