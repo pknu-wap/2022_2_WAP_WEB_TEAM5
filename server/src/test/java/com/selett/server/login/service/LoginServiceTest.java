@@ -1,7 +1,7 @@
 package com.selett.server.login.service;
 
-import com.selett.server.mapper.UserInfoEntity;
-import com.selett.server.repository.UserInfoRepository;
+import com.selett.server.jpa.mapper.UserInfoEntity;
+import com.selett.server.jpa.repository.UserInfoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,6 +1,6 @@
 package com.selett.server.jpa;
 
-import com.selett.server.repository.LicenseRepository;
+import com.selett.server.jpa.repository.LicenseRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
