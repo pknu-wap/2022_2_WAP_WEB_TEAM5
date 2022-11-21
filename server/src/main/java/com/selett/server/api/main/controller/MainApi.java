@@ -10,7 +10,6 @@ import com.selett.server.api.main.dto.update.*;
 import com.selett.server.api.main.service.MainService;
 import com.selett.server.api.main.dto.MainRequest;
 import com.selett.server.api.main.dto.MainResponse;
-import com.selett.server.main.dto.update.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

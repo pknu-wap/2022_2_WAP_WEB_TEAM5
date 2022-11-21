@@ -6,7 +6,6 @@ import com.selett.server.api.main.dto.create.CreateListResponse;
 import com.selett.server.api.main.dto.update.*;
 import com.selett.server.api.main.dto.FolderList;
 import com.selett.server.api.main.dto.MainResponse;
-import com.selett.server.main.dto.update.*;
 import com.selett.server.jpa.mapper.CoverLetterEntity;
 import com.selett.server.jpa.mapper.ListEntity;
 import com.selett.server.jpa.repository.CoverLetterRepository;
