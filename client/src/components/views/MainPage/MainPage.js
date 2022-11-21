@@ -17,14 +17,14 @@ import HiddenTag from "./sections/HiddenTag";
 import MemoForm from "./sections/MemoForm";
 import MemoTag from "./sections/MemoTag";
 
-import { CoverState, CompanyListState } from "./Atom";
+import { CoverState, CompanyListState, MemoState } from "./Atom";
 import { useRecoilState } from "recoil";
 
 function MainPage() {
   // const [Cover, setCover] = useState([]); // 파일을 저장
   const [Grammer, setGrammer] = useState(false);
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
-  const [Memo, setMemo] = useState(false);
+  const [Memo, setMemo] = useRecoilState(MemoState);
   const [ListToggle, setListToggle] = useState(true);
 
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
@@ -88,7 +88,7 @@ function MainPage() {
         </GridItem>
         {ListToggle ? (
           <GridItem // 파일 칸
-            colSpan={ListToggle ? 3 : 0}
+            colSpan={3}
             height="10px"
             style={{
               backgroundColor: "#303136",
@@ -154,8 +154,6 @@ function MainPage() {
                   overflow: "scroll",
                   marginRight: "1%",
                 }}>
-                <MemoForm />
-
                 <div // 네모의 제일 상위 제목
                   style={{
                     fontWeight: "bold",

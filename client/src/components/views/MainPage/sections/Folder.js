@@ -31,6 +31,8 @@ function Folder() {
   const [Loading, setLoading] = useState(false);
   const [placeholderProps, setPlaceholderProps] = useState({});
   const queryAttr = "data-rbd-drag-handle-draggable-id";
+  const [Prev, setPrev] = useState("");
+  const [Next, setNext] = useState("");
 
   const companyHandler = (event) => {
     // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
@@ -124,7 +126,7 @@ function Folder() {
   const onDragEnd = (result) => {
     // dropped outside the list
     // drag 끝날 때 호출되는 함수
-    console.log(result);
+    // console.log(result);
     if (!result.destination) {
       // list밖으로 빠져나갔을 때 destination이 null로 설정됨
       // => null일 때는 그냥 리턴해줌
@@ -134,6 +136,7 @@ function Folder() {
     setCompanyList((items) =>
       reorder(items, result.source.index, result.destination.index)
     );
+    console.log(result);
 
     setPlaceholderProps({});
   };
@@ -144,7 +147,7 @@ function Folder() {
       // list 밖으로 빠져나갔을 때 null로 설정
       return;
     }
-    console.log(update);
+    // console.log(update);
     const draggableId = update.draggableId;
     const destinationIndex = update.destination.index;
 
@@ -192,11 +195,62 @@ function Folder() {
   });
 
   const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
+    let result = Array.from(list);
+    let add = [];
 
-    return result;
+    // const [removed] = result.splice(startIndex, 1);
+    // result.splice(endIndex, 0, removed);
+
+    // setPrev(result[startIndex].prev)
+    let body = {};
+    if (startIndex > endIndex) {
+      // 밑으로 내려가는 액션일 때,
+      // null 처리하기
+      body = {
+        list_id: result[startIndex].list_id,
+        to_move_next_list_id: result[endIndex].next - 1,
+        to_move_prev_list_id: result[endIndex].list_id - 1,
+      };
+    } else {
+      // 4번 -> 1번으로 가는 액션일 때
+      body = {
+        list_id: result[startIndex].list_id,
+        to_move_next_list_id: result[endIndex].next,
+        to_move_prev_list_id: result[endIndex].list_id,
+      };
+    }
+
+    console.log(body);
+    try {
+      axios.put(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists/position",
+        body
+      );
+      FolUpdate();
+    } catch (e) {
+      console.log(e);
+    }
+
+    if (add.length === 0) {
+      // 정렬되도록 만들기
+      result &&
+        result.map((content, index) => {
+          if (content.prev === null) {
+            add.push(result[index]);
+          } else if (content.next === null) {
+            add.push(result[index]);
+          } else {
+            result &&
+              result.map((idSearch) => {
+                if (content.next === idSearch.list_id) {
+                  add.push(result[index]);
+                }
+              });
+          }
+        });
+    }
+
+    return add;
   };
 
   return (

@@ -20,3 +20,8 @@ export const fileClickIdState = atom({
   key: "fileClick",
   default: 0,
 });
+
+export const MemoState = atom({
+  key: "MemoSta",
+  default: "",
+});
