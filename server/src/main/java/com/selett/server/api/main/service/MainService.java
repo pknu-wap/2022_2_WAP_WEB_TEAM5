@@ -99,6 +99,82 @@ public class MainService {
         return false;
     }
 
+    public boolean checkSafeList(UpdatePositionListRequest updatePositionListRequest) {
+        Integer listId = updatePositionListRequest.getListId();
+        Integer toMovePrevListId = updatePositionListRequest.getToMovePrevListId();
+        Integer toMoveNextListId = updatePositionListRequest.getToMoveNextListId();
+        if(!listRepository.existsById(listId))
+            return false;
+        if(toMovePrevListId != null && !listRepository.existsById(toMovePrevListId))
+            return false;
+        if(toMoveNextListId != null && !listRepository.existsById(toMoveNextListId))
+            return false;
+        if(toMoveNextListId == null && toMovePrevListId == null)
+            return false;
+        if(Objects.equals(listId, toMoveNextListId))
+            return false;
+        if(Objects.equals(listId, toMovePrevListId))
+            return false;
+
+
+        if(toMovePrevListId != null) {
+            ListEntity toMovePrevList = listRepository.findByListId(toMovePrevListId);
+            Integer next = toMovePrevList.getNext();
+
+            if(!Objects.equals(next, toMoveNextListId)) {
+                return false;
+            }
+        }
+
+        if(toMoveNextListId != null) {
+            ListEntity toMoveNextList = listRepository.findByListId(toMoveNextListId);
+            Integer prev = toMoveNextList.getPrev();
+
+            if(!Objects.equals(prev, toMovePrevListId)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    public boolean checkSafeCoverLetter(UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
+        Integer id = updatePositionCoverLetterRequest.getId();
+        Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
+        Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
+        if(!coverLetterRepository.existsById(id))
+            return false;
+        if(toMovePrevId != null && !coverLetterRepository.existsById(toMovePrevId))
+            return false;
+        if(toMoveNextId != null && !coverLetterRepository.existsById(toMoveNextId))
+            return false;
+        if(toMoveNextId == null && toMovePrevId == null)
+            return false;
+        if(Objects.equals(id, toMoveNextId))
+            return false;
+        if(Objects.equals(id, toMovePrevId))
+            return false;
+
+        if(toMovePrevId != null) {
+            CoverLetterEntity toMovePrevCoverLetter = coverLetterRepository.findById(toMovePrevId).get();
+            Integer next = toMovePrevCoverLetter.getNext();
+
+            if(!Objects.equals(next, toMoveNextId)) {
+                return false;
+            }
+        }
+
+        if(toMoveNextId != null) {
+            CoverLetterEntity toMoveNextCoverLetter = coverLetterRepository.findById(toMoveNextId).get();
+            Integer prev = toMoveNextCoverLetter.getPrev();
+
+            if(!Objects.equals(prev, toMovePrevId)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public MainResponse getListAndCoverLetter(Integer userId) {
         MainResponse response = new MainResponse(new ArrayList<>());
 

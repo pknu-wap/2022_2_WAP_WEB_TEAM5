@@ -145,7 +145,8 @@ public class MainApi {
 
     @PutMapping("/lists/position")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "리스트 위치 이동 성공")
+            @ApiResponse(responseCode = "200", description = "리스트 위치 이동 성공"),
+            @ApiResponse(responseCode = "400", description = "요청한 id가 하나라도 존재하지 않거나(null 제외) 이동할 곳이 원래 붙어있지 않음")
     })
     @Operation(summary = "리스트 위치 이동", description = "리스트 위치를 이동합니다." +
             "<br/>" +
@@ -154,6 +155,10 @@ public class MainApi {
             "<br/>" +
             "(끝은 null 입니다.)")
     public ResponseEntity<Void> updatePostionList(@Valid @RequestBody UpdatePositionListRequest updatePositionListRequest) {
+        if(!mainService.checkSafeList(updatePositionListRequest)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         mainService.updatePositionList(updatePositionListRequest);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -161,7 +166,8 @@ public class MainApi {
 
     @PutMapping("/cover-letters/position")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "자기소개서 위치 이동 성공")
+            @ApiResponse(responseCode = "200", description = "자기소개서 위치 이동 성공"),
+            @ApiResponse(responseCode = "400", description = "요청한 id가 하나라도 존재하지 않거나(null 제외) 이동할 곳이 원래 붙어있지 않음")
     })
     @Operation(summary = "자기소개서 위치 이동", description = "자기소개서를 이동합니다." +
             "<br/>" +
@@ -170,6 +176,10 @@ public class MainApi {
             "<br/>" +
             "(끝은 null 입니다.)")
     public ResponseEntity<Void> updatePositionCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
+        if(!mainService.checkSafeCoverLetter(updatePositionCoverLetterRequest)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         mainService.updatePositionCoverLetter(updatePositionCoverLetterRequest);
 
         return new ResponseEntity<>(HttpStatus.OK);
