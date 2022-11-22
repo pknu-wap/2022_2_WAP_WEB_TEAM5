@@ -3,12 +3,13 @@ import { useRecoilState } from "recoil";
 import { DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
 import axios from "axios";
-import { fileClickIdState } from "../Atom";
+import { fileClickIdState, CoverState } from "../Atom";
 
 function QuestionList({ content, fileUpdate }) {
   const [Edit, setEdit] = useState(false);
   const [Text, setText] = useState(content.title);
   const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
+  const [Cover, setCover] = useRecoilState(CoverState);
 
   const deleteClick = async (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
@@ -33,8 +34,13 @@ function QuestionList({ content, fileUpdate }) {
     setText(event.currentTarget.value);
   };
 
-  const EditClick = () => {
+  const EditClick = (id) => {
     setEdit(true);
+    console.log(id);
+    const EditTitle = Cover.filter((cover) => cover.id === id);
+    if (EditTitle[0]) {
+      setText(EditTitle[0].title);
+    }
   };
 
   const CheckOnClick = async (id) => {
@@ -115,7 +121,7 @@ function QuestionList({ content, fileUpdate }) {
               outline: "0",
             }}
             onClick={() => questionClick(content.id)}>
-            {content.title}
+            {content.title || ""}
           </Button>
           <EditIcon
             style={{
@@ -126,7 +132,7 @@ function QuestionList({ content, fileUpdate }) {
               marginRight: "4%",
               cursor: "pointer",
             }}
-            onClick={EditClick}
+            onClick={() => EditClick(content.id)}
           />
           <DeleteIcon
             style={{

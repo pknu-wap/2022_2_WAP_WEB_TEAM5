@@ -136,7 +136,6 @@ function Folder() {
     setCompanyList((items) =>
       reorder(items, result.source.index, result.destination.index)
     );
-    console.log(result);
 
     setPlaceholderProps({});
   };
@@ -200,9 +199,6 @@ function Folder() {
     let prev,
       next = 0;
 
-    // console.log(result.length);
-    // console.log(endIndex);
-
     if (endIndex === 0) {
       prev = null;
       next = result[endIndex].list_id;
@@ -241,7 +237,6 @@ function Folder() {
     };
     // }
 
-    console.log(body);
     server(body);
 
     // const [removed] = result.splice(startIndex, 1);

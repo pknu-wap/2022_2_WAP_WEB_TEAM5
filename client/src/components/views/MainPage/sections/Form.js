@@ -97,9 +97,11 @@ function Form(props) {
 
   const titleHandler = (event) => {
     setTitle(event.currentTarget.value);
-    if (Title.length > 200) {
-      alert("200자 이상입니다.");
-      setTitle(Title.substring(0, 200));
+    if (Title !== 0) {
+      if (Title.length > 200) {
+        alert("200자 이상입니다.");
+        setTitle(Title.substring(0, 200));
+      }
     }
   };
 
@@ -113,9 +115,11 @@ function Form(props) {
     setText(event.currentTarget.value);
 
     // console.log(event.currentTarget.value.length);
-    if (Text.length > 5000) {
-      alert("5000자 이상입니다.");
-      setText(Text.substring(0, 5000));
+    if (Text !== 0) {
+      if (Text.length > 5000) {
+        alert("5000자 이상입니다.");
+        setText(Text.substring(0, 5000));
+      }
     }
   };
 
