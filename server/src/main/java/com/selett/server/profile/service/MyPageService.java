@@ -107,9 +107,52 @@ public class MyPageService {
         return myPageResponse;
     }
 
+    //Award
+    public void postProfileAward(String title, LocalDate date, String organization, String grade, Integer userId) {
+        AwardEntity awardEntity = new AwardEntity();
+        awardEntity.setTitle(title);
+        awardEntity.setDate(date);
+        awardEntity.setOrganization(organization);
+        awardEntity.setGrade(grade);
+        awardEntity.setUserId(userId);
 
-    public void postProfile(String title, LocalDate date, String description, Integer userId) {
-        //License
+        awardRepository.save(awardEntity);
+        awardRepository.flush();
+    }
+
+    //Education
+    public void postProfileEducation(String name, String major, String degree, LocalDate admissionDate, LocalDate graduationDate,
+                                     Float majorGrade, Integer majorCourse, Float grade, Float maxGrade, Integer course,Integer userId) {
+        EducationEntity educationEntity = new EducationEntity();
+        educationEntity.setName(name);
+        educationEntity.setMajor(major);
+        educationEntity.setDegree(degree);
+        educationEntity.setAdmissionDate(admissionDate);
+        educationEntity.setGraduationDate(graduationDate);
+        educationEntity.setMajorGrade(majorGrade);
+        educationEntity.setMajorCourse(majorCourse);
+        educationEntity.setGrade(grade);
+        educationEntity.setMaxGrade(maxGrade);
+        educationEntity.setCourse(course);
+        educationEntity.setUserId(userId);
+
+        educationRepository.save(educationEntity);
+        educationRepository.flush();
+    }
+
+    //LanguageSkill
+    public void postProfileLanguageSkill(String title, String grade, Integer userId) {
+        LanguageSkillEntity languageSkillEntity = new LanguageSkillEntity();
+        languageSkillEntity.setTitle(title);
+        languageSkillEntity.setGrade(grade);
+        languageSkillEntity.setUserId(userId);
+
+        languageSkillRepository.save(languageSkillEntity);
+        languageSkillRepository.flush();
+    }
+
+    //License
+    public void postProfileLicense(String title, LocalDate date, String description, Integer userId) {
         LicenseEntity licenseEntity = new LicenseEntity();
         licenseEntity.setTitle(title);
         licenseEntity.setDate(date);
@@ -120,8 +163,18 @@ public class MyPageService {
         licenseRepository.flush();
     }
 
+    //Memo
+    public void postProfileMemo(String description, Integer userId) {
+        MemoEntity memoEntity = new MemoEntity();
+        memoEntity.setDescription(description);
+        memoEntity.setUserId(userId);
+
+        memoRepository.save(memoEntity);
+        memoRepository.flush();
+    }
+
+
 
     //public MyPageResponse UpdateProfile(Integer userId) {}
-
     //public MyPageResponse DeleteProfile(Integer userId) {}
 }
