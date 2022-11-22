@@ -1,17 +1,12 @@
-package com.selett.server.api;
+package com.selett.server.api.Init.service;
 
 import com.selett.server.jpa.repository.*;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-@CrossOrigin(origins = "*")
+@Service
 @AllArgsConstructor
-@RestController
-@RequestMapping("/init")
-public class Init {
+public class InitService {
     private final AwardRepository awardRepository;
     private final LanguageSkillRepository languageSkillRepository;
     private final LicenseRepository licenseRepository;
@@ -19,10 +14,8 @@ public class Init {
     private final EducationRepository educationRepository;
     private final CoverLetterRepository coverLetterRepository;
     private final ListRepository listRepository;
-    private final UserInfoRepository userInfoRepository;
 
-    @GetMapping("")
-    public void deleteAll() {
+    public void init() {
         awardRepository.deleteAll();
         awardRepository.flush();
         languageSkillRepository.deleteAll();
