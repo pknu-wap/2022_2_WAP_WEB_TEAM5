@@ -2,7 +2,8 @@ import React from "react";
 import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
 import {
   Modal,
   ModalOverlay,
@@ -18,6 +19,9 @@ import {
   useDisclosure,
   border,
 } from "@chakra-ui/react";
+import { folderClickIdState, MemoState } from "../MainPage/Atom";
+import Myinfo from "./Myinfo";
+import axios from "axios";
 
 function Profile() {
   const {
@@ -120,6 +124,24 @@ function Profile() {
     setMemo(event.currentTarget.value);
   };
 
+  useEffect(() => {
+    first();
+  }, []);
+
+  const first = async () => {
+    try {
+      const response = await axios.get(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile?userId=1"
+      );
+      setLicense(response.data.licenses);
+      setAwards(response.data.awards);
+      setLanguageSkills(response.data.languageSkills);
+      setEducation(response.data.educations);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   //인적사항
   let [School, setSchool] = useState("");
   let [Major, setMajor] = useState("");
@@ -131,30 +153,41 @@ function Profile() {
   let [Credit, setCredit] = useState("");
   let [MaxCredit, setMaxCredit] = useState("");
   let [CompletingCredit, setCompletingCredit] = useState("");
-  let [Type, setType] = useState([]);
-  let [MyInfo, setMyInfo] = useState([]);
+  let [Type, setType] = useState([
+    "학교명",
+    "전공",
+    "학위",
+    "입학일",
+    "졸업일",
+    "전공학점",
+    "전공이수학점",
+    "학점",
+    "최대학점",
+    "이수학점",
+  ]);
+  let [Education, setEducation] = useState([]);
   //취득 자격증
   let [Date, setDate] = useState("");
   let [Name, setName] = useState("");
   let [Info, setInfo] = useState("");
-  let [Content, setContent] = useState([]);
+  let [License, setLicense] = useState([]);
   //수상 경력
   let [Date2, setDate2] = useState("");
   let [Name2, setName2] = useState("");
   let [Org, setOrg] = useState("");
   let [Grade, setGrade] = useState("");
   let [Info2, setInfo2] = useState("");
-  let [Content2, setContent2] = useState([]);
+  let [Awards, setAwards] = useState([]);
   //어학 성적
   let [Date3, setDate3] = useState("");
   let [Name3, setName3] = useState("");
   let [Info3, setInfo3] = useState("");
-  let [Content3, setContent3] = useState([]);
+  let [LanguageSkills, setLanguageSkills] = useState([]);
   //메모
-  let [Memo, setMemo] = useState("");
+  let [Memo, setMemo] = useRecoilState(MemoState);
 
   // 인적사항
-  const updateMyinfo = () => {
+  const updateEducation = async () => {
     setSchool(School);
     setMajor(Major);
     setDegree(Degree);
@@ -166,30 +199,53 @@ function Profile() {
     setMaxCredit(MaxCredit);
     setCompletingCredit(CompletingCredit);
 
-    setMyInfo([
-      School,
-      Major,
-      Degree,
-      Enrollment,
-      Graduation,
-      MajorCredit,
-      CompletingMajorCredit,
-      Credit,
-      MaxCredit,
-      CompletingCredit,
-    ]);
-    setType([
-      "학교명",
-      "전공",
-      "학위",
-      "입학일",
-      "졸업일",
-      "전공학점",
-      "전공이수학점",
-      "학점",
-      "최대학점",
-      "이수학점",
-    ]);
+    // setEducation([
+    //   School,
+    //   Major,
+    //   Degree,
+    //   Enrollment,
+    //   Graduation,
+    //   MajorCredit,
+    //   CompletingMajorCredit,
+    //   Credit,
+    //   MaxCredit,
+    //   CompletingCredit,
+    // ]);
+    // setType([
+    //   "학교명",
+    //   "전공",
+    //   "학위",
+    //   "입학일",
+    //   "졸업일",
+    //   "전공학점",
+    //   "전공이수학점",
+    //   "학점",
+    //   "최대학점",
+    //   "이수학점",
+    // ]);
+
+    const body = {
+      // 서버에서 요청하는 정보 이름으로 변환
+      a: School,
+      b: Major,
+      c: Degree,
+      d: Enrollment,
+      e: Graduation,
+      f: MajorCredit,
+      g: CompletingMajorCredit,
+      h: Credit,
+      i: MaxCredit,
+      j: CompletingCredit,
+    };
+
+    // try {
+    //   await axios.post(
+    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+    //     body
+    //   );
+    // } catch (e) {
+    //   console.log(e);
+    // }
 
     setSchool("");
     setMajor("");
@@ -204,13 +260,31 @@ function Profile() {
   };
 
   // 취득 자격증
-  const updateLicense = () => {
-    setDate([...Date, Date]);
-    setName([...Name, Name]);
-    setInfo([...Info, Info]);
+  const updateLicense = async () => {
+    setDate(Date);
+    setName(Name);
+    setInfo(Info);
 
-    const con = { date: Date, name: Name, info: Info };
-    setContent([...Content, con]);
+    // const con = { date: Date, title: Name, description: Info };
+    // setLicense([...License, con]);
+
+    const body = {
+      // 서버에서 요청하는 정보 이름으로 변환
+      date: Date,
+      description: Info,
+      title: Name,
+      user_id: 1,
+    };
+    console.log(body);
+
+    try {
+      await axios.post(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/license",
+        body
+      );
+    } catch (e) {
+      console.log(e);
+    }
 
     setDate("");
     setName("");
@@ -218,12 +292,12 @@ function Profile() {
   };
 
   // 수상 경력
-  const updateAward = () => {
-    setDate2([...Date2, Date2]);
-    setName2([...Name2, Name2]);
-    setOrg([...Org, Org]);
-    setGrade([...Grade, Grade]);
-    setInfo2([...Info2, Info2]);
+  const updateAward = async () => {
+    setDate2(Date2);
+    setName2(Name2);
+    setOrg(Org);
+    setGrade(Grade);
+    setInfo2(Info2);
 
     const con2 = {
       date2: Date2,
@@ -232,7 +306,25 @@ function Profile() {
       grade: Grade,
       info2: Info2,
     };
-    setContent2([...Content2, con2]);
+    setAwards([...Awards, con2]);
+
+    const body = {
+      // 서버에서 요청하는 정보 이름으로 변환
+      one: Date2,
+      two: Name2,
+      three: Org,
+      four: Grade,
+      five: Info2,
+    };
+
+    // try {
+    //   await axios.post(
+    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+    //     body
+    //   );
+    // } catch (e) {
+    //   console.log(e);
+    // }
 
     setDate2("");
     setName2("");
@@ -242,13 +334,29 @@ function Profile() {
   };
 
   //어학 성적
-  const updateLen = () => {
-    setDate3([...Date3, Date3]);
-    setName3([...Name3, Name3]);
-    setInfo3([...Info3, Info3]);
+  const updateLen = async () => {
+    setDate3(Date3);
+    setName3(Name3);
+    setInfo3(Info3);
 
-    const con3 = { date3: Date3, name3: Name3, info3: Info3 };
-    setContent3([...Content3, con3]);
+    const con3 = { date: Date3, name: Name3, info: Info3 };
+    setLanguageSkills([...LanguageSkills, con3]);
+
+    const body = {
+      // 서버에서 요청하는 정보 이름으로 변환
+      one: Date3,
+      two: Name3,
+      three: Info3,
+    };
+
+    // try {
+    //   await axios.post(
+    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+    //     body
+    //   );
+    // } catch (e) {
+    //   console.log(e);
+    // }
 
     setDate3("");
     setName3("");
@@ -256,7 +364,7 @@ function Profile() {
   };
 
   return (
-    <div style={{ width: "100%", height: "100vh", backgroundColor: "white" }}>
+    <div style={{ width: "100%", height: "92vh", backgroundColor: "white" }}>
       <NavBar />
       {/* ---------------------------------------------------------------- */}
       <div className="left-nav">
@@ -271,18 +379,10 @@ function Profile() {
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
-              {Content &&
-                Content.map((contents, index) => (
-                  <div className="infoCard">
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.date}
-                    </div>
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.name}
-                    </div>
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.info}
-                    </div>
+              {License &&
+                License.map((contents, index) => (
+                  <div className="infoCard" key={index}>
+                    <Myinfo contents={contents} />
                   </div>
                 ))}
             </div>
@@ -364,23 +464,17 @@ function Profile() {
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
-              {Content2 &&
-                Content2.map((contents, index) => (
-                  <div className="infoCard">
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.date2}
+              {Awards &&
+                Awards.map((contents, index) => (
+                  <div className="infoCard" key={index}>
+                    <div className="info-myinfo-contents">{contents.date}</div>
+                    <div className="info-myinfo-contents">{contents.title}</div>
+                    <div className="info-myinfo-contents">
+                      {contents.organization}
                     </div>
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.name2}
-                    </div>
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.org}
-                    </div>
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.grade}
-                    </div>
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.info2}
+                    <div className="info-myinfo-contents">{contents.grade}</div>
+                    <div className="info-myinfo-contents">
+                      {contents.description}
                     </div>
                   </div>
                 ))}
@@ -476,18 +570,10 @@ function Profile() {
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
-              {Content3 &&
-                Content3.map((contents, index) => (
-                  <div className="infoCard">
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.date3}
-                    </div>
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.name3}
-                    </div>
-                    <div className="info-myinfo-contents" key={index}>
-                      {contents.info3}
-                    </div>
+              {LanguageSkills &&
+                LanguageSkills.map((contents, index) => (
+                  <div className="infoCard" key={index}>
+                    <Myinfo contents={contents} />
                   </div>
                 ))}
             </div>
@@ -513,15 +599,15 @@ function Profile() {
                 <FormControl mt={4}>
                   <FormLabel>시험명</FormLabel>
                   <Input
-                    placeholder="ex) 아이디어톤"
+                    placeholder="ex) 토익"
                     value={Name3}
                     onChange={nameHandler3}
                   />
                 </FormControl>
                 <FormControl mt={4}>
-                  <FormLabel>등급</FormLabel>
+                  <FormLabel>점수</FormLabel>
                   <Input
-                    placeholder="ex) 대상"
+                    placeholder="ex) 750점"
                     value={Info3}
                     onChange={infoHandler3}
                   />
@@ -629,7 +715,7 @@ function Profile() {
                 <Button
                   colorScheme="blue"
                   onClick={() => {
-                    updateMyinfo();
+                    updateEducation();
                     onClose3();
                   }}
                   mr={3}>
@@ -668,8 +754,8 @@ function Profile() {
               height: "100%",
               marginRight: "10px",
             }}>
-            {MyInfo &&
-              MyInfo.map((contents, index) => (
+            {Education &&
+              Education.map((contents, index) => (
                 <div
                   key={index}
                   style={{
@@ -677,7 +763,16 @@ function Profile() {
                     borderBottom: "1px solid grey",
                     padding: "5px",
                   }}>
-                  {MyInfo[index]}
+                  <div>{contents.name}</div>
+                  <div>{contents.major}</div>
+                  <div>{contents.degree}</div>
+                  <div>{contents.admissionDate}</div>
+                  <div>{contents.graduationDate}</div>
+                  <div>{contents.majorGrade}</div>
+                  <div>{contents.majorCourse}</div>
+                  <div>{contents.grade}</div>
+                  <div>{contents.maxGrade}</div>
+                  <div>{contents.course}</div>
                 </div>
               ))}
           </div>
@@ -715,8 +810,8 @@ function Profile() {
             variant="outline"
             colorScheme="gray"
             onClick={() => {
-              setMemo([Memo]);
-              console.log([Memo]);
+              setMemo(Memo);
+              console.log(Memo);
             }}
             style={{
               float: "right",
