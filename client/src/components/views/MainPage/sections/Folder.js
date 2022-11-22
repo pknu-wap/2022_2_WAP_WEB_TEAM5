@@ -201,16 +201,36 @@ function Folder() {
       next = 0;
 
     // console.log(result.length);
-    console.log(endIndex);
+    // console.log(endIndex);
+
     if (endIndex === 0) {
       prev = null;
-      next = result[endIndex + 1].list_id;
+      next = result[endIndex].list_id;
     } else if (endIndex === result.length - 1) {
-      prev = result[endIndex - 1].list_id;
+      prev = result[endIndex].list_id;
       next = null;
     } else {
       prev = result[endIndex - 1].list_id;
       next = result[endIndex + 1].list_id;
+    }
+
+    if (Math.abs(endIndex - startIndex) === 1 && endIndex - startIndex > 0) {
+      if (prev !== null) {
+        prev = result[endIndex].list_id;
+      }
+      if (next !== null) {
+        next = result[endIndex + 1].list_id;
+      }
+    } else if (
+      Math.abs(endIndex - startIndex) === 1 &&
+      endIndex - startIndex < 0
+    ) {
+      if (prev !== null) {
+        prev = result[endIndex - 1].list_id;
+      }
+      if (next !== null) {
+        next = result[endIndex].list_id;
+      }
     }
 
     const body = {
@@ -222,19 +242,24 @@ function Folder() {
     // }
 
     console.log(body);
-    // try {
-    //   axios.put(
-    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists/position",
-    //     body
-    //   );
-    //   FolUpdate();
-    // } catch (e) {
-    //   console.log(e);
-    // }
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
+    server(body);
+
+    // const [removed] = result.splice(startIndex, 1);
+    // result.splice(endIndex, 0, removed);
 
     return result;
+  };
+
+  const server = async (body) => {
+    try {
+      await axios.put(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists/position",
+        body
+      );
+      await FolUpdate();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
