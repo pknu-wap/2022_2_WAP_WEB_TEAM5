@@ -1,6 +1,5 @@
 package com.selett.server.api.register.controller;
 
-import com.selett.server.api.register.dto.ChangePasswordRequest;
 import com.selett.server.api.register.dto.RegisterRequest;
 import com.selett.server.api.register.dto.RegisterResponse;
 import com.selett.server.api.register.service.RegisterService;
@@ -36,7 +35,7 @@ public class RegisterApi {
         return ResponseEntity.ok(registerResponse);
     }
 
-    @PutMapping("/password")
+/*    @PutMapping("/password")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "비밀번호 변경 성공")
     })
@@ -45,5 +44,5 @@ public class RegisterApi {
         registerService.changePassword(changePasswordRequest.getUserId(), changePasswordRequest.getPassword());
 
         return new ResponseEntity<>(HttpStatus.OK);
-    }
+    } */
 }
