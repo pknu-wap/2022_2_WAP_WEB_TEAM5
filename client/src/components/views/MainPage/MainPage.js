@@ -56,6 +56,10 @@ function MainPage() {
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
     first();
+    // if (CompanyList.length === 0) {
+    //   console.log("아");
+    // }
+    // console.log(CompanyList);
   }, []);
 
   const toggleListFunction = () => {

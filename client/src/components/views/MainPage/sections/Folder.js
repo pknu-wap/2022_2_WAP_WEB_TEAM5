@@ -196,61 +196,45 @@ function Folder() {
 
   const reorder = (list, startIndex, endIndex) => {
     let result = Array.from(list);
-    let add = [];
 
-    // const [removed] = result.splice(startIndex, 1);
-    // result.splice(endIndex, 0, removed);
+    let prev,
+      next = 0;
 
-    // setPrev(result[startIndex].prev)
-    let body = {};
-    if (startIndex > endIndex) {
-      // 밑으로 내려가는 액션일 때,
-      // null 처리하기
-      body = {
-        list_id: result[startIndex].list_id,
-        to_move_next_list_id: result[endIndex].next - 1,
-        to_move_prev_list_id: result[endIndex].list_id - 1,
-      };
+    // console.log(result.length);
+    console.log(endIndex);
+    if (endIndex === 0) {
+      prev = null;
+      next = result[endIndex + 1].list_id;
+    } else if (endIndex === result.length - 1) {
+      prev = result[endIndex - 1].list_id;
+      next = null;
     } else {
-      // 4번 -> 1번으로 가는 액션일 때
-      body = {
-        list_id: result[startIndex].list_id,
-        to_move_next_list_id: result[endIndex].next,
-        to_move_prev_list_id: result[endIndex].list_id,
-      };
+      prev = result[endIndex - 1].list_id;
+      next = result[endIndex + 1].list_id;
     }
+
+    const body = {
+      list_id: result[startIndex].list_id,
+
+      to_move_prev_list_id: prev,
+      to_move_next_list_id: next,
+    };
+    // }
 
     console.log(body);
-    try {
-      axios.put(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists/position",
-        body
-      );
-      FolUpdate();
-    } catch (e) {
-      console.log(e);
-    }
+    // try {
+    //   axios.put(
+    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists/position",
+    //     body
+    //   );
+    //   FolUpdate();
+    // } catch (e) {
+    //   console.log(e);
+    // }
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
 
-    if (add.length === 0) {
-      // 정렬되도록 만들기
-      result &&
-        result.map((content, index) => {
-          if (content.prev === null) {
-            add.push(result[index]);
-          } else if (content.next === null) {
-            add.push(result[index]);
-          } else {
-            result &&
-              result.map((idSearch) => {
-                if (content.next === idSearch.list_id) {
-                  add.push(result[index]);
-                }
-              });
-          }
-        });
-    }
-
-    return add;
+    return result;
   };
 
   return (
