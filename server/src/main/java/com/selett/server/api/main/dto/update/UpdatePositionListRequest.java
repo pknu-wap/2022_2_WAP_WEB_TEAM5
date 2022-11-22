@@ -15,11 +15,9 @@ public class UpdatePositionListRequest {
     @JsonProperty("list_id")
     private Integer listId;
 
-    @NotNull
     @JsonProperty("to_move_prev_list_id")
     private Integer toMovePrevListId;
 
-    @NotNull
     @JsonProperty("to_move_next_list_id")
     private Integer toMoveNextListId;
 }

@@ -14,11 +14,9 @@ public class UpdatePositionCoverLetterRequest {
     @NotNull
     private Integer id;
 
-    @NotNull
     @JsonProperty("to_move_prev_id")
     private Integer toMovePrevId;
 
-    @NotNull
     @JsonProperty("to_move_next_id")
     private Integer toMoveNextId;
 }
