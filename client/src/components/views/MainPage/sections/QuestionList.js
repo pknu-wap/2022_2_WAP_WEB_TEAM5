@@ -3,13 +3,18 @@ import { useRecoilState } from "recoil";
 import { DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
 import axios from "axios";
-import { fileClickIdState, CoverState } from "../Atom";
+import { fileClickIdState, CoverState, folderClickIdState } from "../Atom";
 
 function QuestionList({ content, fileUpdate }) {
   const [Edit, setEdit] = useState(false);
   const [Text, setText] = useState(content.title);
   const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
   const [Cover, setCover] = useRecoilState(CoverState);
+  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
+
+  useEffect(() => {
+    setEdit(false);
+  }, [folderClickId]);
 
   const deleteClick = async (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
