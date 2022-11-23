@@ -4,12 +4,16 @@ import com.selett.server.api.register.dto.RegisterResponse;
 import com.selett.server.jpa.mapper.UserInfoEntity;
 import com.selett.server.jpa.repository.UserInfoRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class RegisterService {
     private final UserInfoRepository userInfoRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public RegisterResponse register(String identification, String password, String name, String email) {
         RegisterResponse registerResponse = new RegisterResponse();
@@ -29,8 +33,10 @@ public class RegisterService {
         UserInfoEntity user = new UserInfoEntity();
         user.setIdentification(identification);
         user.setPassword(password);
+        user.encodePassword(passwordEncoder);
         user.setName(name);
         user.setEmail(email);
+        user.setRoles(List.of("ROLE_USER"));
         userInfoRepository.saveAndFlush(user);
 
         registerResponse.setStatus(0);
