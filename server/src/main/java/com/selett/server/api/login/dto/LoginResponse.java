@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class LoginResponse {
     @JsonProperty("user_id")
     private Integer userId;
+    private String token;
 }
