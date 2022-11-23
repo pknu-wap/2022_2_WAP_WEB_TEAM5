@@ -41,7 +41,6 @@ function QuestionList({ content, fileUpdate }) {
 
   const EditClick = (id) => {
     setEdit(true);
-    console.log(id);
     const EditTitle = Cover.filter((cover) => cover.id === id);
     if (EditTitle[0]) {
       setText(EditTitle[0].title);
