@@ -5,4 +5,5 @@ DROP TABLE IF EXISTS licenses;
 DROP TABLE IF EXISTS educations;
 DROP TABLE IF EXISTS cover_letters;
 DROP TABLE IF EXISTS lists;
+DROP TABLE IF EXISTS user_info_entity_roles;
 DROP TABLE IF EXISTS user_informations;

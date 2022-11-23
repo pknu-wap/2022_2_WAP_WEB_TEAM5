@@ -1,11 +1,20 @@
 CREATE TABLE user_informations
 (
-    user_id        INT         NOT NULL AUTO_INCREMENT,
-    identification VARCHAR(20) NOT NULL,
-    password       VARCHAR(20) NOT NULL,
-    name           VARCHAR(20) NOT NULL,
-    email          VARCHAR(50) NOT NULL,
+    user_id        INT          NOT NULL AUTO_INCREMENT,
+    identification VARCHAR(20)  NOT NULL,
+    password       VARCHAR(255) NOT NULL,
+    name           VARCHAR(20)  NOT NULL,
+    email          VARCHAR(50)  NOT NULL,
     PRIMARY KEY (user_id)
+) CHARSET = utf8;
+
+CREATE TABLE user_info_entity_roles
+(
+    user_info_entity_user_id INT          NOT NULL,
+    roles                    VARCHAR(255) NULL,
+    FOREIGN KEY (user_info_entity_user_id)
+        REFERENCES user_informations (user_id)
+        ON DELETE CASCADE
 ) CHARSET = utf8;
 
 CREATE TABLE lists
