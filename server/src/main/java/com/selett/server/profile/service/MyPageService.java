@@ -2,7 +2,7 @@ package com.selett.server.profile.service;
 
 import com.selett.server.mapper.*;
 import com.selett.server.profile.dto.*;
-import com.selett.server.profile.dto.update.UpdateAwardRequest;
+import com.selett.server.profile.dto.update.*;
 import com.selett.server.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -189,11 +189,101 @@ public class MyPageService {
         if (updateAwardRequest.getTitle() != null) {
             updateAward.setTitle(updateAward.getTitle());
         }
-
-        //Fill other things
+        if (updateAwardRequest.getDate() != null) {
+            updateAward.setDate(updateAward.getDate());
+        }
+        if (updateAwardRequest.getOrganization() != null) {
+            updateAward.setOrganization(updateAward.getOrganization());
+        }
+        if (updateAwardRequest.getGrade() != null) {
+            updateAward.setGrade(updateAward.getGrade());
+        }
+        if (updateAwardRequest.getDescription() != null) {
+            updateAward.setDescription(updateAward.getDescription());
+        }
 
         awardRepository.save(updateAward);
         awardRepository.flush();
+    }
+
+    public void updateProfileEducation(UpdateEducationRequest updateEducationRequest) {
+        EducationEntity updateEducation = educationRepository.findById(updateEducationRequest.getId()).get();
+
+        if(updateEducationRequest.getName() != null) {
+            updateEducation.setName(updateEducation.getName());
+        }
+        if(updateEducationRequest.getMajor() != null) {
+            updateEducation.setMajor(updateEducation.getMajor());
+        }
+        if(updateEducationRequest.getDegree() != null) {
+            updateEducation.setDegree(updateEducation.getDegree());
+        }
+        if(updateEducationRequest.getAdmissionDate() != null) {
+            updateEducation.setAdmissionDate(updateEducation.getAdmissionDate());
+        }
+        if(updateEducationRequest.getGraduationDate() != null) {
+            updateEducation.setGraduationDate(updateEducation.getGraduationDate());
+        }
+        if(updateEducationRequest.getMajorGrade() != null) {
+            updateEducation.setMajorGrade(updateEducationRequest.getMajorGrade());
+        }
+        if(updateEducationRequest.getMajorCourse() != null) {
+            updateEducation.setMajorCourse(updateEducationRequest.getMajorCourse());
+        }
+        if(updateEducationRequest.getCourse() != null) {
+            updateEducation.setGrade(updateEducation.getGrade());
+        }
+        if(updateEducationRequest.getMaxGrade() != null) {
+            updateEducation.setMaxGrade(updateEducationRequest.getMaxGrade());
+        }
+        if(updateEducationRequest.getCourse() != null) {
+            updateEducation.setCourse(updateEducationRequest.getCourse());
+        }
+
+        educationRepository.save(updateEducation);
+        educationRepository.flush();
+    }
+
+    public void updateProfileLanguageSkill(UpdateLanguageSkillRequest updateLanguageSkillRequest) {
+        LanguageSkillEntity updateLanguageSkill = languageSkillRepository.findById(updateLanguageSkillRequest.getId()).get();
+
+        if(updateLanguageSkill.getTitle() != null) {
+            updateLanguageSkill.setTitle(updateLanguageSkill.getTitle());
+        }
+        if(updateLanguageSkill.getGrade() != null) {
+            updateLanguageSkill.setGrade(updateLanguageSkill.getGrade());
+        }
+
+        languageSkillRepository.save(updateLanguageSkill);
+        languageSkillRepository.flush();
+    }
+
+    public void updateProfileLicense(UpdateLicenseRequest updateLicenseRequest) {
+        LicenseEntity updateLicense = licenseRepository.findById(updateLicenseRequest.getId()).get();
+
+        if(updateLicense.getTitle() != null) {
+            updateLicense.setTitle(updateLicense.getTitle());
+        }
+        if(updateLicense.getDate() != null) {
+            updateLicense.setDate(updateLicense.getDate());
+        }
+        if(updateLicense.getDescription() != null) {
+            updateLicense.setDescription(updateLicenseRequest.getDescription());
+        }
+
+        licenseRepository.save(updateLicense);
+        licenseRepository.flush();
+    }
+
+    public void updateProfileMemo(UpdateMemoRequest updateMemoRequest) {
+        MemoEntity updateMemo = memoRepository.findById(updateMemoRequest.getId()).get();
+
+        if(updateMemo.getDescription() != null) {
+            updateMemo.setDescription(updateMemo.getDescription());
+        }
+
+        memoRepository.save(updateMemo);
+        memoRepository.flush();
     }
 
 }

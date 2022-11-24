@@ -4,7 +4,7 @@ import com.selett.server.profile.dto.MyPageRequest;
 import com.selett.server.profile.dto.MyPageResponse;
 import com.selett.server.profile.dto.create.*;
 import com.selett.server.profile.dto.delete.*;
-import com.selett.server.profile.dto.update.UpdateAwardRequest;
+import com.selett.server.profile.dto.update.*;
 import com.selett.server.profile.service.MyPageService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -74,6 +74,27 @@ public class MyPageAPI {
     public void updateProfileAward(@Valid @RequestBody UpdateAwardRequest updateAwardRequest) {
         myPageService.updateProfileAward(updateAwardRequest);
     }
+
+    @PutMapping("/educations")
+    public void updateProfileEducation(@Valid @RequestBody UpdateEducationRequest updateEducationRequest) {
+        myPageService.updateProfileEducation(updateEducationRequest);
+    }
+
+    @PutMapping("/language-skills")
+    public void updateProfileLanguageSkill(@Valid @RequestBody UpdateLanguageSkillRequest updateLanguageSkillRequest) {
+        myPageService.updateProfileLanguageSkill(updateLanguageSkillRequest);
+    }
+
+    @PutMapping("/licenses")
+    public void updateProfileLicense(@Valid @RequestBody UpdateLicenseRequest updateLicenseRequest) {
+        myPageService.updateProfileLicense(updateLicenseRequest);
+    }
+
+    @PutMapping("/memos")
+    public void updateProfileMemo(@Valid @RequestBody UpdateMemoRequest updateMemoRequest) {
+        myPageService.updateProfileMemo(updateMemoRequest);
+    }
+
 
     @DeleteMapping("/awards")
     public void deleteProfileAward(@Valid DeleteAwardRequest deleteAwardRequest) {
