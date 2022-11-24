@@ -3,7 +3,6 @@ package com.selett.server.api.login.controller;
 import com.selett.server.api.login.dto.LoginRequest;
 import com.selett.server.api.login.dto.LoginResponse;
 import com.selett.server.api.login.service.LoginService;
-import com.selett.server.api.main.dto.MainResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,11 +20,12 @@ import javax.validation.Valid;
 @RequestMapping("/login")
 public class LoginApi {
     private final LoginService loginService;
+
     @PostMapping("")
     @Operation(summary = "로그인", description = "로그인합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK",
-                            content = @Content(schema = @Schema(implementation = MainResponse.class)))
+                            content = @Content(schema = @Schema(implementation = LoginResponse.class)))
             }
     )
     @io.swagger.annotations.ApiResponses(
