@@ -18,5 +18,11 @@ public class ChangePasswordRequest {
 
     @NotNull
     @Size(min = 1, max = 20)
-    private String password;
+    @JsonProperty("current_password")
+    private String currentPassword;
+
+    @NotNull
+    @Size(min = 1, max = 20)
+    @JsonProperty("new_password")
+    private String newPassword;
 }
