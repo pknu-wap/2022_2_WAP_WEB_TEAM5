@@ -76,12 +76,7 @@ function QuestionList({ content, fileUpdate }) {
   };
 
   return (
-    <Box
-      // variant="ghost"
-
-      // justifyContent="left"
-      style={{ width: "100%" }}
-      _hover={{ backgroundColor: "gray.800" }}>
+    <Box style={{ width: "100%" }} _hover={{ backgroundColor: "gray.800" }}>
       {Edit ? (
         <div style={{ display: "flex", height: "50px" }}>
           <input
@@ -115,9 +110,6 @@ function QuestionList({ content, fileUpdate }) {
       ) : (
         <div style={{ display: "flex", width: "100%" }}>
           <div
-            colorScheme="whiteAlpha"
-            variant="ghost"
-            justifyContent="left"
             style={{
               paddingLeft: "25px",
               height: "40px",
