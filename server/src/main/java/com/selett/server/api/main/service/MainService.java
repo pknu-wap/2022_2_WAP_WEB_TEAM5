@@ -23,6 +23,7 @@ public class MainService {
     private final String errorMsgMoveNull = "이동할 위치가 둘 다 null이면 안됩니다.";
     private final String errorMsgMoveOwn = "이동할 아이디와 이동할 위치의 아이디가 같아야 합니다.";
     private final String errorMsgConnected = "이동할 위치가 연결되어 있어야 합니다.";
+    private final String defaultCoverLetterTitle = "새 자기소개서";
 
     private void setCoverLetterNext(Integer id, Integer to) {
         if (id != null) {
@@ -227,7 +228,7 @@ public class MainService {
 
         if (listRepository.countByUserId(userId) == 0) {
             newListEntity = listRepository.save(newListEntity);
-            createCoverLetter(newListEntity.getListId(), "새 자기소개서");
+            createCoverLetter(newListEntity.getListId(), defaultCoverLetterTitle);
 
             return;
         }
@@ -240,7 +241,7 @@ public class MainService {
         lastListEntity.setNext(newListEntity.getListId());
         listRepository.save(lastListEntity);
 
-        createCoverLetter(newListEntity.getListId(), "새 자기소개서");
+        createCoverLetter(newListEntity.getListId(), defaultCoverLetterTitle);
     }
 
     public void createCoverLetter(Integer listId, String title) {
