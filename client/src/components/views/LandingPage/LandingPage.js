@@ -4,7 +4,13 @@ import { useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
 import sellet from "./SELLET.JPG";
 import sellet2 from "./sellet2.JPG";
-import { InputGroup, Input, InputRightElement, Button } from "@chakra-ui/react";
+import {
+  InputGroup,
+  Input,
+  InputRightElement,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
 import axios from "axios";
 
 function LandingPage() {
@@ -13,6 +19,7 @@ function LandingPage() {
   const [Id, setId] = useState("");
   const [Password, setPassword] = useState("");
   const handleClick = () => setShow(!Show);
+  const toast = useToast();
 
   const IdHandler = (event) => {
     setId(event.currentTarget.value);
@@ -22,25 +29,29 @@ function LandingPage() {
     setPassword(event.currentTarget.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const body = {
       identification: Id,
       password: Password,
     };
 
-    axios
-      .post(
+    try {
+      const response = await axios.post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/login",
         body
-      )
-      .then((response) => {
-        if (response.data.user_id) {
-          sessionStorage.setItem("user_id", response.data.user_id);
-          navigate("/main");
-        } else {
-          alert("아이디 혹은 비밀번호를 확인해주세요.");
-        }
+      );
+      sessionStorage.setItem("user_id", response.data.user_id);
+      navigate("/main");
+    } catch (e) {
+      toast({
+        position: "bottom-right",
+        title: "로그인 실패",
+        description: "아이디와 비밀번호를 확인해주세요",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
       });
+    }
   };
 
   const handleSignup = () => {
@@ -55,8 +66,7 @@ function LandingPage() {
           height: "100vh",
           backgroundColor: "black",
           display: "flex",
-        }}
-      >
+        }}>
         <Carousel
           fade
           style={{
@@ -66,8 +76,7 @@ function LandingPage() {
             alignItems: "center",
             marginTop: "8%",
             // marginLeft: "7%",
-          }}
-        >
+          }}>
           <Carousel.Item>
             <img className="d-block w-100" src={sellet} alt="First slide" />
           </Carousel.Item>
@@ -82,23 +91,20 @@ function LandingPage() {
           height: "100vh",
           width: "25%",
           marginTop: "13%",
-        }}
-      >
+        }}>
         <div
           style={{
             width: "88%",
             marginLeft: "6%",
             // backgroundColor: "gray",
             height: "45%",
-          }}
-        >
+          }}>
           <div
             style={{
               fontSize: "40px",
               fontWeight: "bold",
               textAlign: "center",
-            }}
-          >
+            }}>
             SELETT
           </div>
           <label style={{ width: "80%", marginLeft: "10%" }}>User Name</label>
@@ -131,14 +137,12 @@ function LandingPage() {
             colorScheme="gray"
             onClick={handleSubmit}
             style={{ width: "80%", marginLeft: "10%" }}
-            disabled={Id === "" || Password === ""}
-          >
+            disabled={Id === "" || Password === ""}>
             Login
           </Button>
           <div
             onClick={handleSignup}
-            style={{ marginTop: "10px", cursor: "pointer", marginLeft: "10%" }}
-          >
+            style={{ marginTop: "10px", cursor: "pointer", marginLeft: "10%" }}>
             Register
           </div>
         </div>
