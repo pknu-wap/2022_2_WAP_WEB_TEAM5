@@ -3,6 +3,8 @@ package com.selett.server.profile.controller;
 import com.selett.server.profile.dto.MyPageRequest;
 import com.selett.server.profile.dto.MyPageResponse;
 import com.selett.server.profile.dto.create.*;
+import com.selett.server.profile.dto.delete.*;
+import com.selett.server.profile.dto.update.UpdateAwardRequest;
 import com.selett.server.profile.service.MyPageService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class MyPageAPI {
         return myPageResponse;
     }
 
-    @PostMapping("/award")
+    @PostMapping("/awards")
     public void postProfileAward(@Valid @RequestBody CreateAwardRequest createAwardRequest) {
         myPageService.postProfileAward(createAwardRequest.getTitle(),
                 createAwardRequest.getDate(),
@@ -32,7 +34,7 @@ public class MyPageAPI {
                 createAwardRequest.getUserId());
     }
 
-    @PostMapping("/education")
+    @PostMapping("/educations")
     public void postProfileEducation(@Valid @RequestBody CreateEducationRequest createEducationRequest) {
         myPageService.postProfileEducation(createEducationRequest.getName(),
                 createEducationRequest.getMajor(),
@@ -47,14 +49,14 @@ public class MyPageAPI {
                 createEducationRequest.getUserId());
     }
 
-    @PostMapping("languageskill")
+    @PostMapping("/language-skills")
     public void postProfileLanguageSkill(@Valid @RequestBody CreateLanguageSkillRequest createLanguageSkillRequest) {
         myPageService.postProfileLanguageSkill(createLanguageSkillRequest.getTitle(),
                 createLanguageSkillRequest.getGrade(),
                 createLanguageSkillRequest.getUserId());
     }
 
-    @PostMapping("/license")
+    @PostMapping("/licenses")
     public void postProfileLicesne(@Valid @RequestBody CreateLicenseRequest createLicenseRequest) {
         myPageService.postProfileLicense(createLicenseRequest.getTitle(),
                 createLicenseRequest.getDate(),
@@ -62,9 +64,39 @@ public class MyPageAPI {
                 createLicenseRequest.getUserId());
     }
 
-    @PostMapping("/memo")
+    @PostMapping("/memos")
     public void postProfileMemo(@Valid @RequestBody CreateMemoRequest createMemoRequest) {
         myPageService.postProfileMemo(createMemoRequest.getDescription(),
                 createMemoRequest.getUserId());
+    }
+
+    @PutMapping("/awards")
+    public void updateProfileAward(@Valid @RequestBody UpdateAwardRequest updateAwardRequest) {
+        myPageService.updateProfileAward(updateAwardRequest);
+    }
+
+    @DeleteMapping("/awards")
+    public void deleteProfileAward(@Valid DeleteAwardRequest deleteAwardRequest) {
+        myPageService.deleteProfileAward(deleteAwardRequest.getId());
+    }
+
+    @DeleteMapping("/educations")
+    public void deleteProfileEducation(@Valid DeleteEducationRequest deleteEducationRequest) {
+        myPageService.deleteProfileEducation(deleteEducationRequest.getId());
+    }
+
+    @DeleteMapping("/language-skills")
+    public void deleteProfileLanguageSkill(@Valid DeleteLanguageSkillRequest deleteLanguageSkillRequest) {
+        myPageService.deleteProfileLanguage(deleteLanguageSkillRequest.getId());
+    }
+
+    @DeleteMapping("/licenses")
+    public void deleteProfileLicense(@Valid DeleteLicenseRequest deleteLicenseRequest) {
+        myPageService.deleteProfileLicense(deleteLicenseRequest.getId());
+    }
+
+    @DeleteMapping("/memos")
+    public void deleteProfileMemo(@Valid DeleteMemoRequest deleteMemoRequest) {
+        myPageService.deleteProfileMemo((deleteMemoRequest.getId()));
     }
 }

@@ -2,6 +2,7 @@ package com.selett.server.profile.service;
 
 import com.selett.server.mapper.*;
 import com.selett.server.profile.dto.*;
+import com.selett.server.profile.dto.update.UpdateAwardRequest;
 import com.selett.server.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -174,7 +175,25 @@ public class MyPageService {
     }
 
 
+    public void deleteProfileAward(Integer id) {
+        awardRepository.deleteById(id);
+    }
+    public void deleteProfileEducation(Integer id) { educationRepository.deleteById(id); }
+    public void deleteProfileLanguage(Integer id) { languageSkillRepository.deleteById(id); }
+    public void deleteProfileLicense(Integer id) { languageSkillRepository.deleteById(id); }
+    public void deleteProfileMemo(Integer id) { memoRepository.deleteById(id); }
 
-    //public MyPageResponse UpdateProfile(Integer userId) {}
-    //public MyPageResponse DeleteProfile(Integer userId) {}
+    public void updateProfileAward(UpdateAwardRequest updateAwardRequest) {
+        AwardEntity updateAward = awardRepository.findById(updateAwardRequest.getId()).get();
+
+        if (updateAwardRequest.getTitle() != null) {
+            updateAward.setTitle(updateAward.getTitle());
+        }
+
+        //Fill other things
+
+        awardRepository.save(updateAward);
+        awardRepository.flush();
+    }
+
 }
