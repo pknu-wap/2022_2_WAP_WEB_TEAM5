@@ -18,20 +18,27 @@ import java.util.*;
 public class MainService {
     private final ListRepository listRepository;
     private final CoverLetterRepository coverLetterRepository;
+    private final String errorMsgOverLap = "중복된 제목입니다.";
+    private final String errorMsgRemainOne = "1개일 때는 이동 또는 삭제할 수 없습니다.";
+    private final String errorMsgMoveNull = "이동할 위치가 둘 다 null이면 안됩니다.";
+    private final String errorMsgMoveOwn = "이동할 아이디와 이동할 위치의 아이디가 같아야 합니다.";
+    private final String errorMsgConnected = "이동할 위치가 연결되어 있어야 합니다.";
 
     private void setCoverLetterNext(Integer id, Integer to) {
         if (id != null) {
-            Optional<CoverLetterEntity> coverLetterEntity = coverLetterRepository.findById(id);
-            coverLetterEntity.get().setNext(to);
-            coverLetterRepository.save(coverLetterEntity.get());
+            coverLetterRepository.findById(id).ifPresent(coverLetter -> {
+                coverLetter.setNext(to);
+                coverLetterRepository.save(coverLetter);
+            });
         }
     }
 
     private void setCoverLetterPrev(Integer id, Integer to) {
         if (id != null) {
-            Optional<CoverLetterEntity> coverLetterEntity = coverLetterRepository.findById(id);
-            coverLetterEntity.get().setPrev(to);
-            coverLetterRepository.save(coverLetterEntity.get());
+            coverLetterRepository.findById(id).ifPresent(coverLetter -> {
+                coverLetter.setPrev(to);
+                coverLetterRepository.save(coverLetter);
+            });
         }
     }
 
@@ -51,109 +58,107 @@ public class MainService {
         }
     }
 
-    public boolean existListTitle(Integer userId, String title) {
-        return listRepository.existsByUserIdAndTitle(userId, title);
-    }
-
-    public boolean existCoverLetterTitle(Integer listId, String title) {
-        return coverLetterRepository.existsByListIdAndTitle(listId, title);
-    }
-
-    public boolean isOnlyOneCoverLetter(Integer id) {
-        Optional<CoverLetterEntity> coverLetter = coverLetterRepository.findById(id);
-        Integer listId = coverLetter.get().getListId();
-
-        if(coverLetterRepository.findAllByListId(listId).size() == 1) {
-            return true;
+    public void existListTitle(Integer userId, String title) {
+        if(listRepository.existsByUserIdAndTitle(userId, title)) {
+            throw new IllegalArgumentException(errorMsgOverLap);
         }
-        return false;
     }
 
-    public boolean isOnlyOneList(Integer listId) {
-        ListEntity listEntity = listRepository.findByListId(listId);
-        Integer userId = listEntity.getUserId();
-
-        if(listRepository.findAllByUserId(userId).size() == 1) {
-            return true;
+    public void existCoverLetterTitle(Integer listId, String title) {
+        if(coverLetterRepository.existsByListIdAndTitle(listId, title)) {
+            throw new IllegalArgumentException(errorMsgOverLap);
         }
-        return false;
     }
 
-    public boolean checkSafeList(UpdatePositionListRequest updatePositionListRequest) {
+    public void isOnlyOneList(Integer listId) {
+        listRepository.findById(listId).ifPresent(list -> {
+            Integer userId = list.getUserId();
+
+            if(listRepository.countByUserId(userId) == 1) {
+                throw new IllegalArgumentException(errorMsgRemainOne);
+            }
+        });
+    }
+
+    public void isOnlyOneCoverLetter(Integer id) {
+        coverLetterRepository.findById(id).ifPresent(coverLetter -> {
+            Integer listId = coverLetter.getListId();
+
+            if(coverLetterRepository.countByListId(listId) == 1) {
+                throw new IllegalArgumentException(errorMsgRemainOne);
+            }
+        });
+    }
+
+    public void checkSafeList(UpdatePositionListRequest updatePositionListRequest) {
         Integer listId = updatePositionListRequest.getListId();
         Integer toMovePrevListId = updatePositionListRequest.getToMovePrevListId();
         Integer toMoveNextListId = updatePositionListRequest.getToMoveNextListId();
 
-        if(!listRepository.existsById(listId))
-            return false;
-        if(toMovePrevListId != null && !listRepository.existsById(toMovePrevListId))
-            return false;
-        if(toMoveNextListId != null && !listRepository.existsById(toMoveNextListId))
-            return false;
-        if(toMoveNextListId == null && toMovePrevListId == null)
-            return false;
-        if(Objects.equals(listId, toMoveNextListId))
-            return false;
-        if(Objects.equals(listId, toMovePrevListId))
-            return false;
+        if(toMoveNextListId == null && toMovePrevListId == null) {
+            throw new IllegalArgumentException(errorMsgMoveNull);
+        }
+        if(Objects.equals(listId, toMoveNextListId)) {
+            throw new IllegalArgumentException(errorMsgMoveOwn);
+        }
+        if(Objects.equals(listId, toMovePrevListId)) {
+            throw new IllegalArgumentException(errorMsgMoveOwn);
+        }
 
         if(toMovePrevListId != null) {
-            ListEntity toMovePrevList = listRepository.findByListId(toMovePrevListId);
-            Integer next = toMovePrevList.getNext();
+            listRepository.findById(toMovePrevListId).ifPresent(list -> {
+                Integer next = list.getNext();
 
-            if(!Objects.equals(next, toMoveNextListId)) {
-                return false;
-            }
+                if(!Objects.equals(next, toMoveNextListId)) {
+                    throw new IllegalArgumentException(errorMsgConnected);
+                }
+            });
         }
 
         if(toMoveNextListId != null) {
-            ListEntity toMoveNextList = listRepository.findByListId(toMoveNextListId);
-            Integer prev = toMoveNextList.getPrev();
+            listRepository.findById(toMoveNextListId).ifPresent(list -> {
+                Integer prev = list.getPrev();
 
-            if(!Objects.equals(prev, toMovePrevListId)) {
-                return false;
-            }
+                if(!Objects.equals(prev, toMovePrevListId)) {
+                    throw new IllegalArgumentException(errorMsgConnected);
+                }
+            });
         }
-
-        return true;
     }
-    public boolean checkSafeCoverLetter(UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
+    public void checkSafeCoverLetter(UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
         Integer id = updatePositionCoverLetterRequest.getId();
         Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
         Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
 
-        if(!coverLetterRepository.existsById(id))
-            return false;
-        if(toMovePrevId != null && !coverLetterRepository.existsById(toMovePrevId))
-            return false;
-        if(toMoveNextId != null && !coverLetterRepository.existsById(toMoveNextId))
-            return false;
-        if(toMoveNextId == null && toMovePrevId == null)
-            return false;
-        if(Objects.equals(id, toMoveNextId))
-            return false;
-        if(Objects.equals(id, toMovePrevId))
-            return false;
+        if(toMoveNextId == null && toMovePrevId == null) {
+            throw new IllegalArgumentException(errorMsgMoveNull);
+        }
+        if(Objects.equals(id, toMoveNextId)) {
+            throw new IllegalArgumentException(errorMsgMoveOwn);
+        }
+        if(Objects.equals(id, toMovePrevId)) {
+            throw new IllegalArgumentException(errorMsgMoveOwn);
+        }
 
         if(toMovePrevId != null) {
-            CoverLetterEntity toMovePrevCoverLetter = coverLetterRepository.findById(toMovePrevId).get();
-            Integer next = toMovePrevCoverLetter.getNext();
+            coverLetterRepository.findById(toMovePrevId).ifPresent(list -> {
+                Integer next = list.getNext();
 
-            if(!Objects.equals(next, toMoveNextId)) {
-                return false;
-            }
+                if(!Objects.equals(next, toMoveNextId)) {
+                    throw new IllegalArgumentException(errorMsgConnected);
+                }
+            });
         }
 
         if(toMoveNextId != null) {
-            CoverLetterEntity toMoveNextCoverLetter = coverLetterRepository.findById(toMoveNextId).get();
-            Integer prev = toMoveNextCoverLetter.getPrev();
+            coverLetterRepository.findById(toMoveNextId).ifPresent(list -> {
+                Integer prev = list.getPrev();
 
-            if(!Objects.equals(prev, toMovePrevId)) {
-                return false;
-            }
+                if(!Objects.equals(prev, toMovePrevId)) {
+                    throw new IllegalArgumentException(errorMsgConnected);
+                }
+            });
         }
-
-        return true;
     }
 
     public MainResponse getListAndCoverLetter(Integer userId) {
@@ -263,128 +268,124 @@ public class MainService {
     }
 
     public void deleteList(Integer listId) {
-        ListEntity deleteListEntity = listRepository.findByListId(listId);
+        listRepository.findById(listId).ifPresent(list -> {
+            Integer prevId = list.getPrev();
+            Integer nextId = list.getNext();
 
-        Integer prevId = deleteListEntity.getPrev();
-        Integer nextId = deleteListEntity.getNext();
+            setListNext(prevId, nextId);
+            setListPrev(nextId, prevId);
 
-        setListNext(prevId, nextId);
-        setListPrev(nextId, prevId);
-
-        listRepository.deleteById(listId);
-        listRepository.flush();
+            listRepository.deleteById(listId);
+            listRepository.flush();
+        });
     }
 
     public void deleteCoverLetter(Integer id) {
-        Optional<CoverLetterEntity> deleteCoverLetterEntity = coverLetterRepository.findById(id);
+        coverLetterRepository.findById(id).ifPresent(coverLetter -> {
+            Integer prevId = coverLetter.getPrev();
+            Integer nextId = coverLetter.getNext();
 
-        Integer prevId = deleteCoverLetterEntity.get().getPrev();
-        Integer nextId = deleteCoverLetterEntity.get().getNext();
+            setCoverLetterNext(prevId, nextId);
+            setCoverLetterPrev(nextId, prevId);
 
-        setCoverLetterNext(prevId, nextId);
-        setCoverLetterPrev(nextId, prevId);
-
-        coverLetterRepository.deleteById(id);
-        coverLetterRepository.flush();
+            coverLetterRepository.deleteById(id);
+            coverLetterRepository.flush();
+        });
     }
 
     public void updateList(UpdateListRequest updateListRequest) {
         Integer listId = updateListRequest.getListId();
 
-        ListEntity updateListEntity = listRepository.findByListId(listId);
+        listRepository.findById(listId).ifPresent(list -> {
+            if (updateListRequest.getTitle() != null) {
+                list.setTitle(updateListRequest.getTitle());
+            }
 
-        if (updateListRequest.getTitle() != null) {
-            updateListEntity.setTitle(updateListRequest.getTitle());
-        }
-
-        listRepository.saveAndFlush(updateListEntity);
+            listRepository.saveAndFlush(list);
+        });
     }
 
     public void updateCoverLetter(UpdateCoverLetterRequest updateCoverLetterRequest) {
         Integer id = updateCoverLetterRequest.getId();
 
-        Optional<CoverLetterEntity> updateCoverLetterEntity = coverLetterRepository.findById(id);
-
-        if (updateCoverLetterRequest.getTitle() != null) {
-            updateCoverLetterEntity.get().setTitle(updateCoverLetterRequest.getTitle());
-        }
-        if (updateCoverLetterRequest.getQuestion() != null) {
-            updateCoverLetterEntity.get().setQuestion(updateCoverLetterRequest.getQuestion());
-        }
-        if (updateCoverLetterRequest.getQuestionLock() != null) {
-            updateCoverLetterEntity.get().setQuestionLock(updateCoverLetterRequest.getQuestionLock());
-        }
-        if (updateCoverLetterRequest.getDescription() != null) {
-            updateCoverLetterEntity.get().setDescription(updateCoverLetterRequest.getDescription());
-        }
-        if (updateCoverLetterRequest.getDescriptionLock() != null) {
-            updateCoverLetterEntity.get().setDescriptionLock(updateCoverLetterRequest.getDescriptionLock());
-        }
-
-        coverLetterRepository.saveAndFlush(updateCoverLetterEntity.get());
+        coverLetterRepository.findById(id).ifPresent(coverLetter -> {
+            if (updateCoverLetterRequest.getTitle() != null) {
+                coverLetter.setTitle(updateCoverLetterRequest.getTitle());
+            }
+            if (updateCoverLetterRequest.getQuestion() != null) {
+                coverLetter.setQuestion(updateCoverLetterRequest.getQuestion());
+            }
+            if (updateCoverLetterRequest.getQuestionLock() != null) {
+                coverLetter.setQuestionLock(updateCoverLetterRequest.getQuestionLock());
+            }
+            if (updateCoverLetterRequest.getDescription() != null) {
+                coverLetter.setDescription(updateCoverLetterRequest.getDescription());
+            }
+            if (updateCoverLetterRequest.getDescriptionLock() != null) {
+                coverLetter.setDescriptionLock(updateCoverLetterRequest.getDescriptionLock());
+            }
+            coverLetterRepository.saveAndFlush(coverLetter);
+        });
     }
 
     public void updatePositionList(UpdatePositionListRequest updatePositionListRequest) {
-        Integer listId = updatePositionListRequest.getListId();
+        listRepository.findById(updatePositionListRequest.getListId()).ifPresent(list -> {
+            Integer currentPrevListId = list.getPrev();
+            Integer currentNextListId = list.getNext();
 
-        ListEntity updateListEntity = listRepository.findByListId(listId);
+            setListPrev(currentNextListId, currentPrevListId);
+            setListNext(currentPrevListId, currentNextListId);
 
-        Integer currentPrevListId = updateListEntity.getPrev();
-        Integer currentNextListId = updateListEntity.getNext();
+            Integer toMovePrevListId = updatePositionListRequest.getToMovePrevListId();
+            Integer toMoveNextListId = updatePositionListRequest.getToMoveNextListId();
 
-        setListPrev(currentNextListId, currentPrevListId);
-        setListNext(currentPrevListId, currentNextListId);
+            setListPrev(toMoveNextListId, updatePositionListRequest.getListId());
+            setListNext(toMovePrevListId, updatePositionListRequest.getListId());
 
-        Integer toMovePrevListId = updatePositionListRequest.getToMovePrevListId();
-        Integer toMoveNextListId = updatePositionListRequest.getToMoveNextListId();
+            list.setPrev(toMovePrevListId);
+            list.setNext(toMoveNextListId);
 
-        setListPrev(toMoveNextListId, listId);
-        setListNext(toMovePrevListId, listId);
-
-        updateListEntity.setPrev(toMovePrevListId);
-        updateListEntity.setNext(toMoveNextListId);
-
-        listRepository.saveAndFlush(updateListEntity);
+            listRepository.saveAndFlush(list);
+        });
     }
 
     public void updatePositionCoverLetter(UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
-        Integer id = updatePositionCoverLetterRequest.getId();
+        coverLetterRepository.findById(updatePositionCoverLetterRequest.getId()).ifPresent(coverLetter -> {
+            Integer currentPrevId = coverLetter.getPrev();
+            Integer currentNextId = coverLetter.getNext();
 
-        Optional<CoverLetterEntity> updateCoverLetterEntity = coverLetterRepository.findById(id);
+            setCoverLetterPrev(currentNextId, currentPrevId);
+            setCoverLetterNext(currentPrevId, currentNextId);
 
-        Integer currentPrevId = updateCoverLetterEntity.get().getPrev();
-        Integer currentNextId = updateCoverLetterEntity.get().getNext();
+            Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
+            Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
 
-        setCoverLetterPrev(currentNextId, currentPrevId);
-        setCoverLetterNext(currentPrevId, currentNextId);
+            setCoverLetterPrev(toMoveNextId, updatePositionCoverLetterRequest.getId());
+            setCoverLetterNext(toMovePrevId, updatePositionCoverLetterRequest.getId());
 
-        Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
-        Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
+            coverLetter.setPrev(toMovePrevId);
+            coverLetter.setNext(toMoveNextId);
 
-        setCoverLetterPrev(toMoveNextId, id);
-        setCoverLetterNext(toMovePrevId, id);
-
-        updateCoverLetterEntity.get().setPrev(toMovePrevId);
-        updateCoverLetterEntity.get().setNext(toMoveNextId);
-
-        coverLetterRepository.saveAndFlush(updateCoverLetterEntity.get());
+            coverLetterRepository.saveAndFlush(coverLetter);
+        });
     }
 
     public void updatePositionCoverLetterDiffList(UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest) {
-        Optional<CoverLetterEntity> moveCoverLetter = coverLetterRepository.findById(updatePositionCoverLetterDiffListRequest.getId());
-        CoverLetterEntity lastCoverLetter = coverLetterRepository.findByListIdAndNext(updatePositionCoverLetterDiffListRequest.getToMoveListId(), 0);
+        coverLetterRepository.findById(updatePositionCoverLetterDiffListRequest.getId()).ifPresent(coverLetter -> {
+            CoverLetterEntity lastCoverLetter = coverLetterRepository.findByListIdAndNext(updatePositionCoverLetterDiffListRequest.getToMoveListId(), 0);
 
-        Integer currentPrevId = moveCoverLetter.get().getPrev();
-        Integer currentNextId = moveCoverLetter.get().getNext();
+            Integer currentPrevId = coverLetter.getPrev();
+            Integer currentNextId = coverLetter.getNext();
 
-        setCoverLetterPrev(currentNextId, currentPrevId);
-        setCoverLetterNext(currentPrevId, currentNextId);
+            setCoverLetterPrev(currentNextId, currentPrevId);
+            setCoverLetterNext(currentPrevId, currentNextId);
 
-        lastCoverLetter.setNext(moveCoverLetter.get().getId());
-        moveCoverLetter.get().setListId(updatePositionCoverLetterDiffListRequest.getToMoveListId());
-        moveCoverLetter.get().setNext(null);
+            lastCoverLetter.setNext(coverLetter.getId());
+            coverLetter.setListId(updatePositionCoverLetterDiffListRequest.getToMoveListId());
+            coverLetter.setNext(null);
 
-        coverLetterRepository.save(lastCoverLetter);
-        coverLetterRepository.saveAndFlush(moveCoverLetter.get());
+            coverLetterRepository.save(lastCoverLetter);
+            coverLetterRepository.saveAndFlush(coverLetter);
+        });
     }
 }
