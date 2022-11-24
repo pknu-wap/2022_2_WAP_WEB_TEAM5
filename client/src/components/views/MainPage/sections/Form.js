@@ -338,7 +338,8 @@ function Form(props) {
               }}
               placeholder="내용을 입력해주세요"
               value={Text || ""}
-              onChange={textHandler}></textarea>
+              onChange={textHandler}
+              readOnly={descriptionLock ? true : false}></textarea>
             <Button // 내용 버튼
               colorScheme="gray"
               variant="ghost"

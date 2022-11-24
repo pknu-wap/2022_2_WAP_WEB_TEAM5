@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import QuestionList from "./QuestionList";
 import { CoverState, CompanyListState, folderClickIdState } from "../Atom";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from "axios";
 
 function Question({ Cov, setCov }) {
@@ -26,6 +27,8 @@ function Question({ Cov, setCov }) {
   const [Cover, setCover] = useRecoilState(CoverState);
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   const [folderClickId, setFolderClickId] = useRecoilState(folderClickIdState);
+  const [placeholderProps, setPlaceholderProps] = useState({});
+  const queryAttr = "data-rbd-drag-handle-draggable-id";
 
   const ContentHandler = (event) => {
     setContent(event.currentTarget.value);
@@ -99,6 +102,152 @@ function Question({ Cov, setCov }) {
     }
   };
 
+  const onDragEnd = (result) => {
+    // dropped outside the list
+    // drag 끝날 때 호출되는 함수
+    // console.log(result);
+    if (!result.destination) {
+      // list밖으로 빠져나갔을 때 destination이 null로 설정됨
+      // => null일 때는 그냥 리턴해줌
+      return;
+    }
+
+    setCover((items) =>
+      reorder(items, result.source.index, result.destination.index)
+    );
+
+    setPlaceholderProps({});
+  };
+
+  const onDragUpdate = (update) => {
+    // drag 도중에 변화가 생기면 호출되는 함수
+    if (!update.destination) {
+      // list 밖으로 빠져나갔을 때 null로 설정
+      return;
+    }
+    // console.log(update);
+    const draggableId = update.draggableId;
+    const destinationIndex = update.destination.index;
+
+    const domQuery = `[${queryAttr}='${draggableId}']`;
+    const draggedDOM = document.querySelector(domQuery);
+    if (!draggedDOM) {
+      return;
+    }
+    const { clientHeight, clientWidth } = draggedDOM;
+
+    const clientY =
+      parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
+      [...draggedDOM.parentNode.children]
+        .slice(0, destinationIndex)
+        .reduce((total, curr) => {
+          const style = curr.currentStyle || window.getComputedStyle(curr);
+          const marginBottom = parseFloat(style.marginBottom);
+          return total + curr.clientHeight + marginBottom;
+        }, 0);
+
+    setPlaceholderProps({
+      clientHeight,
+      clientWidth,
+      clientY,
+      clientX: parseFloat(
+        window.getComputedStyle(draggedDOM.parentNode).paddingLeft
+      ),
+    });
+  };
+
+  const getListStyle = (isDraggingOver) => ({
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    // alignItems: "center",
+  });
+
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    color: "black",
+    cursor: "pointer",
+    fontWeight: "bold",
+    // marginTop: "40px",
+
+    ...draggableStyle,
+  });
+
+  const reorder = (list, startIndex, endIndex) => {
+    let result = Array.from(list);
+    console.log(result);
+
+    let prev,
+      next = 0;
+
+    if (endIndex === startIndex) {
+      alert("자신의 자리로 이동할 수 없습니다.");
+    }
+
+    if (endIndex === 0) {
+      // 제일 첫 인덱스로 이동을 하려고 할 때,
+      prev = null;
+      next = result[endIndex].list_id;
+    } else if (endIndex === result.length - 1) {
+      // 제일 마지막 인덱스로 이동하려고 할 때
+      prev = result[endIndex].id;
+      next = null;
+    } else if (endIndex - startIndex > 0) {
+      prev = result[endIndex].id; // 위에서 밑으로 이동할 때
+      next = result[endIndex + 1].id;
+    } else {
+      prev = result[endIndex - 1].id; // 밑에서 위로 이동할 때
+      next = result[endIndex].id;
+    }
+
+    if (Math.abs(endIndex - startIndex) === 1 && endIndex - startIndex > 0) {
+      // 한 칸 차이로 이동하려고 하면서, 위에서 밑으로 내려가려고 할 때
+      if (prev !== null) {
+        prev = result[endIndex].id;
+      }
+      if (next !== null) {
+        next = result[endIndex + 1].id;
+      }
+    } else if (
+      Math.abs(endIndex - startIndex) === 1 && // 한 칸 차이로 이동하려고 하면서, 밑에서 위로 가려고 할 때
+      endIndex - startIndex < 0
+    ) {
+      if (prev !== null) {
+        prev = result[endIndex - 1].id;
+      }
+      if (next !== null) {
+        next = result[endIndex].id;
+      }
+    }
+
+    const body = {
+      id: result[startIndex].id,
+
+      to_move_prev_id: prev,
+      to_move_next_id: next,
+    };
+    // }
+    console.log(body);
+
+    server(body);
+
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
+  const server = async (body) => {
+    try {
+      await axios.put(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters/position",
+        body
+      );
+      await fileUpdate();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div
       style={{
@@ -139,17 +288,50 @@ function Question({ Cov, setCov }) {
             marginRight: "10%",
           }}></AddIcon>
       </div>
+      <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={
+                // width: "100%",
+                // height: "100%",
+                getListStyle(snapshot.isDraggingOver)
+              }>
+              {Cover &&
+                Cover.map((content, index) => (
+                  <Draggable
+                    key={`${content.id}`}
+                    draggableId={`${content.id}`}
+                    // 달러로 안 하면 작동 안 함
+                    index={index}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style
+                        )}>
+                        <QuestionList
+                          key={index}
+                          content={content}
+                          setCover={setCover}
+                          Cover={Cover}
+                          fileUpdate={fileUpdate}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
-      {Cover &&
-        Cover.map((content, index) => (
-          <QuestionList
-            key={index}
-            content={content}
-            setCover={setCover}
-            Cover={Cover}
-            fileUpdate={fileUpdate}
-          />
-        ))}
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

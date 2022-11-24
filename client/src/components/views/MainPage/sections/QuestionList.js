@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
-import { Button } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import axios from "axios";
 import { fileClickIdState, CoverState, folderClickIdState } from "../Atom";
 
@@ -76,7 +76,12 @@ function QuestionList({ content, fileUpdate }) {
   };
 
   return (
-    <div style={{ width: "100%" }}>
+    <Box
+      // variant="ghost"
+
+      // justifyContent="left"
+      style={{ width: "100%" }}
+      _hover={{ backgroundColor: "gray.800" }}>
       {Edit ? (
         <div style={{ display: "flex", height: "50px" }}>
           <input
@@ -109,24 +114,24 @@ function QuestionList({ content, fileUpdate }) {
         </div>
       ) : (
         <div style={{ display: "flex", width: "100%" }}>
-          <Button
+          <div
             colorScheme="whiteAlpha"
             variant="ghost"
             justifyContent="left"
             style={{
               paddingLeft: "25px",
-              height: "50px",
+              height: "40px",
               color: "white",
               fontSize: "15px",
               width: "80%",
-              marginTop: "10px",
+              marginTop: "9%",
               overflow: "scroll",
               border: "none",
               outline: "0",
             }}
             onClick={() => questionClick(content.id)}>
             {content.title || ""}
-          </Button>
+          </div>
           <EditIcon
             style={{
               color: "white",
@@ -151,7 +156,7 @@ function QuestionList({ content, fileUpdate }) {
           />
         </div>
       )}
-    </div>
+    </Box>
   );
 }
 

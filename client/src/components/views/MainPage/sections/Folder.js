@@ -199,6 +199,10 @@ function Folder() {
     let prev,
       next = 0;
 
+    if (endIndex === startIndex) {
+      alert("자신의 자리로 이동할 수 없습니다.");
+    }
+
     if (endIndex === 0) {
       // 제일 첫 인덱스로 이동을 하려고 할 때,
       prev = null;
