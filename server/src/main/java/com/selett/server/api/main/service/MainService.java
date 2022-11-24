@@ -59,13 +59,13 @@ public class MainService {
     }
 
     public void existListTitle(Integer userId, String title) {
-        if(listRepository.existsByUserIdAndTitle(userId, title)) {
+        if (listRepository.existsByUserIdAndTitle(userId, title)) {
             throw new IllegalArgumentException(errorMsgOverLap);
         }
     }
 
     public void existCoverLetterTitle(Integer listId, String title) {
-        if(coverLetterRepository.existsByListIdAndTitle(listId, title)) {
+        if (coverLetterRepository.existsByListIdAndTitle(listId, title)) {
             throw new IllegalArgumentException(errorMsgOverLap);
         }
     }
@@ -74,7 +74,7 @@ public class MainService {
         listRepository.findById(listId).ifPresent(list -> {
             Integer userId = list.getUserId();
 
-            if(listRepository.countByUserId(userId) == 1) {
+            if (listRepository.countByUserId(userId) == 1) {
                 throw new IllegalArgumentException(errorMsgRemainOne);
             }
         });
@@ -84,7 +84,7 @@ public class MainService {
         coverLetterRepository.findById(id).ifPresent(coverLetter -> {
             Integer listId = coverLetter.getListId();
 
-            if(coverLetterRepository.countByListId(listId) == 1) {
+            if (coverLetterRepository.countByListId(listId) == 1) {
                 throw new IllegalArgumentException(errorMsgRemainOne);
             }
         });
@@ -95,66 +95,67 @@ public class MainService {
         Integer toMovePrevListId = updatePositionListRequest.getToMovePrevListId();
         Integer toMoveNextListId = updatePositionListRequest.getToMoveNextListId();
 
-        if(toMoveNextListId == null && toMovePrevListId == null) {
+        if (toMoveNextListId == null && toMovePrevListId == null) {
             throw new IllegalArgumentException(errorMsgMoveNull);
         }
-        if(Objects.equals(listId, toMoveNextListId)) {
+        if (Objects.equals(listId, toMoveNextListId)) {
             throw new IllegalArgumentException(errorMsgMoveOwn);
         }
-        if(Objects.equals(listId, toMovePrevListId)) {
+        if (Objects.equals(listId, toMovePrevListId)) {
             throw new IllegalArgumentException(errorMsgMoveOwn);
         }
 
-        if(toMovePrevListId != null) {
+        if (toMovePrevListId != null) {
             listRepository.findById(toMovePrevListId).ifPresent(list -> {
                 Integer next = list.getNext();
 
-                if(!Objects.equals(next, toMoveNextListId)) {
+                if (!Objects.equals(next, toMoveNextListId)) {
                     throw new IllegalArgumentException(errorMsgConnected);
                 }
             });
         }
 
-        if(toMoveNextListId != null) {
+        if (toMoveNextListId != null) {
             listRepository.findById(toMoveNextListId).ifPresent(list -> {
                 Integer prev = list.getPrev();
 
-                if(!Objects.equals(prev, toMovePrevListId)) {
+                if (!Objects.equals(prev, toMovePrevListId)) {
                     throw new IllegalArgumentException(errorMsgConnected);
                 }
             });
         }
     }
+
     public void checkSafeCoverLetter(UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
         Integer id = updatePositionCoverLetterRequest.getId();
         Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
         Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
 
-        if(toMoveNextId == null && toMovePrevId == null) {
+        if (toMoveNextId == null && toMovePrevId == null) {
             throw new IllegalArgumentException(errorMsgMoveNull);
         }
-        if(Objects.equals(id, toMoveNextId)) {
+        if (Objects.equals(id, toMoveNextId)) {
             throw new IllegalArgumentException(errorMsgMoveOwn);
         }
-        if(Objects.equals(id, toMovePrevId)) {
+        if (Objects.equals(id, toMovePrevId)) {
             throw new IllegalArgumentException(errorMsgMoveOwn);
         }
 
-        if(toMovePrevId != null) {
+        if (toMovePrevId != null) {
             coverLetterRepository.findById(toMovePrevId).ifPresent(list -> {
                 Integer next = list.getNext();
 
-                if(!Objects.equals(next, toMoveNextId)) {
+                if (!Objects.equals(next, toMoveNextId)) {
                     throw new IllegalArgumentException(errorMsgConnected);
                 }
             });
         }
 
-        if(toMoveNextId != null) {
+        if (toMoveNextId != null) {
             coverLetterRepository.findById(toMoveNextId).ifPresent(list -> {
                 Integer prev = list.getPrev();
 
-                if(!Objects.equals(prev, toMovePrevId)) {
+                if (!Objects.equals(prev, toMovePrevId)) {
                     throw new IllegalArgumentException(errorMsgConnected);
                 }
             });

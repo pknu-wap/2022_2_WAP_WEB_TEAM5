@@ -104,7 +104,7 @@ public class MainApi {
             "삭제할 리스트의 번호를 넣어주세요."
     )
     public ResponseEntity<?> deleteList(@Valid DeleteListRequest deleteListRequest,
-                                           @RequestHeader("Authorization") String token) {
+                                        @RequestHeader("Authorization") String token) {
         try {
             requestTokenValidation.verifyList(token, deleteListRequest.getListId());
 
@@ -125,7 +125,7 @@ public class MainApi {
             "삭제할 자기소개서의 번호를 넣어주세요."
     )
     public ResponseEntity<?> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest,
-                                                  @RequestHeader("Authorization") String token) {
+                                               @RequestHeader("Authorization") String token) {
         try {
             requestTokenValidation.verifyCoverLetter(token, deleteCoverLetterRequest.getId());
 
@@ -146,7 +146,7 @@ public class MainApi {
             "갱신할 리스트의 번호와 갱신할 정보를 입력해주세요."
     )
     public ResponseEntity<?> updateList(@Valid @RequestBody UpdateListRequest updateListRequest,
-                                           @RequestHeader("Authorization") String token) {
+                                        @RequestHeader("Authorization") String token) {
         try {
             requestTokenValidation.verifyList(token, updateListRequest.getListId());
         } catch (IllegalArgumentException e) {
@@ -165,7 +165,7 @@ public class MainApi {
             "갱신할 자기소개서의 번호와 갱신할 정보를 입력해주세요."
     )
     public ResponseEntity<?> updateCoverLetter(@Valid @RequestBody UpdateCoverLetterRequest updateCoverLetterRequest,
-                                                  @RequestHeader("Authorization") String token) {
+                                               @RequestHeader("Authorization") String token) {
         try {
             requestTokenValidation.verifyCoverLetter(token, updateCoverLetterRequest.getId());
         } catch (IllegalArgumentException e) {
@@ -186,13 +186,13 @@ public class MainApi {
             "(끝은 null 입니다.)"
     )
     public ResponseEntity<?> updatePostionList(@Valid @RequestBody UpdatePositionListRequest updatePositionListRequest,
-                                                  @RequestHeader("Authorization") String token) {
+                                               @RequestHeader("Authorization") String token) {
         try {
             requestTokenValidation.verifyList(token, updatePositionListRequest.getListId());
-            if(updatePositionListRequest.getToMovePrevListId() != null) {
+            if (updatePositionListRequest.getToMovePrevListId() != null) {
                 requestTokenValidation.verifyList(token, updatePositionListRequest.getToMovePrevListId());
             }
-            if(updatePositionListRequest.getToMoveNextListId() != null) {
+            if (updatePositionListRequest.getToMoveNextListId() != null) {
                 requestTokenValidation.verifyList(token, updatePositionListRequest.getToMoveNextListId());
             }
 
@@ -217,13 +217,13 @@ public class MainApi {
             "(끝은 null 입니다.)"
     )
     public ResponseEntity<?> updatePositionCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest,
-                                                          @RequestHeader("Authorization") String token) {
+                                                       @RequestHeader("Authorization") String token) {
         try {
             requestTokenValidation.verifyCoverLetter(token, updatePositionCoverLetterRequest.getId());
-            if(updatePositionCoverLetterRequest.getToMovePrevId() != null) {
+            if (updatePositionCoverLetterRequest.getToMovePrevId() != null) {
                 requestTokenValidation.verifyCoverLetter(token, updatePositionCoverLetterRequest.getToMovePrevId());
             }
-            if(updatePositionCoverLetterRequest.getToMoveNextId() != null) {
+            if (updatePositionCoverLetterRequest.getToMoveNextId() != null) {
                 requestTokenValidation.verifyCoverLetter(token, updatePositionCoverLetterRequest.getToMoveNextId());
             }
 
@@ -246,7 +246,7 @@ public class MainApi {
             "이동할 자기소개서 번호와 이동할 리스트의 번호를 입력해주세요."
     )
     public ResponseEntity<?> updatePositionCoverLetterDiffList(@Valid @RequestBody UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest,
-                                                                  @RequestHeader("Authorization") String token) {
+                                                               @RequestHeader("Authorization") String token) {
         try {
             requestTokenValidation.verifyCoverLetter(token, updatePositionCoverLetterDiffListRequest.getId());
             requestTokenValidation.verifyList(token, updatePositionCoverLetterDiffListRequest.getToMoveListId());
