@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Builder
@@ -24,83 +23,61 @@ public class RequestTokenValidation {
     private final MemoRepository memoRepository;
     private final LicenseRepository licenseRepository;
 
-    public boolean verify(String token, Integer userId) {
-        Optional<UserInfoEntity> user = userInfoRepository.findById(userId);
+    public void verify(String token, Integer userId) {
+        UserInfoEntity user = userInfoRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
 
-        if(user.isEmpty()) {
-            return false;
+        if (!Objects.equals(user.getIdentification(), jwtTokenProvider.getUserPk(token))) {
+            throw new IllegalArgumentException("잘못된 요청입니다.");
         }
-
-        return Objects.equals(user.get().getIdentification(), jwtTokenProvider.getUserPk(token));
     }
 
-    public boolean verifyList(String token, Integer listId) {
-        Optional<ListEntity> list = listRepository.findById(listId);
+    public void verifyList(String token, Integer listId) {
+        ListEntity list = listRepository.findById(listId)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
 
-        if(list.isEmpty()) {
-            return false;
-        }
-
-        return verify(token, list.get().getUserId());
+        verify(token, list.getUserId());
     }
 
-    public boolean verifyCoverLetter(String token, Integer id) {
-        Optional<CoverLetterEntity> coverLetter = coverLetterRepository.findById(id);
+    public void verifyCoverLetter(String token, Integer id) {
+        CoverLetterEntity coverLetter = coverLetterRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
 
-        if(coverLetter.isEmpty()) {
-            return false;
-        }
-
-        return verifyList(token, coverLetter.get().getListId());
+        verifyList(token, coverLetter.getListId());
     }
 
-    public boolean verifyAward(String token, Integer id) {
-        Optional<AwardEntity> award = awardRepository.findById(id);
+    public void verifyAward(String token, Integer id) {
+        AwardEntity award = awardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
 
-        if(award.isEmpty()) {
-            return false;
-        }
-
-        return verify(token, award.get().getUserId());
+        verify(token, award.getUserId());
     }
 
-    public boolean verifyEducation(String token, Integer id) {
-        Optional<EducationEntity> education = educationRepository.findById(id);
+    public void verifyEducation(String token, Integer id) {
+        EducationEntity education = educationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
 
-        if(education.isEmpty()) {
-            return false;
-        }
-
-        return verify(token, education.get().getUserId());
+        verify(token, education.getUserId());
     }
 
-    public boolean verifyLanguageSkill(String token, Integer id) {
-        Optional<LanguageSkillEntity> languageSkill = languageSkillRepository.findById(id);
+    public void verifyLanguageSkill(String token, Integer id) {
+        LanguageSkillEntity languageSkill = languageSkillRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
 
-        if(languageSkill.isEmpty()) {
-            return false;
-        }
-
-        return verify(token, languageSkill.get().getUserId());
+        verify(token, languageSkill.getUserId());
     }
 
-    public boolean verifyMemo(String token, Integer id) {
-        Optional<MemoEntity> memo = memoRepository.findById(id);
+    public void verifyMemo(String token, Integer id) {
+        MemoEntity memo = memoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
 
-        if(memo.isEmpty()) {
-            return false;
-        }
-
-        return verify(token, memo.get().getUserId());
+        verify(token, memo.getUserId());
     }
 
-    public boolean verifyLicense(String token, Integer id) {
-        Optional<LicenseEntity> license = licenseRepository.findById(id);
+    public void verifyLicense(String token, Integer id) {
+        LicenseEntity license = licenseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
 
-        if(license.isEmpty()) {
-            return false;
-        }
-
-        return verify(token, license.get().getUserId());
+        verify(token, license.getUserId());
     }
 }
