@@ -1,15 +1,14 @@
 package com.selett.server.api.main.controller;
 
+import com.selett.server.api.main.dto.MainRequest;
+import com.selett.server.api.main.dto.MainResponse;
 import com.selett.server.api.main.dto.create.CreateCoverLetterRequest;
-import com.selett.server.api.main.dto.create.CreateCoverLetterResponse;
 import com.selett.server.api.main.dto.create.CreateListRequest;
-import com.selett.server.api.main.dto.create.CreateListResponse;
 import com.selett.server.api.main.dto.delete.DeleteCoverLetterRequest;
 import com.selett.server.api.main.dto.delete.DeleteListRequest;
 import com.selett.server.api.main.dto.update.*;
 import com.selett.server.api.main.service.MainService;
-import com.selett.server.api.main.dto.MainRequest;
-import com.selett.server.api.main.dto.MainResponse;
+import com.selett.server.utils.RequestTokenValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,6 +25,7 @@ import javax.validation.Valid;
 @RequestMapping("")
 public class MainApi {
     private final MainService mainService;
+    private final RequestTokenValidation requestTokenValidation;
 
     @GetMapping("")
     @ApiResponses(value = {
@@ -35,7 +35,9 @@ public class MainApi {
             "<br/>" +
             "<br/>" +
             "조회할 유저의 번호를 넣어주세요.")
-    public ResponseEntity<MainResponse> getListAndCoverLetter(@Valid MainRequest mainRequest) {
+    public ResponseEntity<MainResponse> getListAndCoverLetter(@Valid MainRequest mainRequest, @RequestHeader("Authorization") String token) {
+        requestTokenValidation.verify(token, mainRequest.getUserId());
+
         MainResponse mainResponse = mainService.getListAndCoverLetter(mainRequest.getUserId());
 
         return new ResponseEntity<>(mainResponse, HttpStatus.OK);
@@ -50,14 +52,14 @@ public class MainApi {
             "<br/>" +
             "<br/>" +
             "생성할 유저의 번호를 넣어주세요.")
-    public ResponseEntity<CreateListResponse> newList(@Valid @RequestBody CreateListRequest createListRequest) {
+    public ResponseEntity<Void> newList(@Valid @RequestBody CreateListRequest createListRequest, @RequestHeader("Authorization") String token) {
         if (mainService.existListTitle(createListRequest.getUserId(), createListRequest.getTitle())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        CreateListResponse createListResponse = mainService.createList(createListRequest.getUserId(), createListRequest.getTitle());
+        mainService.createList(createListRequest.getUserId(), createListRequest.getTitle());
 
-        return new ResponseEntity<>(createListResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/cover-letters")
@@ -69,14 +71,14 @@ public class MainApi {
             "<br/>" +
             "<br/>" +
             "생성항 리스트의 번호를 넣어주세요.")
-    public ResponseEntity<CreateCoverLetterResponse> newCoverLetter(@Valid @RequestBody CreateCoverLetterRequest createCoverLetterRequest) {
+    public ResponseEntity<Void> newCoverLetter(@Valid @RequestBody CreateCoverLetterRequest createCoverLetterRequest, @RequestHeader("Authorization") String token) {
         if (mainService.existCoverLetterTitle(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        CreateCoverLetterResponse createCoverLetterResponse = mainService.createCoverLetter(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle());
+        mainService.createCoverLetter(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle());
 
-        return new ResponseEntity<>(createCoverLetterResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/lists")
@@ -87,8 +89,8 @@ public class MainApi {
             "<br/>" +
             "<br/>" +
             "삭제할 리스트의 번호를 넣어주세요.")
-    public ResponseEntity<Void> deleteList(@Valid DeleteListRequest deleteListRequest) {
-        if(mainService.isOnlyOneList(deleteListRequest.getListId())) {
+    public ResponseEntity<Void> deleteList(@Valid DeleteListRequest deleteListRequest, @RequestHeader("Authorization") String token) {
+        if (mainService.isOnlyOneList(deleteListRequest.getListId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         mainService.deleteList(deleteListRequest.getListId());
@@ -105,8 +107,8 @@ public class MainApi {
             "<br/>" +
             "<br/>" +
             "삭제할 자기소개서의 번호를 넣어주세요.")
-    public ResponseEntity<Void> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
-        if(mainService.isOnlyOneCoverLetter(deleteCoverLetterRequest.getId())) {
+    public ResponseEntity<Void> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest, @RequestHeader("Authorization") String token) {
+        if (mainService.isOnlyOneCoverLetter(deleteCoverLetterRequest.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -123,7 +125,7 @@ public class MainApi {
             "<br/>" +
             "<br/>" +
             "갱신할 리스트의 번호와 갱신할 정보를 입력해주세요.")
-    public ResponseEntity<Void> updateList(@Valid @RequestBody UpdateListRequest updateListRequest) {
+    public ResponseEntity<Void> updateList(@Valid @RequestBody UpdateListRequest updateListRequest, @RequestHeader("Authorization") String token) {
         mainService.updateList(updateListRequest);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -137,7 +139,7 @@ public class MainApi {
             "<br/>" +
             "<br/>" +
             "갱신할 자기소개서의 번호와 갱신할 정보를 입력해주세요.")
-    public ResponseEntity<Void> updateCoverLetter(@Valid @RequestBody UpdateCoverLetterRequest updateCoverLetterRequest) {
+    public ResponseEntity<Void> updateCoverLetter(@Valid @RequestBody UpdateCoverLetterRequest updateCoverLetterRequest, @RequestHeader("Authorization") String token) {
         mainService.updateCoverLetter(updateCoverLetterRequest);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -154,8 +156,8 @@ public class MainApi {
             "이동할 리스트 번호와 이동할 위치의 이전 리스트 번호와 다음 리스트 번호를 입력해주세요." +
             "<br/>" +
             "(끝은 null 입니다.)")
-    public ResponseEntity<Void> updatePostionList(@Valid @RequestBody UpdatePositionListRequest updatePositionListRequest) {
-        if(!mainService.checkSafeList(updatePositionListRequest)) {
+    public ResponseEntity<Void> updatePostionList(@Valid @RequestBody UpdatePositionListRequest updatePositionListRequest, @RequestHeader("Authorization") String token) {
+        if (!mainService.checkSafeList(updatePositionListRequest)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -175,8 +177,8 @@ public class MainApi {
             "이동할 자기소개서 번호와 이동할 위치의 이전 자기소개서 번호와 다음 자기소개서 번호를 입력해주세요." +
             "<br/>" +
             "(끝은 null 입니다.)")
-    public ResponseEntity<Void> updatePositionCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
-        if(!mainService.checkSafeCoverLetter(updatePositionCoverLetterRequest)) {
+    public ResponseEntity<Void> updatePositionCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest, @RequestHeader("Authorization") String token) {
+        if (!mainService.checkSafeCoverLetter(updatePositionCoverLetterRequest)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -194,8 +196,8 @@ public class MainApi {
             "<br/>" +
             "<br/>" +
             "이동할 자기소개서 번호와 이동할 리스트의 번호를 입력해주세요.")
-    public ResponseEntity<Void> updatePositionCoverLetterDiffList(@Valid @RequestBody UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest) {
-        if(mainService.isOnlyOneCoverLetter(updatePositionCoverLetterDiffListRequest.getId())) {
+    public ResponseEntity<Void> updatePositionCoverLetterDiffList(@Valid @RequestBody UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest, @RequestHeader("Authorization") String token) {
+        if (mainService.isOnlyOneCoverLetter(updatePositionCoverLetterDiffListRequest.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         mainService.updatePositionCoverLetterDiffList(updatePositionCoverLetterDiffListRequest);
