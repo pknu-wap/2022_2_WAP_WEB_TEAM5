@@ -64,12 +64,6 @@ public class MyPageAPI {
                 createLicenseRequest.getUserId());
     }
 
-    @PostMapping("/memos")
-    public void postProfileMemo(@Valid @RequestBody CreateMemoRequest createMemoRequest) {
-        myPageService.postProfileMemo(createMemoRequest.getDescription(),
-                createMemoRequest.getUserId());
-    }
-
     @PutMapping("/awards")
     public void updateProfileAward(@Valid @RequestBody UpdateAwardRequest updateAwardRequest) {
         myPageService.updateProfileAward(updateAwardRequest);
@@ -114,10 +108,5 @@ public class MyPageAPI {
     @DeleteMapping("/licenses")
     public void deleteProfileLicense(@Valid DeleteLicenseRequest deleteLicenseRequest) {
         myPageService.deleteProfileLicense(deleteLicenseRequest.getId());
-    }
-
-    @DeleteMapping("/memos")
-    public void deleteProfileMemo(@Valid DeleteMemoRequest deleteMemoRequest) {
-        myPageService.deleteProfileMemo((deleteMemoRequest.getId()));
     }
 }

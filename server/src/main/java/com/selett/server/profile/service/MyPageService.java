@@ -164,16 +164,6 @@ public class MyPageService {
         licenseRepository.flush();
     }
 
-    //Memo
-    public void postProfileMemo(String description, Integer userId) {
-        MemoEntity memoEntity = new MemoEntity();
-        memoEntity.setDescription(description);
-        memoEntity.setUserId(userId);
-
-        memoRepository.save(memoEntity);
-        memoRepository.flush();
-    }
-
 
     public void deleteProfileAward(Integer id) {
         awardRepository.deleteById(id);
@@ -181,7 +171,6 @@ public class MyPageService {
     public void deleteProfileEducation(Integer id) { educationRepository.deleteById(id); }
     public void deleteProfileLanguage(Integer id) { languageSkillRepository.deleteById(id); }
     public void deleteProfileLicense(Integer id) { languageSkillRepository.deleteById(id); }
-    public void deleteProfileMemo(Integer id) { memoRepository.deleteById(id); }
 
     public void updateProfileAward(UpdateAwardRequest updateAwardRequest) {
         AwardEntity updateAward = awardRepository.findById(updateAwardRequest.getId()).get();
