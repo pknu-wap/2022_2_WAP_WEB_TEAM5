@@ -1,4 +1,7 @@
 import { atom } from "recoil";
+import {recoilPersist} from "recoil-persist";
+
+const {persistAtom} = recoilPersist();
 
 export const CoverState = atom({
   key: "counter",
@@ -29,4 +32,5 @@ export const MemoState = atom({
 export const TokenState = atom({
   key: "Tok",
   default: "",
+  effects_UNSTABLE: [persistAtom],
 })
