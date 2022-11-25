@@ -1,9 +1,9 @@
 import React from "react";
 
-function GrammerTag({ Grammer, setGrammer, Memo, setMemo }) {
+function GrammerTag({ Grammer, setGrammer, MemoToggle, setMemoToggle }) {
   const grammerHandler = () => {
     setGrammer(!Grammer);
-    Memo && setMemo(!Memo);
+    MemoToggle && setMemoToggle(!MemoToggle);
   };
 
   return (
@@ -12,8 +12,9 @@ function GrammerTag({ Grammer, setGrammer, Memo, setMemo }) {
         backgroundColor: "#303136",
         color: "white",
         height: "min-content",
-        width: "1.5%",
+        width: "100%",
         marginTop: "50px",
+        marginRight: "1%",
         overflow: "hidden",
         fontSize: "13px",
         cursor: "pointer",

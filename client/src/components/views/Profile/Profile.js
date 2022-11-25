@@ -19,12 +19,13 @@ import {
   useDisclosure,
   border,
 } from "@chakra-ui/react";
+import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
+
 import { folderClickIdState, MemoState, TokenState } from "../MainPage/Atom";
 import Myinfo from "./Myinfo";
 import axios from "axios";
 
 function Profile() {
-  const [Token, setToken] = useRecoilState(TokenState);
   const {
     isOpen: isOpen1,
     onOpen: onOpen1,
@@ -82,13 +83,10 @@ function Profile() {
 
   //어학 성적
   const dateHandler3 = (event) => {
-    setDate3(event.currentTarget.value);
+    setTitle(event.currentTarget.value);
   };
   const nameHandler3 = (event) => {
-    setName3(event.currentTarget.value);
-  };
-  const infoHandler3 = (event) => {
-    setInfo3(event.currentTarget.value);
+    setGrade1(event.currentTarget.value);
   };
   //인적사항
   const schoolHandler = (event) => {
@@ -124,6 +122,23 @@ function Profile() {
   const memoHandler = (event) => {
     setMemo(event.currentTarget.value);
   };
+  // 카드 삭제 기능
+  const deleteHandler = async (id) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      //     const body = {
+      //       listId: id,
+      //     };
+      //     try{
+      //       await axios.delete(
+      //         "",
+      //         {params: body}
+      //       );
+      //       await ContentsUpdate();
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+    }
+  };
 
   useEffect(() => {
     first();
@@ -132,14 +147,12 @@ function Profile() {
   const first = async () => {
     try {
       const response = await axios.get(
-        // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile?userId=1"
-        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
-
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile?userId=1"
       );
       setLicense(response.data.licenses);
       setAwards(response.data.awards);
       setLanguageSkills(response.data.languageSkills);
-      setEducation(response.data.educations);
+      setEducations(response.data.educations);
     } catch (e) {
       console.log(e);
     }
@@ -168,7 +181,7 @@ function Profile() {
     "최대학점",
     "이수학점",
   ]);
-  let [Education, setEducation] = useState([]);
+  let [Educations, setEducations] = useState([]);
   //취득 자격증
   let [Date, setDate] = useState("");
   let [Name, setName] = useState("");
@@ -182,14 +195,32 @@ function Profile() {
   let [Info2, setInfo2] = useState("");
   let [Awards, setAwards] = useState([]);
   //어학 성적
-  let [Date3, setDate3] = useState("");
-  let [Name3, setName3] = useState("");
-  let [Info3, setInfo3] = useState("");
+  let [Title, setTitle] = useState("");
+  let [Grade1, setGrade1] = useState("");
   let [LanguageSkills, setLanguageSkills] = useState([]);
   //메모
   let [Memo, setMemo] = useRecoilState(MemoState);
+  // user token
+  let [Token, setToken] = useRecoilState(TokenState);
 
-  // 인적사항
+  const updateMemo = async () => {
+    setMemo(Memo);
+
+    const body = {
+      description: Memo,
+      user_id: 1,
+    };
+    try {
+      await axios.post(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/memos",
+        body
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // 학력
   const updateEducation = async () => {
     setSchool(School);
     setMajor(Major);
@@ -202,53 +233,42 @@ function Profile() {
     setMaxCredit(MaxCredit);
     setCompletingCredit(CompletingCredit);
 
-    // setEducation([
-    //   School,
-    //   Major,
-    //   Degree,
-    //   Enrollment,
-    //   Graduation,
-    //   MajorCredit,
-    //   CompletingMajorCredit,
-    //   Credit,
-    //   MaxCredit,
-    //   CompletingCredit,
-    // ]);
-    // setType([
-    //   "학교명",
-    //   "전공",
-    //   "학위",
-    //   "입학일",
-    //   "졸업일",
-    //   "전공학점",
-    //   "전공이수학점",
-    //   "학점",
-    //   "최대학점",
-    //   "이수학점",
-    // ]);
+    setEducations([
+      School,
+      Major,
+      Degree,
+      Enrollment,
+      Graduation,
+      MajorCredit,
+      CompletingMajorCredit,
+      Credit,
+      MaxCredit,
+      CompletingCredit,
+    ]);
 
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
-      a: School,
-      b: Major,
-      c: Degree,
-      d: Enrollment,
-      e: Graduation,
-      f: MajorCredit,
-      g: CompletingMajorCredit,
-      h: Credit,
-      i: MaxCredit,
-      j: CompletingCredit,
+      name: School,
+      major: Major,
+      degree: Degree,
+      admissionDate: Enrollment,
+      graduationDate: Graduation,
+      majorGrade: MajorCredit,
+      majorCourse: CompletingMajorCredit,
+      grade: Credit,
+      maxGrade: MaxCredit,
+      course: CompletingCredit,
+      user_id: 1,
     };
 
-    // try {
-    //   await axios.post(
-    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-    //     body
-    //   );
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    try {
+      await axios.post(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/educations",
+        body
+      );
+    } catch (e) {
+      console.log(e);
+    }
 
     setSchool("");
     setMajor("");
@@ -268,21 +288,20 @@ function Profile() {
     setName(Name);
     setInfo(Info);
 
-    // const con = { date: Date, title: Name, description: Info };
-    // setLicense([...License, con]);
+    const con = { date: Date, title: Name, description: Info };
+    setLicense([...License, con]);
 
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
       date: Date,
-      description: Info,
       title: Name,
+      description: Info,
       user_id: 1,
     };
-    console.log(body);
 
     try {
       await axios.post(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/license",
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/licenses",
         body
       );
     } catch (e) {
@@ -303,31 +322,32 @@ function Profile() {
     setInfo2(Info2);
 
     const con2 = {
-      date2: Date2,
-      name2: Name2,
+      date: Date2,
+      name: Name2,
       org: Org,
       grade: Grade,
-      info2: Info2,
+      info: Info2,
     };
     setAwards([...Awards, con2]);
 
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
-      one: Date2,
-      two: Name2,
-      three: Org,
-      four: Grade,
-      five: Info2,
+      date: Date2,
+      title: Name2,
+      // organization: Org,
+      grade: Grade,
+      description: Info2,
+      user_id: 1,
     };
 
-    // try {
-    //   await axios.post(
-    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-    //     body
-    //   );
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    try {
+      await axios.post(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/awards",
+        body
+      );
+    } catch (e) {
+      console.log(e);
+    }
 
     setDate2("");
     setName2("");
@@ -338,41 +358,39 @@ function Profile() {
 
   //어학 성적
   const updateLen = async () => {
-    setDate3(Date3);
-    setName3(Name3);
-    setInfo3(Info3);
+    setTitle(Title);
+    setGrade1(Grade1);
 
-    const con3 = { date: Date3, name: Name3, info: Info3 };
+    const con3 = { title: Title, grade: Grade1 };
     setLanguageSkills([...LanguageSkills, con3]);
 
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
-      one: Date3,
-      two: Name3,
-      three: Info3,
+      title: Title,
+      grade: Grade1,
+      user_id: 1,
     };
 
-    // try {
-    //   await axios.post(
-    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-    //     body
-    //   );
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    try {
+      await axios.post(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/language-skills",
+        body
+      );
+    } catch (e) {
+      console.log(e);
+    }
 
-    setDate3("");
-    setName3("");
-    setInfo3("");
+    setTitle("");
+    setGrade1("");
   };
 
   return (
-    <div style={{ width: "100%", height: "92vh", backgroundColor: "white" }}>
+    <div style={{ width: "100%", height: "93vh", backgroundColor: "white" }}>
       <NavBar />
       {/* ---------------------------------------------------------------- */}
       <div className="left-nav">
         {/* info-title */}
-        <div className="info-title">
+        <div className="info-title" style={{ paddingTop: "2%" }}>
           <h4>취득 자격증</h4>
         </div>
         {/* 전체카드 감싸는 div */}
@@ -385,7 +403,23 @@ function Profile() {
               {License &&
                 License.map((contents, index) => (
                   <div className="infoCard" key={index}>
-                    <Myinfo contents={contents} />
+                    <button
+                      // onClick={() => deleteHandler(index)}
+                      style={{
+                        display: "inline-block",
+                        float: "right",
+                        border: "0",
+                        width: "35px",
+                        borderRadius: "100%",
+                        height: "1px",
+                      }}>
+                      x
+                    </button>
+                    <div className="info-myinfo-contents">{contents.date}</div>
+                    <div className="info-myinfo-contents">{contents.title}</div>
+                    <div className="info-myinfo-contents">
+                      {contents.description}
+                    </div>
                   </div>
                 ))}
             </div>
@@ -429,6 +463,7 @@ function Profile() {
 
               <ModalFooter>
                 <Button
+                  disabled={Date === "" || Name === "" || Info === ""}
                   colorScheme="blue"
                   onClick={() => {
                     updateLicense();
@@ -442,19 +477,21 @@ function Profile() {
             </ModalContent>
           </Modal>
         </div>
-        <Button
-          variant="outline"
-          colorScheme="gray"
-          onClick={onOpen1}
-          style={{
-            float: "right",
-            marginTop: "10px",
-            border: "1px solid gray",
-            width: "5%",
-            height: "30px",
-          }}>
-          추가
-        </Button>
+        <div style={{ marginBottom: "2%" }}>
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            onClick={onOpen1}
+            style={{
+              float: "right",
+              marginTop: "10px",
+              border: "1px solid gray",
+              width: "5%",
+              height: "30px",
+            }}>
+            추가
+          </Button>
+        </div>
         {/* ------------------------------------------------------------------------------------ */}
         {/* info-title */}
         <div className="info-title">
@@ -463,22 +500,29 @@ function Profile() {
         {/* 전체카드 감싸는 div */}
         <div
           className="info-div"
-          style={{ overflow: "auto", whiteSpace: "nowrap", height: "28%" }}>
+          style={{ overflow: "auto", whiteSpace: "nowrap", minHeight: "28%" }}>
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
               {Awards &&
                 Awards.map((contents, index) => (
                   <div className="infoCard" key={index}>
+                    <button
+                      style={{
+                        display: "inline-block",
+                        float: "right",
+                        border: "0",
+                        width: "35px",
+                        borderRadius: "100%",
+                        height: "1px",
+                      }}>
+                      x
+                    </button>
                     <div className="info-myinfo-contents">{contents.date}</div>
-                    <div className="info-myinfo-contents">{contents.title}</div>
-                    <div className="info-myinfo-contents">
-                      {contents.organization}
-                    </div>
+                    <div className="info-myinfo-contents">{contents.name}</div>
+                    <div className="info-myinfo-contents">{contents.org}</div>
                     <div className="info-myinfo-contents">{contents.grade}</div>
-                    <div className="info-myinfo-contents">
-                      {contents.description}
-                    </div>
+                    <div className="info-myinfo-contents">{contents.info}</div>
                   </div>
                 ))}
             </div>
@@ -537,6 +581,13 @@ function Profile() {
 
               <ModalFooter>
                 <Button
+                  disabled={
+                    Date2 === "" ||
+                    Name2 === "" ||
+                    Org === "" ||
+                    Info2 === "" ||
+                    Grade === ""
+                  }
                   colorScheme="blue"
                   onClick={() => {
                     updateAward();
@@ -550,33 +601,47 @@ function Profile() {
             </ModalContent>
           </Modal>
         </div>
-        <Button
-          variant="outline"
-          colorScheme="gray"
-          onClick={onOpen2}
-          style={{
-            float: "right",
-            marginTop: "10px",
-            border: "1px solid gray",
-            width: "5%",
-            height: "30px",
-          }}>
-          추가
-        </Button>
+        <div style={{ marginBottom: "2%" }}>
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            onClick={onOpen2}
+            style={{
+              float: "right",
+              marginTop: "10px",
+              border: "1px solid gray",
+              width: "5%",
+              height: "30px",
+            }}>
+            추가
+          </Button>
+        </div>
         {/* ------------------------------------------------------------------------- */}
         <div className="info-title">
           <h4>어학 성적</h4>
         </div>
         <div
           className="info-div"
-          style={{ overflow: "auto", whiteSpace: "nowrap" }}>
+          style={{ overflow: "auto", whiteSpace: "nowrap", height: "13%" }}>
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
               {LanguageSkills &&
                 LanguageSkills.map((contents, index) => (
                   <div className="infoCard" key={index}>
-                    <Myinfo contents={contents} />
+                    <button
+                      style={{
+                        display: "inline-block",
+                        float: "right",
+                        border: "0",
+                        width: "35px",
+                        borderRadius: "100%",
+                        height: "1px",
+                      }}>
+                      x
+                    </button>
+                    <div className="info-myinfo-contents">{contents.title}</div>
+                    <div className="info-myinfo-contents">{contents.grade}</div>
                   </div>
                 ))}
             </div>
@@ -591,34 +656,27 @@ function Profile() {
               <ModalCloseButton />
               <ModalBody pb={6}>
                 <FormControl>
-                  <FormLabel>날짜</FormLabel>
-                  <Input
-                    ref={initialRef}
-                    value={Date3}
-                    placeholder="ex) 2022.10.1"
-                    onChange={dateHandler3}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
                   <FormLabel>시험명</FormLabel>
                   <Input
+                    ref={initialRef}
+                    value={Title}
                     placeholder="ex) 토익"
-                    value={Name3}
-                    onChange={nameHandler3}
+                    onChange={dateHandler3}
                   />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>점수</FormLabel>
                   <Input
-                    placeholder="ex) 750점"
-                    value={Info3}
-                    onChange={infoHandler3}
+                    placeholder="ex) 750 점"
+                    value={Grade1}
+                    onChange={nameHandler3}
                   />
                 </FormControl>
               </ModalBody>
 
               <ModalFooter>
                 <Button
+                  disabled={Title === "" || Grade1 === ""}
                   colorScheme="blue"
                   onClick={() => {
                     updateLen();
@@ -651,11 +709,10 @@ function Profile() {
         <div className="right-title">
           <h4>인적사항</h4>
         </div>
-        <div className="my-info" style={{ overflow: "scroll" }}>
+        <div className="my-info">
           <Modal
             initialFocusRef={initialRef}
             isOpen={isOpen3}
-            kjy
             onClose={onClose3}>
             <ModalOverlay />
             <ModalContent>
@@ -716,6 +773,17 @@ function Profile() {
 
               <ModalFooter>
                 <Button
+                  disabled={
+                    Major === "" ||
+                    Degree === "" ||
+                    Enrollment === "" ||
+                    Graduation === "" ||
+                    MajorCredit === "" ||
+                    CompletingMajorCredit === "" ||
+                    Credit === "" ||
+                    MaxCredit === "" ||
+                    CompletingCredit === ""
+                  }
                   colorScheme="blue"
                   onClick={() => {
                     updateEducation();
@@ -757,29 +825,24 @@ function Profile() {
               height: "100%",
               marginRight: "10px",
             }}>
-            {Education &&
-              Education.map((contents, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    borderBottom: "1px solid grey",
-                    padding: "5px",
-                  }}>
-                  <div>{contents.name}</div>
-                  <div>{contents.major}</div>
-                  <div>{contents.degree}</div>
-                  <div>{contents.admissionDate}</div>
-                  <div>{contents.graduationDate}</div>
-                  <div>{contents.majorGrade}</div>
-                  <div>{contents.majorCourse}</div>
-                  <div>{contents.grade}</div>
-                  <div>{contents.maxGrade}</div>
-                  <div>{contents.course}</div>
+            {Educations &&
+              Educations.map((contents, index) => (
+                <div key={index}>
+                  <div className="educationInfo">{Educations[index]}</div>
                 </div>
               ))}
           </div>
         </div>
+        <ArrowLeftIcon
+          w={4}
+          h={4}
+          style={{ marginTop: "3.5%", marginLeft: "75%" }}
+        />
+        <ArrowRightIcon
+          w={4}
+          h={4}
+          style={{ marginTop: "3.5%", marginLeft: "5%" }}
+        />
         <Button
           variant="outline"
           colorScheme="gray"
@@ -794,7 +857,7 @@ function Profile() {
           추가
         </Button>
 
-        <div className="right-title">
+        <div className="right-title" style={{ paddingTop: "8%" }}>
           <h4>메모장</h4>
         </div>
         <div className="memo">
@@ -803,6 +866,7 @@ function Profile() {
             value={Memo}
             onChange={memoHandler}
             style={{
+              backgroundColor: "white",
               width: "100%",
               height: "100%",
               resize: "none",
@@ -813,14 +877,15 @@ function Profile() {
             variant="outline"
             colorScheme="gray"
             onClick={() => {
-              setMemo(Memo);
-              console.log(Memo);
+              updateMemo();
+              console.log([Memo]);
             }}
             style={{
-              float: "right",
+              marginTop: "10px",
               border: "1px solid gray",
               width: "10%",
               height: "30px",
+              float: "right",
             }}>
             저장
           </Button>

@@ -15,22 +15,19 @@ function GrammerForm() {
         color: "black",
         fontWeight: "normal",
         fontSize: "13px",
-      }}
-    >
+      }}>
       <tbody>
         <tr
           style={
             {
               // borderBottom: "1px solid #d9d9d9"
             }
-          }
-        >
+          }>
           <th
             style={{
               width: "30%",
               // borderRight: "1px solid #d9d9d9",
-            }}
-          >
+            }}>
             입력 내용
           </th>
           <th style={{ width: "70%" }}>도너츠</th>
@@ -40,14 +37,12 @@ function GrammerForm() {
             {
               // borderBottom: "1px solid #d9d9d9"
             }
-          }
-        >
+          }>
           <th
             style={{
               width: "30%",
               // borderRight: "1px solid #d9d9d9",
-            }}
-          >
+            }}>
             대치어
           </th>
           <th style={{ width: "70%" }}>도넛</th>
@@ -58,8 +53,7 @@ function GrammerForm() {
               width: "30%",
               verticalAlign: "top",
               // borderRight: "1px solid #d9d9d9",
-            }}
-          >
+            }}>
             도움말
           </th>
           <th style={{ width: "70%" }}>

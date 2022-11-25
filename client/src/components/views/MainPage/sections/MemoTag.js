@@ -1,8 +1,8 @@
 import React from "react";
 
-function MemoTag({ Memo, setMemo, Grammer, setGrammer }) {
+function MemoTag({ MemoToggle, setMemoToggle, Grammer, setGrammer }) {
   const memoHandler = () => {
-    setMemo(!Memo);
+    setMemoToggle(!MemoToggle);
     Grammer && setGrammer(!Grammer);
   };
 
@@ -12,7 +12,7 @@ function MemoTag({ Memo, setMemo, Grammer, setGrammer }) {
         backgroundColor: "#303136",
         color: "white",
         height: "min-content",
-        width: "1.5%",
+        width: "100%",
         marginTop: "50px",
         overflow: "hidden",
         fontSize: "13px",

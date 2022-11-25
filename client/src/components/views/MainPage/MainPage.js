@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Grid, GridItem, Modal,
+import {
+  Grid,
+  GridItem,
+  Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -11,7 +14,8 @@ import { Grid, GridItem, Modal,
   FormControl,
   FormLabel,
   Input,
-  Button } from "@chakra-ui/react";
+  Button,
+} from "@chakra-ui/react";
 import GrammerForm from "./sections/GrammerForm";
 import NavBar from "../NavBar/NavBar";
 
@@ -28,7 +32,13 @@ import HiddenTag from "./sections/HiddenTag";
 import MemoForm from "./sections/MemoForm";
 import MemoTag from "./sections/MemoTag";
 
-import { CoverState, CompanyListState, MemoState, TokenState } from "./Atom";
+import {
+  CoverState,
+  CompanyListState,
+  MemoState,
+  TokenState,
+  UserIdState,
+} from "./Atom";
 import { useRecoilState } from "recoil";
 
 function MainPage() {
@@ -36,11 +46,11 @@ function MainPage() {
   const [Grammer, setGrammer] = useState(false);
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
   const [Memo, setMemo] = useRecoilState(MemoState);
+  const [MemoToggle, setMemoToggle] = useState(false);
   const [ListToggle, setListToggle] = useState(true);
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const initialRef = React.useRef(null)
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
-
 
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   // 폴더의 list가 저장됨
@@ -51,20 +61,21 @@ function MainPage() {
 
   const [Cover, setCover] = useRecoilState(CoverState);
   const [Token, setToken] = useRecoilState(TokenState);
+  const [userId, setuserId] = useRecoilState(UserIdState);
 
   const first = async () => {
     setLoading(true);
-    console.log(Token)
+    console.log(Token);
     try {
       const response = await axios.get(
         // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`
       );
-      console.log(response)
+      console.log(response);
       setCompanyList(response.data.list);
-      console.log(CompanyList)
+      console.log(CompanyList);
 
-      setCover(response.data.list[0].cover_letter); 
+      setCover(response.data.list[0].cover_letter);
       setLoading(false);
       setCov(response.data.list[0].title);
     } catch (e) {
@@ -73,22 +84,22 @@ function MainPage() {
   };
 
   useEffect(() => {
-    // 메인페이지가 처음 랜더링 될 때 정보들을 
+    // 메인페이지가 처음 랜더링 될 때 정보들을
     set();
   }, []);
-  
-  const set = async() => {
+
+  const set = async () => {
     await first();
-    if(CompanyList.length===0) {
-      onOpen()
+    if (CompanyList.length === 0) {
+      onOpen();
     }
-  }
+  };
 
   const FolUpdate = async () => {
     // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
     setLoading(true);
     const response = await axios.get(
-      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
+      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`
     );
     setCompanyList(response.data.list);
     setLoading(false);
@@ -99,19 +110,19 @@ function MainPage() {
     setCompany(event.currentTarget.value);
   };
 
-  const companyclickHandler = async() => {
-    
+  const companyclickHandler = async () => {
     const body = {
+      Authorization: Token,
       user_id: Token,
       title: Company,
     };
-    
+
     axios.post(
       "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
       body
     );
-    FolUpdate()
-  }
+    FolUpdate();
+  };
 
   const toggleListFunction = () => {
     setListToggle(!ListToggle);
@@ -143,21 +154,26 @@ function MainPage() {
         </GridItem>
         {ListToggle ? (
           <GridItem // 파일 칸
-            colSpan={3}
-            height="10px"
+            sx={{ "::-webkit-scrollbar": { display: "none" } }}
+            colSpan={ListToggle ? 3 : 0}
             style={{
+              height: "10px",
               backgroundColor: "#303136",
               height: "100%",
               overflow: "scroll",
             }}>
             <Question Cov={Cov} setCov={setCov} />
-            <HiddenTag
+            {/* <HiddenTag
               ListToggle={ListToggle}
               refreshfunction={toggleListFunction}
-            />
+            /> */}
           </GridItem>
         ) : (
-          <GridItem colSpan={0}>
+          <GridItem
+            colSpan={0}
+            style={{
+              backgroundColor: "#d9d9d9",
+            }}>
             <HiddenTag
               ListToggle={ListToggle}
               refreshfunction={toggleListFunction}
@@ -172,37 +188,50 @@ function MainPage() {
           style={{
             backgroundColor: "#d9d9d9",
             height: "100%",
-            // minWidth: "800px",
+            minWidth: "800px",
           }}>
           <div style={{ display: "flex", height: "100%" }}>
             {/* 제목, 내용 입력 칸이랑 맞춤법 검사 태그를 묶는 태그 */}
-
+            {ListToggle && (
+              <HiddenTag
+                ListToggle={ListToggle}
+                refreshfunction={toggleListFunction}
+              />
+            )}
             <Form />
             {/* 제목과 내용 입력칸 */}
+            <div
+              style={{
+                width: "1.5%",
+                display: "flex",
+                flexDirection: "column",
+              }}>
+              <GrammerTag
+                MemoToggle={MemoToggle}
+                setMemoToggle={setMemoToggle}
+                Grammer={Grammer}
+                setGrammer={setGrammer}
+              />
+              {/* 맞춤법 검사 태그 */}
 
-            <GrammerTag
-              Memo={Memo}
-              setMemo={setMemo}
-              Grammer={Grammer}
-              setGrammer={setGrammer}
-            />
-            {/* 맞춤법 검사 태그 */}
-
-            <MemoTag
-              Memo={Memo}
-              setMemo={setMemo}
-              Grammer={Grammer}
-              setGrammer={setGrammer}
-            />
+              <MemoTag
+                MemoToggle={MemoToggle}
+                setMemoToggle={setMemoToggle}
+                Grammer={Grammer}
+                setGrammer={setGrammer}
+              />
+            </div>
 
             {Grammer ? (
               <div // 맞춤법 검사 칸의 제일 큰 흰색 네모
                 style={{
+                  // marginLeft: "0.5%",
                   marginLeft: "0.5%",
+                  borderRadius: "10px",
                   backgroundColor: "white",
-                  marginTop: "5%",
-                  width: "25%",
-                  height: "555px",
+                  marginTop: "30px",
+                  width: "30%",
+                  height: "90%",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -230,7 +259,26 @@ function MainPage() {
             ) : (
               <div></div>
             )}
-            {Memo ? <MemoForm /> : <div></div>}
+            {MemoToggle ? (
+              <div // 맞춤법 검사 칸의 제일 큰 흰색 네모
+                style={{
+                  // marginLeft: "0.5%",
+                  marginLeft: "0.5%",
+                  borderRadius: "10px",
+                  backgroundColor: "white",
+                  marginTop: "30px",
+                  width: "30%",
+                  height: "90%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginRight: "1%",
+                }}>
+                <MemoForm />
+              </div>
+            ) : (
+              <div></div>
+            )}
           </div>
         </GridItem>
       </Grid>

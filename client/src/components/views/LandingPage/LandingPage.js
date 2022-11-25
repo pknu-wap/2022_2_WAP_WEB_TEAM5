@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {useRecoilState} from "recoil";
+import { useRecoilState } from "recoil";
 import "./LandingPage.css";
 import { useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
@@ -12,7 +12,7 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-import {TokenState} from "../MainPage/Atom"
+import { TokenState, UserIdState } from "../MainPage/Atom";
 import axios from "axios";
 
 function LandingPage() {
@@ -23,6 +23,7 @@ function LandingPage() {
   const handleClick = () => setShow(!Show);
   const toast = useToast();
   const [Token, setToken] = useRecoilState(TokenState);
+  const [UserId, setUserId] = useRecoilState(UserIdState);
 
   const IdHandler = (event) => {
     setId(event.currentTarget.value);
@@ -43,8 +44,9 @@ function LandingPage() {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/login",
         body
       );
-      sessionStorage.setItem("user_id", response.data.user_id);
-      setToken(response.data.user_id);
+      // sessionStorage.setItem("user_id", response.data.user_id);
+      setToken(response.data.token);
+      setUserId(response.data.user_id);
       navigate("/main");
 
       console.log(response);
