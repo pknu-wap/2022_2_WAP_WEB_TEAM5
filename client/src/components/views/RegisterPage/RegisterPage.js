@@ -42,7 +42,7 @@ function RegisterPage() {
     navigate("/");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     const body = {
       identification: Id,
       password: Password,
@@ -50,21 +50,31 @@ function RegisterPage() {
       email: Email,
     };
 
-    axios
-      .post(
+    // axios
+    //   .post(
+    //     "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/register",
+    //     body
+    //   )
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     if (response.data.status === 0) {
+    //       navigate("/");
+    //     } else if (response.data.status === 1) {
+    //       alert("중복된 아이디입니다.");
+    //     } else {
+    //       alert("중복된 이메일입니다.");
+    //     }
+    //   });
+
+    try {
+      await axios.post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/register",
         body
-      )
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.status === 0) {
-          navigate("/");
-        } else if (response.data.status === 1) {
-          alert("중복된 아이디입니다.");
-        } else {
-          alert("중복된 이메일입니다.");
-        }
-      });
+      );
+      navigate("/");
+    } catch(e) {
+      console.log(e)
+    }
   };
 
   return (
