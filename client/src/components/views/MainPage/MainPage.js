@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  Input,
+  Button } from "@chakra-ui/react";
 import GrammerForm from "./sections/GrammerForm";
 import NavBar from "../NavBar/NavBar";
 
@@ -26,6 +37,10 @@ function MainPage() {
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
   const [Memo, setMemo] = useRecoilState(MemoState);
   const [ListToggle, setListToggle] = useState(true);
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const initialRef = React.useRef(null)
+  const [Company, setCompany] = useState("");
+
 
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   // 폴더의 list가 저장됨
@@ -45,25 +60,58 @@ function MainPage() {
         // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
         `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
       );
+      console.log(response)
       setCompanyList(response.data.list);
-      setCover(response.data.list[0].cover_letter);
+      console.log(CompanyList)
+
+      setCover(response.data.list[0].cover_letter); 
       setLoading(false);
       setCov(response.data.list[0].title);
-      console.log(response.data.list);
-      console.log(response.data.list[0].cover_letter[0].description_lock);
-      console.log(response.data.list[1].cover_letter[0].description_lock);
     } catch (e) {
       console.log(e);
     }
   };
+
   useEffect(() => {
-    // 메인페이지가 처음 랜더링 될 때 정보들을 가져옴
-    first();
-    // if (CompanyList.length === 0) {
-    //   console.log("아");
-    // }
-    // console.log(CompanyList);
+    // 메인페이지가 처음 랜더링 될 때 정보들을 
+    set();
   }, []);
+  
+  const set = async() => {
+    await first();
+    if(CompanyList.length===0) {
+      onOpen()
+    }
+  }
+
+  const FolUpdate = async () => {
+    // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
+    setLoading(true);
+    const response = await axios.get(
+      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
+    );
+    setCompanyList(response.data.list);
+    setLoading(false);
+  };
+
+  const companyHandler = (event) => {
+    // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
+    setCompany(event.currentTarget.value);
+  };
+
+  const companyclickHandler = async() => {
+    
+    const body = {
+      user_id: Token,
+      title: Company,
+    };
+    
+    axios.post(
+      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
+      body
+    );
+    FolUpdate()
+  }
 
   const toggleListFunction = () => {
     setListToggle(!ListToggle);
@@ -186,6 +234,41 @@ function MainPage() {
           </div>
         </GridItem>
       </Grid>
+
+      <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader style={{ marginTop: "10px" }}>
+            이름을 정해주세요
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>회사 이름</FormLabel>
+              <Input
+                ref={initialRef}
+                placeholder="Company"
+                value={Company}
+                onChange={companyHandler}
+                focusBorderColor="gray.300"
+              />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                companyclickHandler();
+                onClose();
+              }}>
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

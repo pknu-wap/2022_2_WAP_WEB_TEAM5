@@ -67,10 +67,10 @@ function Folder() {
 
         try {
           await axios.post(
-            // 서버에게 요청하고,
-            "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
+                    "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
             body
           );
+    // 서버에게 요청하고,
           await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
         } catch (e) {
           console.log(e);

@@ -33,6 +33,7 @@ function NavBar(props) {
   const logoutHandler = () => {
     // 로그아웃을 눌렀을 때 실행되는 코드
     alert("로그아웃 되셨습니다.");
+    navigate("/")
   };
 
   useEffect(() => {
