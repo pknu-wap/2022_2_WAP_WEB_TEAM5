@@ -18,7 +18,7 @@ import {
   AvatarBadge,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { folderClickIdState, CoverState, CompanyListState } from "../Atom";
+import { folderClickIdState, CoverState, CompanyListState, TokenState } from "../Atom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function Folder() {
@@ -33,6 +33,7 @@ function Folder() {
   const queryAttr = "data-rbd-drag-handle-draggable-id";
   const [Prev, setPrev] = useState("");
   const [Next, setNext] = useState("");
+  const [Token, setToken] = useRecoilState(TokenState)
 
   const companyHandler = (event) => {
     // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
@@ -109,7 +110,8 @@ function Folder() {
     // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
     setLoading(true);
     const response = await axios.get(
-      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
     );
     setCompanyList(response.data.list);
     setLoading(false);

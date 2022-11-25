@@ -25,3 +25,8 @@ export const MemoState = atom({
   key: "MemoSta",
   default: "",
 });
+
+export const TokenState = atom({
+  key: "Tok",
+  default: "",
+})

@@ -16,7 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import QuestionList from "./QuestionList";
-import { CoverState, CompanyListState, folderClickIdState } from "../Atom";
+import { CoverState, CompanyListState, folderClickIdState, TokenState } from "../Atom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from "axios";
 
@@ -28,6 +28,7 @@ function Question({ Cov, setCov }) {
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   const [folderClickId, setFolderClickId] = useRecoilState(folderClickIdState);
   const [placeholderProps, setPlaceholderProps] = useState({});
+  const [Token, setToken] = useRecoilState(TokenState)
   const queryAttr = "data-rbd-drag-handle-draggable-id";
 
   const ContentHandler = (event) => {
@@ -86,7 +87,8 @@ function Question({ Cov, setCov }) {
 
   const fileUpdate = async () => {
     const response = await axios.get(
-      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+          `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
+      // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
     );
     setCompanyList(response.data.list);
     const fileList = await response.data.list.filter(
@@ -179,14 +181,12 @@ function Question({ Cov, setCov }) {
     let prev,
       next = 0;
 
-    if (endIndex === startIndex) {
-      alert("자신의 자리로 이동할 수 없습니다.");
-    }
-
     if (endIndex === 0) {
       // 제일 첫 인덱스로 이동을 하려고 할 때,
       prev = null;
-      next = result[endIndex].list_id;
+      next = result[endIndex].id;
+      console.log(result[endIndex])
+      console.log(next)
     } else if (endIndex === result.length - 1) {
       // 제일 마지막 인덱스로 이동하려고 할 때
       prev = result[endIndex].id;
@@ -230,9 +230,6 @@ function Question({ Cov, setCov }) {
 
     server(body);
 
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
     return result;
   };
 
@@ -242,9 +239,10 @@ function Question({ Cov, setCov }) {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters/position",
         body
       );
-      await fileUpdate();
+      fileUpdate();
     } catch (e) {
-      console.log(e);
+      // console.log(e);
+      alert("자기 자리로 이동할 수 없습니다.")
     }
   };
 

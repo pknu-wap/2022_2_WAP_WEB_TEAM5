@@ -19,11 +19,12 @@ import {
   useDisclosure,
   border,
 } from "@chakra-ui/react";
-import { folderClickIdState, MemoState } from "../MainPage/Atom";
+import { folderClickIdState, MemoState, TokenState } from "../MainPage/Atom";
 import Myinfo from "./Myinfo";
 import axios from "axios";
 
 function Profile() {
+  const [Token, setToken] = useRecoilState(TokenState);
   const {
     isOpen: isOpen1,
     onOpen: onOpen1,
@@ -131,7 +132,9 @@ function Profile() {
   const first = async () => {
     try {
       const response = await axios.get(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile?userId=1"
+        // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile?userId=1"
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
+
       );
       setLicense(response.data.licenses);
       setAwards(response.data.awards);

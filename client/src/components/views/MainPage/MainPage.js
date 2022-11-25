@@ -17,7 +17,7 @@ import HiddenTag from "./sections/HiddenTag";
 import MemoForm from "./sections/MemoForm";
 import MemoTag from "./sections/MemoTag";
 
-import { CoverState, CompanyListState, MemoState } from "./Atom";
+import { CoverState, CompanyListState, MemoState, TokenState } from "./Atom";
 import { useRecoilState } from "recoil";
 
 function MainPage() {
@@ -35,12 +35,15 @@ function MainPage() {
   const [Cov, setCov] = useState("");
 
   const [Cover, setCover] = useRecoilState(CoverState);
+  const [Token, setToken] = useRecoilState(TokenState);
 
   const first = async () => {
     setLoading(true);
+    console.log(Token)
     try {
       const response = await axios.get(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+        // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
       );
       setCompanyList(response.data.list);
       setCover(response.data.list[0].cover_letter);
