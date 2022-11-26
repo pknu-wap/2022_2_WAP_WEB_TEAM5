@@ -1,11 +1,13 @@
 package com.selett.server.api.main.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.selett.server.api.main.dto.MainRequest;
 import com.selett.server.api.main.dto.MainResponse;
 import com.selett.server.api.main.dto.create.CreateCoverLetterRequest;
 import com.selett.server.api.main.dto.create.CreateListRequest;
 import com.selett.server.api.main.dto.delete.DeleteCoverLetterRequest;
 import com.selett.server.api.main.dto.delete.DeleteListRequest;
+import com.selett.server.api.main.dto.spell.SpellCheckRequest;
 import com.selett.server.api.main.dto.update.*;
 import com.selett.server.api.main.service.MainService;
 import com.selett.server.utils.RequestTokenValidation;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URISyntaxException;
 
 @AllArgsConstructor
 @RestController
@@ -121,7 +124,7 @@ public class MainApi {
     )
     public ResponseEntity<?> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
         try {
-            requestTokenValidation.verifyCoverLetter( deleteCoverLetterRequest.getId());
+            requestTokenValidation.verifyCoverLetter(deleteCoverLetterRequest.getId());
 
             mainService.isOnlyOneCoverLetter(deleteCoverLetterRequest.getId());
         } catch (IllegalArgumentException e) {
@@ -248,5 +251,28 @@ public class MainApi {
         mainService.updatePositionCoverLetterDiffList(updatePositionCoverLetterDiffListRequest);
 
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/spell-check")
+    @Operation(summary = "맞춤법 검사", description = "맞춤법을 검사합니다." +
+            "<br/>" +
+            "검사하고 싶은 자기소개서의 id를 입력하세요." +
+            "<br/>" +
+            "<br/>" +
+            "errorIdx - 교정 순서" +
+            "correctMethod - 교정 방법 분류" +
+            "orgStr - 입력 내용" +
+            "candWord - 대치어 (2개 이상이면 '|'로 구분)" +
+            "help - 도움말" +
+            "start, end - 원문에서 입력어 위치"
+    )
+    public ResponseEntity<?> spellCheck(@Valid SpellCheckRequest spellCheckRequest) throws JsonProcessingException, URISyntaxException {
+        try {
+            requestTokenValidation.verifyCoverLetter(spellCheckRequest.getId());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(mainService.spellCheck(spellCheckRequest));
     }
 }

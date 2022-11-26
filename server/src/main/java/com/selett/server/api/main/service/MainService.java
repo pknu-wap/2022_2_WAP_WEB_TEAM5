@@ -1,16 +1,26 @@
 package com.selett.server.api.main.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.selett.server.api.main.dto.CoverLetter;
 import com.selett.server.api.main.dto.FolderList;
 import com.selett.server.api.main.dto.MainResponse;
+import com.selett.server.api.main.dto.spell.SpellCheckRequest;
 import com.selett.server.api.main.dto.update.*;
 import com.selett.server.jpa.mapper.CoverLetterEntity;
 import com.selett.server.jpa.mapper.ListEntity;
 import com.selett.server.jpa.repository.CoverLetterRepository;
 import com.selett.server.jpa.repository.ListRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -388,5 +398,31 @@ public class MainService {
             coverLetterRepository.save(lastCoverLetter);
             coverLetterRepository.saveAndFlush(coverLetter);
         });
+    }
+
+    public Map<String, String> spellCheck(SpellCheckRequest spellCheckRequest) throws JsonProcessingException, URISyntaxException {
+        CoverLetterEntity coverLetter = coverLetterRepository.findById(spellCheckRequest.getId())
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
+
+        if(coverLetter.getDescription() == null)
+            return null;
+
+        String replace = coverLetter.getDescription().replaceAll("\n", "\r\n");
+        String encode = URLEncoder.encode(replace, StandardCharsets.UTF_8);
+
+        RequestEntity<String> res = RequestEntity
+                    .post(new URI("http://164.125.7.61/speller/results"))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .body("text1=" + encode);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<String> response = restTemplate.exchange(res, String.class);
+
+        String data = "{" + Objects.requireNonNull(response.getBody()).substring(response.getBody().indexOf("\"errInfo\":[{"), response.getBody().indexOf("],\"idx\":") + 1) + "}";
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.readValue(data, Map.class);
     }
 }
