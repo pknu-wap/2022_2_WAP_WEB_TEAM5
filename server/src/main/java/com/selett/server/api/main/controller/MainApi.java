@@ -260,10 +260,15 @@ public class MainApi {
             "<br/>" +
             "<br/>" +
             "errorIdx - 교정 순서" +
+            "<br/>" +
             "correctMethod - 교정 방법 분류" +
+            "<br/>" +
             "orgStr - 입력 내용" +
+            "<br/>" +
             "candWord - 대치어 (2개 이상이면 '|'로 구분)" +
+            "<br/>" +
             "help - 도움말" +
+            "<br/>" +
             "start, end - 원문에서 입력어 위치"
     )
     public ResponseEntity<?> spellCheck(@Valid SpellCheckRequest spellCheckRequest) throws JsonProcessingException, URISyntaxException {
