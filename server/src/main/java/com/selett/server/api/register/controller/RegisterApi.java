@@ -35,10 +35,9 @@ public class RegisterApi {
 
     @PutMapping("/password")
     @Operation(summary = "비밀번호 변경", description = "비밀번호를 변경합니다.")
-    public ResponseEntity<?> changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest,
-                                            @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
         try {
-            requestTokenValidation.verify(token, changePasswordRequest.getUserId());
+            requestTokenValidation.verify(changePasswordRequest.getUserId());
 
             registerService.changePassword(
                     changePasswordRequest.getUserId(),

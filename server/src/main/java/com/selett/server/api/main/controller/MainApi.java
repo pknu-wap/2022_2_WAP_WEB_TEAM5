@@ -41,10 +41,9 @@ public class MainApi {
             @io.swagger.annotations.ApiResponse(
                     response = MainResponse.class, message = "OK", code = 200)
     )
-    public ResponseEntity<?> getListAndCoverLetter(@Valid MainRequest mainRequest,
-                                                   @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> getListAndCoverLetter(@Valid MainRequest mainRequest) {
         try {
-            requestTokenValidation.verify(token, mainRequest.getUserId());
+            requestTokenValidation.verify(mainRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -60,10 +59,9 @@ public class MainApi {
             "<br/>" +
             "생성할 유저의 번호를 넣어주세요."
     )
-    public ResponseEntity<?> createList(@Valid @RequestBody CreateListRequest createListRequest,
-                                        @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> createList(@Valid @RequestBody CreateListRequest createListRequest) {
         try {
-            requestTokenValidation.verify(token, createListRequest.getUserId());
+            requestTokenValidation.verify(createListRequest.getUserId());
 
             mainService.existListTitle(createListRequest.getUserId(), createListRequest.getTitle());
         } catch (IllegalArgumentException e) {
@@ -81,10 +79,9 @@ public class MainApi {
             "<br/>" +
             "생성항 리스트의 번호를 넣어주세요."
     )
-    public ResponseEntity<?> createCoverLetter(@Valid @RequestBody CreateCoverLetterRequest createCoverLetterRequest,
-                                               @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> createCoverLetter(@Valid @RequestBody CreateCoverLetterRequest createCoverLetterRequest) {
         try {
-            requestTokenValidation.verifyList(token, createCoverLetterRequest.getListId());
+            requestTokenValidation.verifyList(createCoverLetterRequest.getListId());
 
             mainService.existCoverLetterTitle(createCoverLetterRequest.getListId(), createCoverLetterRequest.getTitle());
         } catch (IllegalArgumentException e) {
@@ -102,10 +99,9 @@ public class MainApi {
             "<br/>" +
             "삭제할 리스트의 번호를 넣어주세요."
     )
-    public ResponseEntity<?> deleteList(@Valid DeleteListRequest deleteListRequest,
-                                        @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> deleteList(@Valid DeleteListRequest deleteListRequest) {
         try {
-            requestTokenValidation.verifyList(token, deleteListRequest.getListId());
+            requestTokenValidation.verifyList(deleteListRequest.getListId());
 
             mainService.isOnlyOneList(deleteListRequest.getListId());
         } catch (IllegalArgumentException e) {
@@ -123,10 +119,9 @@ public class MainApi {
             "<br/>" +
             "삭제할 자기소개서의 번호를 넣어주세요."
     )
-    public ResponseEntity<?> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest,
-                                               @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> deleteCoverLetter(@Valid DeleteCoverLetterRequest deleteCoverLetterRequest) {
         try {
-            requestTokenValidation.verifyCoverLetter(token, deleteCoverLetterRequest.getId());
+            requestTokenValidation.verifyCoverLetter( deleteCoverLetterRequest.getId());
 
             mainService.isOnlyOneCoverLetter(deleteCoverLetterRequest.getId());
         } catch (IllegalArgumentException e) {
@@ -144,10 +139,9 @@ public class MainApi {
             "<br/>" +
             "갱신할 리스트의 번호와 갱신할 정보를 입력해주세요."
     )
-    public ResponseEntity<?> updateList(@Valid @RequestBody UpdateListRequest updateListRequest,
-                                        @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> updateList(@Valid @RequestBody UpdateListRequest updateListRequest) {
         try {
-            requestTokenValidation.verifyList(token, updateListRequest.getListId());
+            requestTokenValidation.verifyList(updateListRequest.getListId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -163,10 +157,9 @@ public class MainApi {
             "<br/>" +
             "갱신할 자기소개서의 번호와 갱신할 정보를 입력해주세요."
     )
-    public ResponseEntity<?> updateCoverLetter(@Valid @RequestBody UpdateCoverLetterRequest updateCoverLetterRequest,
-                                               @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> updateCoverLetter(@Valid @RequestBody UpdateCoverLetterRequest updateCoverLetterRequest) {
         try {
-            requestTokenValidation.verifyCoverLetter(token, updateCoverLetterRequest.getId());
+            requestTokenValidation.verifyCoverLetter(updateCoverLetterRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -184,15 +177,14 @@ public class MainApi {
             "<br/>" +
             "(끝은 null 입니다.)"
     )
-    public ResponseEntity<?> updatePostionList(@Valid @RequestBody UpdatePositionListRequest updatePositionListRequest,
-                                               @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> updatePostionList(@Valid @RequestBody UpdatePositionListRequest updatePositionListRequest) {
         try {
-            requestTokenValidation.verifyList(token, updatePositionListRequest.getListId());
+            requestTokenValidation.verifyList(updatePositionListRequest.getListId());
             if (updatePositionListRequest.getToMovePrevListId() != null) {
-                requestTokenValidation.verifyList(token, updatePositionListRequest.getToMovePrevListId());
+                requestTokenValidation.verifyList(updatePositionListRequest.getToMovePrevListId());
             }
             if (updatePositionListRequest.getToMoveNextListId() != null) {
-                requestTokenValidation.verifyList(token, updatePositionListRequest.getToMoveNextListId());
+                requestTokenValidation.verifyList(updatePositionListRequest.getToMoveNextListId());
             }
 
             mainService.isOnlyOneList(updatePositionListRequest.getListId());
@@ -215,15 +207,14 @@ public class MainApi {
             "<br/>" +
             "(끝은 null 입니다.)"
     )
-    public ResponseEntity<?> updatePositionCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest,
-                                                       @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> updatePositionCoverLetter(@Valid @RequestBody UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
         try {
-            requestTokenValidation.verifyCoverLetter(token, updatePositionCoverLetterRequest.getId());
+            requestTokenValidation.verifyCoverLetter(updatePositionCoverLetterRequest.getId());
             if (updatePositionCoverLetterRequest.getToMovePrevId() != null) {
-                requestTokenValidation.verifyCoverLetter(token, updatePositionCoverLetterRequest.getToMovePrevId());
+                requestTokenValidation.verifyCoverLetter(updatePositionCoverLetterRequest.getToMovePrevId());
             }
             if (updatePositionCoverLetterRequest.getToMoveNextId() != null) {
-                requestTokenValidation.verifyCoverLetter(token, updatePositionCoverLetterRequest.getToMoveNextId());
+                requestTokenValidation.verifyCoverLetter(updatePositionCoverLetterRequest.getToMoveNextId());
             }
 
             mainService.isOnlyOneCoverLetter(updatePositionCoverLetterRequest.getId());
@@ -244,11 +235,10 @@ public class MainApi {
             "<br/>" +
             "이동할 자기소개서 번호와 이동할 리스트의 번호를 입력해주세요."
     )
-    public ResponseEntity<?> updatePositionCoverLetterDiffList(@Valid @RequestBody UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest,
-                                                               @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> updatePositionCoverLetterDiffList(@Valid @RequestBody UpdatePositionCoverLetterDiffListRequest updatePositionCoverLetterDiffListRequest) {
         try {
-            requestTokenValidation.verifyCoverLetter(token, updatePositionCoverLetterDiffListRequest.getId());
-            requestTokenValidation.verifyList(token, updatePositionCoverLetterDiffListRequest.getToMoveListId());
+            requestTokenValidation.verifyCoverLetter(updatePositionCoverLetterDiffListRequest.getId());
+            requestTokenValidation.verifyList(updatePositionCoverLetterDiffListRequest.getToMoveListId());
 
             mainService.isOnlyOneCoverLetter(updatePositionCoverLetterDiffListRequest.getId());
         } catch (IllegalArgumentException e) {

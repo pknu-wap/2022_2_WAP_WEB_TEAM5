@@ -41,10 +41,9 @@ public class ProfileApi {
             @io.swagger.annotations.ApiResponse(
                     response = MyPageResponse.class, message = "OK", code = 200)
     )
-    public ResponseEntity<?> getProfile(@Valid MyPageRequest myPageRequest,
-                                        @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> getProfile(@Valid MyPageRequest myPageRequest) {
         try {
-            requestTokenValidation.verify(token, myPageRequest.getUserId());
+            requestTokenValidation.verify(myPageRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -57,10 +56,9 @@ public class ProfileApi {
     //여기서부터 create
     @PostMapping("/awards")
     @Operation(summary = "수상실적 추가", description = "수상 실적 추가합니다.")
-    public ResponseEntity<?> postProfileAward(@Valid @RequestBody CreateAwardRequest createAwardRequest,
-                                              @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> postProfileAward(@Valid @RequestBody CreateAwardRequest createAwardRequest) {
         try {
-            requestTokenValidation.verify(token, createAwardRequest.getUserId());
+            requestTokenValidation.verifyAward(createAwardRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -75,10 +73,9 @@ public class ProfileApi {
 
     @PostMapping("/educations")
     @Operation(summary = "학력 추가", description = "학력 추가합니다.")
-    public ResponseEntity<?> postProfileEducation(@Valid @RequestBody CreateEducationRequest createEducationRequest,
-                                                  @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> postProfileEducation(@Valid @RequestBody CreateEducationRequest createEducationRequest) {
         try {
-            requestTokenValidation.verify(token, createEducationRequest.getUserId());
+            requestTokenValidation.verifyEducation(createEducationRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -99,10 +96,9 @@ public class ProfileApi {
 
     @PostMapping("/language-skills")
     @Operation(summary = "어학 성적 추가", description = "어학 성적 추가합니다.")
-    public ResponseEntity<?> postProfileLanguageSkill(@Valid @RequestBody CreateLanguageSkillRequest createLanguageSkillRequest,
-                                                      @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> postProfileLanguageSkill(@Valid @RequestBody CreateLanguageSkillRequest createLanguageSkillRequest) {
         try {
-            requestTokenValidation.verify(token, createLanguageSkillRequest.getUserId());
+            requestTokenValidation.verifyLanguageSkill(createLanguageSkillRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -115,10 +111,9 @@ public class ProfileApi {
 
     @PostMapping("/licenses")
     @Operation(summary = "자격증 추가", description = "자격증 추가합니다.")
-    public ResponseEntity<?> postProfileLicense(@Valid @RequestBody CreateLicenseRequest createLicenseRequest,
-                                                @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> postProfileLicense(@Valid @RequestBody CreateLicenseRequest createLicenseRequest) {
         try {
-            requestTokenValidation.verify(token, createLicenseRequest.getUserId());
+            requestTokenValidation.verifyLicense(createLicenseRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -133,10 +128,9 @@ public class ProfileApi {
     //여기서부터 update
     @PutMapping("/awards")
     @Operation(summary = "수상 실적 갱신", description = "수상 실적 갱신합니다.")
-    public ResponseEntity<?> updateProfileAward(@Valid @RequestBody UpdateAwardRequest updateAwardRequest,
-                                                     @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> updateProfileAward(@Valid @RequestBody UpdateAwardRequest updateAwardRequest) {
         try {
-            requestTokenValidation.verifyAward(token, updateAwardRequest.getId());
+            requestTokenValidation.verifyAward(updateAwardRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -147,10 +141,9 @@ public class ProfileApi {
 
     @PutMapping("/educations")
     @Operation(summary = "학력 갱신", description = "학력 갱신합니다.")
-    public ResponseEntity<?> updateProfileEducation(@Valid @RequestBody UpdateEducationRequest updateEducationRequest,
-                                       @RequestHeader("Authorizaton") String token) {
+    public ResponseEntity<?> updateProfileEducation(@Valid @RequestBody UpdateEducationRequest updateEducationRequest) {
         try {
-            requestTokenValidation.verifyAward(token, updateEducationRequest.getId());
+            requestTokenValidation.verifyEducation(updateEducationRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -161,10 +154,9 @@ public class ProfileApi {
 
     @PutMapping("/language-skills")
     @Operation(summary = "어학 성적 갱신", description = "어학 성적 갱신합니다.")
-    public ResponseEntity<?> updateProfileLanguageSkill(@Valid @RequestBody UpdateLanguageSkillRequest updateLanguageSkillRequest,
-                                           @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> updateProfileLanguageSkill(@Valid @RequestBody UpdateLanguageSkillRequest updateLanguageSkillRequest) {
         try {
-            requestTokenValidation.verifyAward(token, updateLanguageSkillRequest.getId());
+            requestTokenValidation.verifyLanguageSkill(updateLanguageSkillRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -175,10 +167,9 @@ public class ProfileApi {
 
     @PutMapping("/licenses")
     @Operation(summary = "자격증 갱신", description = "자격증 갱신합니다.")
-    public ResponseEntity<?> updateProfileLicense(@Valid @RequestBody UpdateLicenseRequest updateLicenseRequest,
-                                     @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> updateProfileLicense(@Valid @RequestBody UpdateLicenseRequest updateLicenseRequest) {
         try {
-            requestTokenValidation.verifyAward(token, updateLicenseRequest.getId());
+            requestTokenValidation.verifyLicense(updateLicenseRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -189,10 +180,9 @@ public class ProfileApi {
 
     @PutMapping("/memos")
     @Operation(summary = "메모 갱신", description = "메모 갱신합니다.")
-    public ResponseEntity<?> updateProfileMemo(@Valid @RequestBody UpdateMemoRequest updateMemoRequest,
-                                  @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> updateProfileMemo(@Valid @RequestBody UpdateMemoRequest updateMemoRequest) {
         try {
-            requestTokenValidation.verifyAward(token, updateMemoRequest.getId());
+            requestTokenValidation.verifyMemo(updateMemoRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -204,9 +194,9 @@ public class ProfileApi {
     //여기서부터 Delete
     @DeleteMapping("/awards")
     @Operation(summary = "수상 실적 삭제", description = "수상 실적 삭제합니다.")
-    public ResponseEntity<?> deleteProfileAward(@Valid DeleteRequest deleteRequest, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> deleteProfileAward(@Valid DeleteRequest deleteRequest) {
         try {
-            requestTokenValidation.verifyAward(token, deleteRequest.getId());
+            requestTokenValidation.verifyAward(deleteRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -217,9 +207,9 @@ public class ProfileApi {
 
     @DeleteMapping("/educations")
     @Operation(summary = "학력 삭제", description = "학력 삭제합니다.")
-    public ResponseEntity<?> deleteProfileEducation(@Valid DeleteRequest deleteRequest, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> deleteProfileEducation(@Valid DeleteRequest deleteRequest) {
         try {
-            requestTokenValidation.verifyEducation(token, deleteRequest.getId());
+            requestTokenValidation.verifyEducation(deleteRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -230,9 +220,9 @@ public class ProfileApi {
 
     @DeleteMapping("/language-skills")
     @Operation(summary = "어학 성적 삭제", description = "어학 성적 삭제합니다.")
-    public ResponseEntity<?> deleteProfileLanguageSkill(@Valid DeleteRequest deleteRequest, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> deleteProfileLanguageSkill(@Valid DeleteRequest deleteRequest) {
         try {
-            requestTokenValidation.verifyLanguageSkill(token, deleteRequest.getId());
+            requestTokenValidation.verifyLanguageSkill(deleteRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -243,9 +233,9 @@ public class ProfileApi {
 
     @DeleteMapping("/licenses")
     @Operation(summary = "자격증 삭제", description = "자격증 삭제합니다.")
-    public ResponseEntity<?> deleteProfileLicense(@Valid DeleteRequest deleteRequest, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> deleteProfileLicense(@Valid DeleteRequest deleteRequest) {
         try {
-            requestTokenValidation.verifyLicense(token, deleteRequest.getId());
+            requestTokenValidation.verifyLicense(deleteRequest.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
