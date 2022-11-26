@@ -1,6 +1,7 @@
 package com.selett.server.api.profile.service;
 
 import com.selett.server.api.profile.dto.*;
+import com.selett.server.api.profile.dto.update.*;
 import com.selett.server.jpa.mapper.*;
 import com.selett.server.jpa.repository.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 
-public class MyPageService {
+public class ProfileService {
     private final AwardRepository awardRepository;
     private final EducationRepository educationRepository;
     private final LicenseRepository licenseRepository;
@@ -24,10 +25,8 @@ public class MyPageService {
         MyPageResponse myPageResponse = new MyPageResponse();
 
         //award
-        List<AwardEntity> awards = awardRepository.findAllByUserId(userId);
         List<Award> awardResponse = new ArrayList<>();
-
-        for (AwardEntity award : awards) {
+        awardRepository.findAllByUserId(userId).forEach(award -> {
             Award awardInput = new Award();
             awardInput.setId(award.getId());
             awardInput.setTitle(award.getTitle());
@@ -37,13 +36,11 @@ public class MyPageService {
             awardInput.setDescription(award.getDescription());
 
             awardResponse.add(awardInput);
-        }
+        });
 
         //License
-        List<LicenseEntity> licenses = licenseRepository.findAllByUserId(userId);
         List<License> licenseResponse = new ArrayList<>();
-
-        for (LicenseEntity license : licenses) {
+        licenseRepository.findAllByUserId(userId).forEach(license -> {
             License licenseInput = new License();
             licenseInput.setId(license.getId());
             licenseInput.setTitle(license.getTitle());
@@ -51,13 +48,11 @@ public class MyPageService {
             licenseInput.setDescription(license.getDescription());
 
             licenseResponse.add(licenseInput);
-        }
+        });
 
         //Education
-        List<EducationEntity> educations = educationRepository.findAllByUserId(userId);
         List<Education> educationResponse = new ArrayList<>();
-
-        for (EducationEntity education : educations) {
+        educationRepository.findAllByUserId(userId).forEach(education -> {
             Education educationInput = new Education();
             educationInput.setId(education.getId());
             educationInput.setName(education.getName());
@@ -72,36 +67,31 @@ public class MyPageService {
             educationInput.setCourse(education.getCourse());
 
             educationResponse.add(educationInput);
-        }
+        });
 
         //Memo
-        List<MemoEntity> memos = memoRepository.findAllByUserId(userId);
-        List<Memo> memoResponse = new ArrayList<>();
-
-        for (MemoEntity memo : memos) {
+        memoRepository.findById(userId).ifPresent(memo -> {
             Memo memoInput = new Memo();
+            memoInput.setId(memo.getId());
             memoInput.setDescription(memo.getDescription());
 
-            memoResponse.add(memoInput);
-        }
+            myPageResponse.setMemo(memoInput);
+        });
 
         //LanguageSkill
-        List<LanguageSkillEntity> languageSkills = languageSkillRepository.findAllByUserId(userId);
         List<LanguageSkill> languageSkillResponse = new ArrayList<>();
-
-        for (LanguageSkillEntity languageSkill : languageSkills) {
+        languageSkillRepository.findAllByUserId(userId).forEach(languageSkill -> {
             LanguageSkill languageSkillInput = new LanguageSkill();
             languageSkillInput.setId(languageSkill.getId());
             languageSkillInput.setTitle(languageSkill.getTitle());
             languageSkillInput.setGrade(languageSkill.getGrade());
 
             languageSkillResponse.add(languageSkillInput);
-        }
+        });
 
         myPageResponse.setAwards(awardResponse);
         myPageResponse.setLicenses(licenseResponse);
         myPageResponse.setEducations(educationResponse);
-        myPageResponse.setMemos(memoResponse);
         myPageResponse.setLanguageSkills(languageSkillResponse);
 
         return myPageResponse;
@@ -163,9 +153,11 @@ public class MyPageService {
         licenseRepository.flush();
     }
 
+
     //Memo
     public void postProfileMemo(String description, Integer userId) {
         MemoEntity memoEntity = new MemoEntity();
+
         memoEntity.setDescription(description);
         memoEntity.setUserId(userId);
 
@@ -174,7 +166,126 @@ public class MyPageService {
     }
 
 
-    //public MyPageResponse UpdateProfile(Integer userId) {}
+    public void deleteProfileAward(Integer id) {
+        awardRepository.deleteById(id);
+        awardRepository.flush();
+    }
+    public void deleteProfileEducation(Integer id) {
+        educationRepository.deleteById(id);
+        educationRepository.flush();
+    }
+    public void deleteProfileLanguage(Integer id) {
+        languageSkillRepository.deleteById(id);
+        languageSkillRepository.flush();
+    }
+    public void deleteProfileLicense(Integer id) {
+        languageSkillRepository.deleteById(id);
+        languageSkillRepository.flush();
+    }
 
-    //public MyPageResponse DeleteProfile(Integer userId) {}
+    public void updateProfileAward(UpdateAwardRequest updateAwardRequest) {
+        awardRepository.findById(updateAwardRequest.getId()).ifPresent(award -> {
+            if (updateAwardRequest.getTitle() != null) {
+                award.setTitle(award.getTitle());
+            }
+            if (updateAwardRequest.getDate() != null) {
+                award.setDate(award.getDate());
+            }
+            if (updateAwardRequest.getOrganization() != null) {
+                award.setOrganization(award.getOrganization());
+            }
+            if (updateAwardRequest.getGrade() != null) {
+                award.setGrade(award.getGrade());
+            }
+            if (updateAwardRequest.getDescription() != null) {
+                award.setDescription(award.getDescription());
+            }
+
+            awardRepository.save(award);
+            awardRepository.flush();
+        });
+    }
+
+    public void updateProfileEducation(UpdateEducationRequest updateEducationRequest) {
+        educationRepository.findById(updateEducationRequest.getId()).ifPresent(education -> {
+            if (updateEducationRequest.getName() != null) {
+                education.setName(education.getName());
+            }
+            if (updateEducationRequest.getMajor() != null) {
+                education.setMajor(education.getMajor());
+            }
+            if (updateEducationRequest.getDegree() != null) {
+                education.setDegree(education.getDegree());
+            }
+            if (updateEducationRequest.getAdmissionDate() != null) {
+                education.setAdmissionDate(education.getAdmissionDate());
+            }
+            if (updateEducationRequest.getGraduationDate() != null) {
+                education.setGraduationDate(education.getGraduationDate());
+            }
+            if (updateEducationRequest.getMajorGrade() != null) {
+                education.setMajorGrade(education.getMajorGrade());
+            }
+            if (updateEducationRequest.getMajorCourse() != null) {
+                education.setMajorCourse(education.getMajorCourse());
+            }
+            if (updateEducationRequest.getCourse() != null) {
+                education.setGrade(education.getGrade());
+            }
+            if (updateEducationRequest.getMaxGrade() != null) {
+                education.setMaxGrade(education.getMaxGrade());
+            }
+            if (updateEducationRequest.getCourse() != null) {
+                education.setCourse(education.getCourse());
+            }
+
+            educationRepository.save(education);
+            educationRepository.flush();
+        });
+    }
+
+    public void updateProfileLanguageSkill(UpdateLanguageSkillRequest updateLanguageSkillRequest) {
+        languageSkillRepository.findById(updateLanguageSkillRequest.getId()).ifPresent(languageSkill -> {
+            if(languageSkill.getTitle() != null) {
+                languageSkill.setTitle(languageSkill.getTitle());
+            }
+            if(languageSkill.getGrade() != null) {
+                languageSkill.setGrade(languageSkill.getGrade());
+            }
+
+            languageSkillRepository.save(languageSkill);
+            languageSkillRepository.flush();
+        });
+    }
+
+    public void updateProfileLicense(UpdateLicenseRequest updateLicenseRequest) {
+        licenseRepository.findById(updateLicenseRequest.getId()).ifPresent(license -> {
+            if(license.getTitle() != null) {
+                license.setTitle(license.getTitle());
+            }
+            if(license.getDate() != null) {
+                license.setDate(license.getDate());
+            }
+            if(license.getDescription() != null) {
+                license.setDescription(updateLicenseRequest.getDescription());
+            }
+
+            licenseRepository.save(license);
+            licenseRepository.flush();
+        });
+
+
+    }
+
+    public void updateProfileMemo(UpdateMemoRequest updateMemoRequest) {
+        memoRepository.findById(updateMemoRequest.getId()).ifPresent(memo -> {
+            if(memo.getDescription() != null) {
+                memo.setDescription(memo.getDescription());
+            }
+
+            memoRepository.save(memo);
+            memoRepository.flush();
+        });
+    }
+
 }

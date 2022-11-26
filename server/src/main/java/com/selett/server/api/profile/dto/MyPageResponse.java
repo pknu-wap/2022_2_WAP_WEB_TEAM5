@@ -1,5 +1,6 @@
 package com.selett.server.api.profile.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ public class MyPageResponse {
     List<Award> awards;
     List<Education> educations;
     List<License> licenses;
-    List<Memo> memos;
+    Memo memo;
+    @JsonProperty("language_skills")
     List<LanguageSkill> languageSkills;
 }

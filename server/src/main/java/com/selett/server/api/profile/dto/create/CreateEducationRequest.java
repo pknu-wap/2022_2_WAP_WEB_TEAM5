@@ -19,13 +19,18 @@ public class CreateEducationRequest {
     @NotNull
     private String degree;
     @NotNull
+    @JsonProperty("admission_date")
     private LocalDate admissionDate;
     @NotNull
+    @JsonProperty("graduation_date")
     private LocalDate graduationDate;
 
+    @JsonProperty("major_grade")
     private Float majorGrade;
+    @JsonProperty("major_course")
     private Integer majorCourse;
     private Float grade;
+    @JsonProperty("max_grade")
     private Float maxGrade;
     private Integer course;
     @NotNull
