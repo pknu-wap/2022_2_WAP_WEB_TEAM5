@@ -34,6 +34,7 @@ public class UserInfoEntity implements UserDetails {
     private String identification;
 
     @NotNull
+    @Size(min = 1, max = 255)
     private String password;
 
     @NotNull
