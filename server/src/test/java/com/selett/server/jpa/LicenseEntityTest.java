@@ -1,19 +1,19 @@
 package com.selett.server.jpa;
 
-import com.selett.server.jpa.repository.MemoRepository;
+import com.selett.server.jpa.repository.LicenseRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class MemoEntityTest {
+public class LicenseEntityTest {
 
     @Autowired
-    private MemoRepository memoRepository;
+    private LicenseRepository licenseRepository;
 
     @Test
     public void searchAll() {
-        memoRepository.findAll().forEach(System.out::println);
+        licenseRepository.findAll().forEach(System.out::println);
     }
 
 }
