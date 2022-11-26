@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -18,6 +19,7 @@ public class CoverLetterEntity {
     private Integer id;
 
     @NotNull
+    @Size(max = 200)
     private String title;
 
     private String question;
@@ -25,6 +27,7 @@ public class CoverLetterEntity {
     @NotNull
     private Boolean questionLock;
 
+    @Size(max = 5000)
     private String description;
 
     @NotNull

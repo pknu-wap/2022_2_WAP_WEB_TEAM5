@@ -19,6 +19,7 @@ public class LanguageSkillEntity {
     private Integer id;
 
     @NotNull
+    @Size(max = 200)
     private String title;
 
     @NotNull

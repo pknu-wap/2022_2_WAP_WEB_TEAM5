@@ -3,6 +3,7 @@ package com.selett.server.jpa.mapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,9 +20,11 @@ public class AwardEntity {
     private Integer id;
 
     @NotNull
+    @Size(max = 200)
     private String title;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     @NotNull
@@ -32,6 +35,7 @@ public class AwardEntity {
     @Size(min = 1, max = 20)
     private String grade;
 
+    @Size(max = 5000)
     private String description;
 
     @NotNull
