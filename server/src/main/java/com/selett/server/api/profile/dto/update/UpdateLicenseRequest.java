@@ -3,6 +3,7 @@ package com.selett.server.api.profile.dto.update;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,9 +16,10 @@ import java.time.LocalDate;
 public class UpdateLicenseRequest {
     @NotNull
     private Integer id;
-    @Size(max=200)
+    @Size(max = 200)
     private String title;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
-    @Size(max=5000)
+    @Size(max = 5000)
     private String description;
 }

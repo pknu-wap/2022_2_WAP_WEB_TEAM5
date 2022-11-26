@@ -14,8 +14,8 @@ import javax.validation.constraints.Size;
 public class UpdateLanguageSkillRequest {
     @NotNull
     private Integer id;
-    @Size(max=200)
+    @Size(max = 200)
     private String title;
-    @Size(max=20)
+    @Size(max = 20)
     private String grade;
 }

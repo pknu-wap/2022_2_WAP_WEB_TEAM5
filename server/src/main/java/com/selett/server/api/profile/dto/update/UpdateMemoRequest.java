@@ -14,6 +14,6 @@ import javax.validation.constraints.Size;
 public class UpdateMemoRequest {
     @NotNull
     private Integer id;
-    @Size(max=5000)
+    @Size(max = 5000)
     private String description;
 }
