@@ -1,5 +1,7 @@
 package com.selett.server.api.register.service;
 
+import com.selett.server.api.main.service.MainService;
+import com.selett.server.api.profile.service.MyPageService;
 import com.selett.server.jpa.mapper.UserInfoEntity;
 import com.selett.server.jpa.repository.UserInfoRepository;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,8 @@ import java.util.List;
 public class RegisterService {
     private final UserInfoRepository userInfoRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MainService mainService;
+    private final MyPageService myPageService;
 
     public void register(String identification, String password, String name, String email) {
         if(userInfoRepository.existsByIdentification(identification)) {
@@ -30,7 +34,11 @@ public class RegisterService {
         user.setName(name);
         user.setEmail(email);
         user.setRoles(List.of("ROLE_USER"));
-        userInfoRepository.saveAndFlush(user);
+
+        UserInfoEntity newUser = userInfoRepository.saveAndFlush(user);
+
+        mainService.createList(newUser.getUserId(), "새 폴더");
+        myPageService.postProfileMemo(null, newUser.getUserId());
     }
 
     public void changePassword(Integer userId, String currentPassword, String newPassword) {
