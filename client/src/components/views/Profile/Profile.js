@@ -129,20 +129,52 @@ function Profile() {
     setMemo(event.currentTarget.value);
   };
   // 카드 삭제 기능
-  const deleteHandler = async (id) => {
+  const deleteLicense = async (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      //     const body = {
-      //       listId: id,
-      //     };
-      //     try{
-      //       await axios.delete(
-      //         "",
-      //         {params: body}
-      //       );
-      //       await ContentsUpdate();
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
+      try {
+        await axios.delete(
+          `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/licenses?id=${id}`,
+          {
+            headers: {
+              Authorization: Token,
+            },
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+  const deleteAwards = async (id) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      try {
+        await axios.delete(
+          `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/awards?id=${id}`,
+          {
+            headers: {
+              Authorization: Token,
+            },
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+  const deleteLan = async (id) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      try {
+        await axios.delete(
+          `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/language-skills?id=${id}`,
+          {
+            headers: {
+              Authorization: Token,
+            },
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -454,7 +486,7 @@ function Profile() {
                 License.map((contents, index) => (
                   <div className="infoCard" key={index}>
                     <button
-                      // onClick={() => deleteHandler(index)}
+                      onClick={() => deleteLicense(contents.id)}
                       style={{
                         display: "inline-block",
                         float: "right",
@@ -559,6 +591,7 @@ function Profile() {
                   <div className="infoCard" key={index}>
                     {/* {console.log(contents.org)} */}
                     <button
+                      onClick={() => deleteAwards(contents.id)}
                       style={{
                         display: "inline-block",
                         float: "right",
@@ -685,6 +718,7 @@ function Profile() {
                 LanguageSkills.map((contents, index) => (
                   <div className="infoCard" key={index}>
                     <button
+                      onClick={() => deleteLan(contents.id)}
                       style={{
                         display: "inline-block",
                         float: "right",
