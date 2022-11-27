@@ -250,16 +250,7 @@ function MainPage() {
                     <RepeatIcon />
                   </Button>
                 </div>
-
-                <GrammerForm
-                  GrammerText={GrammerText}
-                  style={{
-                    backgroundColor: "black",
-                    width: "100px",
-                    height: "100px",
-                  }}
-                />
-
+                <GrammerForm GrammerText={GrammerText} />
                 {/* 맞춤법 검사 내용들(나중에는 map으로 해야할 거 같음..?!) */}
               </div>
             ) : (

@@ -6,10 +6,11 @@ function GrammerForm(GrammerText) {
       {console.log(GrammerText)}
       {console.log(GrammerText.GrammerText)}
 
-      {GrammerText.GrammerText.length !== 0 &&
-        GrammerText.GrammerText.map((text, index) => {
-          console.log("아");
+      {GrammerText.GrammerText &&
+        GrammerText.GrammerText.length !== 0 &&
+        GrammerText.GrammerText.map((text, index) => (
           <table // 첫 번째 테이블 시작
+            key={index}
             style={{
               width: "90%",
               borderBottom: "1px solid #d9d9d9",
@@ -66,8 +67,8 @@ function GrammerForm(GrammerText) {
                 <th style={{ width: "70%" }}>{text.help}</th>
               </tr>
             </tbody>
-          </table>;
-        })}
+          </table>
+        ))}
     </Fragment>
   );
 }
