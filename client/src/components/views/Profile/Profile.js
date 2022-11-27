@@ -163,8 +163,8 @@ function Profile() {
       console.log(response);
       setLicense(response.data.licenses);
       setAwards(response.data.awards);
-      console.log(Awards);
-      setLanguageSkills(response.data.languageSkills);
+      console.log(response.data.language_skills);
+      setLanguageSkills(response.data.language_skills);
       setEducations(response.data.educations);
     } catch (e) {
       console.log(e);
@@ -354,10 +354,10 @@ function Profile() {
 
     const con2 = {
       date: Date2,
-      name: Name2,
-      org: Org,
+      title: Name2,
+      organization: Org,
       grade: Grade,
-      info: Info2,
+      description: Info2,
     };
     setAwards([...Awards, con2]);
 
@@ -399,6 +399,8 @@ function Profile() {
     setGrade1(Grade1);
 
     const con3 = { title: Title, grade: Grade1 };
+    console.log(con3);
+    console.log(LanguageSkills);
     setLanguageSkills([...LanguageSkills, con3]);
 
     const body = {
@@ -549,6 +551,7 @@ function Profile() {
               {Awards &&
                 Awards.map((contents, index) => (
                   <div className="infoCard" key={index}>
+                    {/* {console.log(contents.org)} */}
                     <button
                       style={{
                         display: "inline-block",
@@ -561,10 +564,14 @@ function Profile() {
                       x
                     </button>
                     <div className="info-myinfo-contents">{contents.date}</div>
-                    <div className="info-myinfo-contents">{contents.name}</div>
-                    <div className="info-myinfo-contents">{contents.org}</div>
+                    <div className="info-myinfo-contents">{contents.title}</div>
+                    <div className="info-myinfo-contents">
+                      {contents.organization}
+                    </div>
                     <div className="info-myinfo-contents">{contents.grade}</div>
-                    <div className="info-myinfo-contents">{contents.info}</div>
+                    <div className="info-myinfo-contents">
+                      {contents.description}
+                    </div>
                   </div>
                 ))}
             </div>
@@ -668,6 +675,7 @@ function Profile() {
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
+              {console.log(LanguageSkills)}
               {LanguageSkills &&
                 LanguageSkills.map((contents, index) => (
                   <div className="infoCard" key={index}>
