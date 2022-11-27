@@ -69,7 +69,13 @@ function MainPage() {
     try {
       const response = await axios.get(
         // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`,
+        {
+          headers: {
+            Authorization: Token,
+            // Authorization: `JWT ${Token}`,
+          },
+        }
       );
       console.log(response);
       setCompanyList(response.data.list);
@@ -85,44 +91,8 @@ function MainPage() {
 
   useEffect(() => {
     // 메인페이지가 처음 랜더링 될 때 정보들을
-    set();
+    first();
   }, []);
-
-  const set = async () => {
-    await first();
-    if (CompanyList.length === 0) {
-      onOpen();
-    }
-  };
-
-  const FolUpdate = async () => {
-    // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
-    setLoading(true);
-    const response = await axios.get(
-      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`
-    );
-    setCompanyList(response.data.list);
-    setLoading(false);
-  };
-
-  const companyHandler = (event) => {
-    // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
-    setCompany(event.currentTarget.value);
-  };
-
-  const companyclickHandler = async () => {
-    const body = {
-      Authorization: Token,
-      user_id: Token,
-      title: Company,
-    };
-
-    axios.post(
-      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
-      body
-    );
-    FolUpdate();
-  };
 
   const toggleListFunction = () => {
     setListToggle(!ListToggle);
@@ -146,8 +116,9 @@ function MainPage() {
             flexDirection: "column",
             alignItems: "center",
             overflow: "scroll",
-            minWidth: "80px",
-          }}>
+            minWidth: "100px",
+          }}
+          sx={{ "::-webkit-scrollbar": { display: "none" } }}>
           <Folder
           // 이곳은 폴더들의 내용이 담겨있음
           />
@@ -157,7 +128,7 @@ function MainPage() {
             sx={{ "::-webkit-scrollbar": { display: "none" } }}
             colSpan={ListToggle ? 3 : 0}
             style={{
-              height: "10px",
+              // height: "10px",
               backgroundColor: "#303136",
               height: "100%",
               overflow: "scroll",
@@ -203,6 +174,7 @@ function MainPage() {
             <div
               style={{
                 width: "1.5%",
+                height: "40%",
                 display: "flex",
                 flexDirection: "column",
               }}>
@@ -225,17 +197,17 @@ function MainPage() {
             {Grammer ? (
               <div // 맞춤법 검사 칸의 제일 큰 흰색 네모
                 style={{
-                  // marginLeft: "0.5%",
                   marginLeft: "0.5%",
                   borderRadius: "10px",
                   backgroundColor: "white",
-                  marginTop: "30px",
+                  marginTop: "8%",
                   width: "30%",
-                  height: "90%",
+                  height: "580px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   overflow: "scroll",
+
                   marginRight: "1%",
                 }}>
                 <div // 네모의 제일 상위 제목
@@ -249,12 +221,10 @@ function MainPage() {
                   }}>
                   맞춤법 검사
                 </div>
+
                 <GrammerForm />
+
                 {/* 맞춤법 검사 내용들(나중에는 map으로 해야할 거 같음..?!) */}
-                <GrammerForm />
-                <GrammerForm />
-                <GrammerForm />
-                <GrammerForm />
               </div>
             ) : (
               <div></div>
@@ -266,9 +236,9 @@ function MainPage() {
                   marginLeft: "0.5%",
                   borderRadius: "10px",
                   backgroundColor: "white",
-                  marginTop: "30px",
+                  marginTop: "8%",
                   width: "30%",
-                  height: "90%",
+                  height: "580px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -282,41 +252,6 @@ function MainPage() {
           </div>
         </GridItem>
       </Grid>
-
-      <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader style={{ marginTop: "10px" }}>
-            이름을 정해주세요
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <FormControl>
-              <FormLabel>회사 이름</FormLabel>
-              <Input
-                ref={initialRef}
-                placeholder="Company"
-                value={Company}
-                onChange={companyHandler}
-                focusBorderColor="gray.300"
-              />
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() => {
-                companyclickHandler();
-                onClose();
-              }}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </div>
   );
 }

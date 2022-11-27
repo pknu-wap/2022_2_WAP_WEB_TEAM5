@@ -8,7 +8,7 @@ import {
   MenuItem,
   Spinner,
 } from "@chakra-ui/react";
-import { DragHandleIcon } from "@chakra-ui/icons";
+import { HamburgerIcon } from "@chakra-ui/icons";
 // import axios from "axios";
 
 function NavBar(props) {
@@ -33,7 +33,7 @@ function NavBar(props) {
   const logoutHandler = () => {
     // 로그아웃을 눌렀을 때 실행되는 코드
     alert("로그아웃 되셨습니다.");
-    navigate("/")
+    navigate("/");
   };
 
   useEffect(() => {
@@ -89,7 +89,7 @@ function NavBar(props) {
           <Menu>
             {/* 로그아웃 버튼을 클릭했을 때 메뉴 창이 열리는데, 그 메뉴창 */}
             <MenuButton>
-              <DragHandleIcon
+              <HamburgerIcon
                 style={{ width: "40px", height: "40px", marginRight: "9px" }}
               />
             </MenuButton>

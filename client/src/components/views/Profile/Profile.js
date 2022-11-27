@@ -21,11 +21,17 @@ import {
 } from "@chakra-ui/react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 
-import { folderClickIdState, MemoState, TokenState } from "../MainPage/Atom";
+import {
+  folderClickIdState,
+  MemoState,
+  TokenState,
+  UserIdState,
+} from "../MainPage/Atom";
 import Myinfo from "./Myinfo";
 import axios from "axios";
 
 function Profile() {
+  const [userId, setuserId] = useRecoilState(UserIdState);
   const {
     isOpen: isOpen1,
     onOpen: onOpen1,
@@ -147,10 +153,17 @@ function Profile() {
   const first = async () => {
     try {
       const response = await axios.get(
-        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile?userId=1"
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile?userId=${userId}`,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
+      console.log(response);
       setLicense(response.data.licenses);
       setAwards(response.data.awards);
+      console.log(Awards);
       setLanguageSkills(response.data.languageSkills);
       setEducations(response.data.educations);
     } catch (e) {
@@ -210,10 +223,16 @@ function Profile() {
       description: Memo,
       user_id: 1,
     };
+
     try {
       await axios.post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/memos",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
     } catch (e) {
       console.log(e);
@@ -264,7 +283,12 @@ function Profile() {
     try {
       await axios.post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/educations",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
     } catch (e) {
       console.log(e);
@@ -296,13 +320,20 @@ function Profile() {
       date: Date,
       title: Name,
       description: Info,
-      user_id: 1,
+      user_id: userId,
     };
+    // 2022-02-02
+    console.log(body);
 
     try {
       await axios.post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/licenses",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
     } catch (e) {
       console.log(e);
@@ -334,16 +365,22 @@ function Profile() {
       // 서버에서 요청하는 정보 이름으로 변환
       date: Date2,
       title: Name2,
-      // organization: Org,
+      organization: Org,
       grade: Grade,
       description: Info2,
       user_id: 1,
     };
+    console.log(body);
 
     try {
       await axios.post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/awards",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
     } catch (e) {
       console.log(e);
@@ -374,7 +411,12 @@ function Profile() {
     try {
       await axios.post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/language-skills",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
     } catch (e) {
       console.log(e);

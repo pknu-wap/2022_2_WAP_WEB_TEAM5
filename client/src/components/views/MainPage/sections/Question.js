@@ -16,7 +16,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import QuestionList from "./QuestionList";
-import { CoverState, CompanyListState, folderClickIdState, TokenState } from "../Atom";
+import {
+  CoverState,
+  CompanyListState,
+  folderClickIdState,
+  TokenState,
+} from "../Atom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from "axios";
 
@@ -28,7 +33,7 @@ function Question({ Cov, setCov }) {
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   const [folderClickId, setFolderClickId] = useRecoilState(folderClickIdState);
   const [placeholderProps, setPlaceholderProps] = useState({});
-  const [Token, setToken] = useRecoilState(TokenState)
+  const [Token, setToken] = useRecoilState(TokenState);
   const queryAttr = "data-rbd-drag-handle-draggable-id";
 
   const ContentHandler = (event) => {
@@ -84,10 +89,9 @@ function Question({ Cov, setCov }) {
       setCov(cov[0].title);
     }
   }, [folderClickId]);
-
   const fileUpdate = async () => {
     const response = await axios.get(
-          `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
+      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
       // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
     );
     setCompanyList(response.data.list);
@@ -185,8 +189,8 @@ function Question({ Cov, setCov }) {
       // 제일 첫 인덱스로 이동을 하려고 할 때,
       prev = null;
       next = result[endIndex].id;
-      console.log(result[endIndex])
-      console.log(next)
+      console.log(result[endIndex]);
+      console.log(next);
     } else if (endIndex === result.length - 1) {
       // 제일 마지막 인덱스로 이동하려고 할 때
       prev = result[endIndex].id;
@@ -242,7 +246,7 @@ function Question({ Cov, setCov }) {
       fileUpdate();
     } catch (e) {
       // console.log(e);
-      alert("자기 자리로 이동할 수 없습니다.")
+      alert("자기 자리로 이동할 수 없습니다.");
     }
   };
 
