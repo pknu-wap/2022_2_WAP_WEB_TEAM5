@@ -148,7 +148,6 @@ function Folder() {
     const cov = CompanyList.filter((company) => company.list_id === id);
     // CompanyList에 담겨져있는 폴더들을 살피면서 클릭한 id와 같은 것을 추출해냄
     setCover(cov[0].cover_letter);
-    console.log("폴더 클릭할 때마다 실행");
     setfolderClickId(id);
     // 폴더를 클릭했을 때 id를 mainPage로 보내줌
   };
@@ -290,7 +289,12 @@ function Folder() {
     try {
       await axios.put(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists/position",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
       await FolUpdate();
     } catch (e) {
