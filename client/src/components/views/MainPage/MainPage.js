@@ -16,6 +16,7 @@ import {
   Input,
   Button,
 } from "@chakra-ui/react";
+import { RepeatIcon } from "@chakra-ui/icons";
 import GrammerForm from "./sections/GrammerForm";
 import NavBar from "../NavBar/NavBar";
 
@@ -38,6 +39,7 @@ import {
   MemoState,
   TokenState,
   UserIdState,
+  fileClickIdState,
 } from "./Atom";
 import { useRecoilState } from "recoil";
 
@@ -54,6 +56,7 @@ function MainPage() {
 
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   // 폴더의 list가 저장됨
+  const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
 
   const [Loading, setLoading] = useState(false);
   // Loading 여부 판단
@@ -62,6 +65,8 @@ function MainPage() {
   const [Cover, setCover] = useRecoilState(CoverState);
   const [Token, setToken] = useRecoilState(TokenState);
   const [userId, setuserId] = useRecoilState(UserIdState);
+
+  const [GrammerText, setGrammerText] = useState([]);
 
   const first = async () => {
     setLoading(true);
@@ -97,6 +102,23 @@ function MainPage() {
   const toggleListFunction = () => {
     setListToggle(!ListToggle);
   };
+  const GrammerReHandler = async () => {
+    try {
+      const response = await axios.get(
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/spell-check?id=${fileClickId}`,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
+      );
+      console.log(response);
+      setGrammerText(response.data.errInfo);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  console.log(GrammerText);
 
   return (
     <div>
@@ -128,7 +150,7 @@ function MainPage() {
             sx={{ "::-webkit-scrollbar": { display: "none" } }}
             colSpan={ListToggle ? 3 : 0}
             style={{
-              // height: "10px",
+              height: "10px",
               backgroundColor: "#303136",
               height: "100%",
               overflow: "scroll",
@@ -207,7 +229,6 @@ function MainPage() {
                   flexDirection: "column",
                   alignItems: "center",
                   overflow: "scroll",
-
                   marginRight: "1%",
                 }}>
                 <div // 네모의 제일 상위 제목
@@ -217,12 +238,30 @@ function MainPage() {
                     marginTop: "10px",
                     fontSize: "20px",
                     color: "black",
+                    alignItems: "center",
                     marginBottom: "5px",
+                    display: "flex",
                   }}>
                   맞춤법 검사
                 </div>
+                <div>
+                  <Button
+                    w={4}
+                    h={4}
+                    style={{ float: "right" }}
+                    onClick={GrammerReHandler}>
+                    <RepeatIcon />
+                  </Button>
+                </div>
 
-                <GrammerForm />
+                <GrammerForm
+                  GrammerText={GrammerText}
+                  style={{
+                    backgroundColor: "black",
+                    width: "100px",
+                    height: "100px",
+                  }}
+                />
 
                 {/* 맞춤법 검사 내용들(나중에는 map으로 해야할 거 같음..?!) */}
               </div>

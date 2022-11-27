@@ -63,7 +63,12 @@ function Question({ Cov, setCov }) {
         try {
           await axios.post(
             "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-            body
+            body,
+            {
+              headers: {
+                Authorization: Token,
+              },
+            }
           );
           await fileUpdate();
         } catch (e) {
@@ -91,8 +96,14 @@ function Question({ Cov, setCov }) {
   }, [folderClickId]);
   const fileUpdate = async () => {
     const response = await axios.get(
-      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
+      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`,
       // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      {
+        headers: {
+          Authorization: Token,
+          // Authorization: `JWT ${Token}`,
+        },
+      }
     );
     setCompanyList(response.data.list);
     const fileList = await response.data.list.filter(
@@ -241,7 +252,12 @@ function Question({ Cov, setCov }) {
     try {
       await axios.put(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters/position",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
       fileUpdate();
     } catch (e) {

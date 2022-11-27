@@ -3,7 +3,13 @@ import { useRecoilState } from "recoil";
 import { DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { Box } from "@chakra-ui/react";
 import axios from "axios";
-import { fileClickIdState, CoverState, folderClickIdState } from "../Atom";
+import {
+  fileClickIdState,
+  CoverState,
+  folderClickIdState,
+  TokenState,
+  UserIdState,
+} from "../Atom";
 
 function QuestionList({ content, fileUpdate }) {
   const [Edit, setEdit] = useState(false);
@@ -11,6 +17,8 @@ function QuestionList({ content, fileUpdate }) {
   const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
   const [Cover, setCover] = useRecoilState(CoverState);
   const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
+  const [Token, setToken] = useRecoilState(TokenState);
+  const [userId, setuserId] = useRecoilState(UserIdState);
 
   useEffect(() => {
     setEdit(false);
@@ -26,7 +34,12 @@ function QuestionList({ content, fileUpdate }) {
       try {
         await axios.delete(
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-          { params: body }
+          {
+            params: body,
+            headers: {
+              Authorization: Token,
+            },
+          }
         );
         await fileUpdate();
       } catch (e) {
@@ -61,7 +74,12 @@ function QuestionList({ content, fileUpdate }) {
     try {
       await axios.put(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
       await fileUpdate();
     } catch (e) {

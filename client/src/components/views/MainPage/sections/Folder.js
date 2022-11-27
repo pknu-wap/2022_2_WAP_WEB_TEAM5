@@ -23,6 +23,7 @@ import {
   CoverState,
   CompanyListState,
   TokenState,
+  UserIdState,
 } from "../Atom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -39,6 +40,7 @@ function Folder() {
   const [Prev, setPrev] = useState("");
   const [Next, setNext] = useState("");
   const [Token, setToken] = useRecoilState(TokenState);
+  const [userId, setuserId] = useRecoilState(UserIdState);
 
   const companyHandler = (event) => {
     // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
@@ -70,15 +72,15 @@ function Folder() {
           title: Company,
         };
 
-        const header = {
-          Authorization: Token,
-        };
-
         try {
           await axios.post(
             "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
             body,
-            header
+            {
+              headers: {
+                Authorization: Token,
+              },
+            }
           );
           // 서버에게 요청하고,
           await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
@@ -107,7 +109,12 @@ function Folder() {
       try {
         await axios.delete(
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
-          { params: body }
+          {
+            params: body,
+            headers: {
+              Authorization: Token,
+            },
+          }
         );
         await FolUpdate();
       } catch (e) {
@@ -119,12 +126,16 @@ function Folder() {
   const FolUpdate = async () => {
     // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
     setLoading(true);
-    const response = await axios.get(
-      // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
-    );
-    setCompanyList(response.data.list);
-    setLoading(false);
+    try {
+      const response = await axios.get(
+        // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`
+      );
+      setCompanyList(response.data.list);
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const circleClick = (id) => {

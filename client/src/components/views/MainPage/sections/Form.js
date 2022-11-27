@@ -5,11 +5,12 @@ import Count from "./Count";
 import { LockIcon, UnlockIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import {
+  TokenState,
+  UserIdState,
   CoverState,
   fileClickIdState,
   folderClickIdState,
   CompanyListState,
-  TokenState,
 } from "../Atom";
 
 function Form(props) {
@@ -25,6 +26,8 @@ function Form(props) {
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   const [change, setchange] = useState(false);
   const [Token, setToken] = useRecoilState(TokenState);
+  const [userId, setuserId] = useRecoilState(UserIdState);
+
   useEffect(() => {
     // 제일 첫 화면에서 회사 목록이 불러진 후 실행
     if (
@@ -145,7 +148,12 @@ function Form(props) {
     try {
       await axios.put(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
       await FormUpdate();
     } catch (e) {
@@ -181,7 +189,12 @@ function Form(props) {
     try {
       await axios.put(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
-        body
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
       );
       await FormUpdate();
     } catch (e) {
@@ -195,8 +208,13 @@ function Form(props) {
   const FormUpdate = async () => {
     // console.log(Cover);
     const response = await axios.get(
-      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`
-      // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1",
+      {
+        headers: {
+          Authorization: Token,
+          // Authorization: `JWT ${Token}`,
+        },
+      }
     );
     setCompanyList(response.data.list);
     const fileList = await response.data.list.filter(
