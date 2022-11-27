@@ -166,6 +166,7 @@ function Profile() {
       console.log(response.data.language_skills);
       setLanguageSkills(response.data.language_skills);
       setEducations(response.data.educations);
+      setMemo(response.data.memo);
     } catch (e) {
       console.log(e);
     }
@@ -216,16 +217,21 @@ function Profile() {
   // user token
   let [Token, setToken] = useRecoilState(TokenState);
 
-  const updateMemo = async () => {
+  const updateMemo = () => {
     setMemo(Memo);
 
+    update();
+  };
+
+  const update = async () => {
+    console.log(Memo);
     const body = {
       description: Memo,
-      user_id: 1,
+      id: 1,
     };
 
     try {
-      await axios.post(
+      await axios.put(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/memos",
         body,
         {
@@ -675,7 +681,6 @@ function Profile() {
           {/* info-myinfo */}
           <div className="info-myinfo">
             <div className="info-contents">
-              {console.log(LanguageSkills)}
               {LanguageSkills &&
                 LanguageSkills.map((contents, index) => (
                   <div className="infoCard" key={index}>
@@ -928,7 +933,6 @@ function Profile() {
             colorScheme="gray"
             onClick={() => {
               updateMemo();
-              console.log([Memo]);
             }}
             style={{
               marginTop: "10px",
