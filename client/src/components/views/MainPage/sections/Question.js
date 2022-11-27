@@ -20,6 +20,7 @@ import {
   CoverState,
   CompanyListState,
   folderClickIdState,
+  UserIdState,
   TokenState,
 } from "../Atom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -34,6 +35,7 @@ function Question({ Cov, setCov }) {
   const [folderClickId, setFolderClickId] = useRecoilState(folderClickIdState);
   const [placeholderProps, setPlaceholderProps] = useState({});
   const [Token, setToken] = useRecoilState(TokenState);
+  const [userId, setuserId] = useRecoilState(UserIdState);
   const queryAttr = "data-rbd-drag-handle-draggable-id";
 
   const ContentHandler = (event) => {
@@ -95,27 +97,31 @@ function Question({ Cov, setCov }) {
     }
   }, [folderClickId]);
   const fileUpdate = async () => {
-    const response = await axios.get(
-      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${Token}`,
-      // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-      {
-        headers: {
-          Authorization: Token,
-          // Authorization: `JWT ${Token}`,
-        },
+    try {
+      const response = await axios.get(
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`,
+        // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+        {
+          headers: {
+            Authorization: Token,
+            // Authorization: `JWT ${Token}`,
+          },
+        }
+      );
+      setCompanyList(response.data.list);
+      const fileList = await response.data.list.filter(
+        (company) =>
+          company.list_id ===
+          (folderClickId === 0 ? CompanyList[0].list_id : folderClickId)
+        // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
+      );
+      // 폴더의 list를 돌려서 folderClickId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
+      if (fileList[0]) {
+        setCover(fileList[0].cover_letter);
+        setCov(fileList[0].title);
       }
-    );
-    setCompanyList(response.data.list);
-    const fileList = await response.data.list.filter(
-      (company) =>
-        company.list_id ===
-        (folderClickId === 0 ? CompanyList[0].list_id : folderClickId)
-      // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
-    );
-    // 폴더의 list를 돌려서 folderClickId와 똑같은 id에 해당하는 파일의 정보를 fileList에 담는다.
-    if (fileList[0]) {
-      setCover(fileList[0].cover_letter);
-      setCov(fileList[0].title);
+    } catch (e) {
+      console.log(e);
     }
   };
 

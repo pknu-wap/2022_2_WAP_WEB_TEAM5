@@ -129,7 +129,13 @@ function Folder() {
     try {
       const response = await axios.get(
         // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
-        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`,
+        {
+          headers: {
+            Authorization: Token,
+            // Authorization: `JWT ${Token}`,
+          },
+        }
       );
       setCompanyList(response.data.list);
       setLoading(false);
