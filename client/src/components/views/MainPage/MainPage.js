@@ -103,7 +103,9 @@ function MainPage() {
   const GrammerReHandler = async () => {
     try {
       const response = await axios.get(
-        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/spell-check?id=${fileClickId}`,
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/spell-check?id=${
+          fileClickId === 0 ? Cover[0].id : fileClickId
+        }`,
         {
           headers: {
             Authorization: Token,
@@ -178,7 +180,6 @@ function MainPage() {
           style={{
             backgroundColor: "#d9d9d9",
             height: "100%",
-            minWidth: "800px",
           }}>
           <div style={{ display: "flex", height: "100%" }}>
             {/* 제목, 내용 입력 칸이랑 맞춤법 검사 태그를 묶는 태그 */}
