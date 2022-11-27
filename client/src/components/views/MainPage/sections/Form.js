@@ -38,7 +38,6 @@ function Form(props) {
     ) {
       // 회사 목록이 존재하면서 파일 클릭이 되어있지 않고 폴더 클릭이 되어 있지 않을 때
       if (fileClickId === 0) {
-        // 폴더 클릭은 되어있고, 파일 클릭이 되지 않은 상태
         setchange(true);
         setTitle(CompanyList[0].cover_letter[0].question);
         setText(CompanyList[0].cover_letter[0].description);
@@ -133,14 +132,16 @@ function Form(props) {
     if (questionLock === false) {
       console.log("questionLock이 false-> true면 실행");
       body = {
-        id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
+        // id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
+        id: fileClickId === 0 ? Cover[0].id : fileClickId,
+        // CompanyList[0]이니까 0번 폴더에 저장이 되지.
         question: Title,
         question_lock: !questionLock,
       };
     } else if (questionLock === true) {
       console.log("questionLock이 true-> false면 실행");
       body = {
-        id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
+        id: fileClickId === 0 ? Cover[0].id : fileClickId,
         question_lock: !questionLock,
       };
     }
@@ -173,7 +174,7 @@ function Form(props) {
       console.log("descriptionLock false-> true면 실행");
 
       body = {
-        id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
+        id: fileClickId === 0 ? Cover[0].id : fileClickId,
         description: Text,
         description_lock: !descriptionLock,
       };
@@ -181,7 +182,7 @@ function Form(props) {
       console.log("descriptionLock true-> false면 실행");
 
       body = {
-        id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
+        id: fileClickId === 0 ? Cover[0].id : fileClickId,
         description_lock: !descriptionLock,
       };
     }

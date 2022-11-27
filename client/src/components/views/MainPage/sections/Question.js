@@ -96,6 +96,7 @@ function Question({ Cov, setCov }) {
       setCov(cov[0].title);
     }
   }, [folderClickId]);
+
   const fileUpdate = async () => {
     try {
       const response = await axios.get(
