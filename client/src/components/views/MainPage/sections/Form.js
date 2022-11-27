@@ -357,6 +357,7 @@ function Form(props) {
                 outline: "0",
               }}
               placeholder="내용을 입력해주세요"
+              readOnly={descriptionLock ? true : false}
               value={Text || ""}
               onChange={textHandler}></textarea>
             <Button // 내용 버튼

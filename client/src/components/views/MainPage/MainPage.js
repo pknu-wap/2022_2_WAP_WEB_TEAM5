@@ -70,7 +70,6 @@ function MainPage() {
 
   const first = async () => {
     setLoading(true);
-    console.log(Token);
     try {
       const response = await axios.get(
         // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
@@ -84,7 +83,6 @@ function MainPage() {
       );
       console.log(response);
       setCompanyList(response.data.list);
-      console.log(CompanyList);
 
       setCover(response.data.list[0].cover_letter);
       setLoading(false);
@@ -118,7 +116,6 @@ function MainPage() {
       console.log(e);
     }
   };
-  console.log(GrammerText);
 
   return (
     <div>
