@@ -58,7 +58,7 @@ public class ProfileApi {
     @Operation(summary = "수상실적 추가", description = "수상 실적 추가합니다.")
     public ResponseEntity<?> postProfileAward(@Valid @RequestBody CreateAwardRequest createAwardRequest) {
         try {
-            requestTokenValidation.verifyAward(createAwardRequest.getUserId());
+            requestTokenValidation.verify(createAwardRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -66,7 +66,8 @@ public class ProfileApi {
                 createAwardRequest.getDate(),
                 createAwardRequest.getOrganization(),
                 createAwardRequest.getGrade(),
-                createAwardRequest.getUserId());
+                createAwardRequest.getUserId(),
+                createAwardRequest.getDescription());
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -75,7 +76,7 @@ public class ProfileApi {
     @Operation(summary = "학력 추가", description = "학력 추가합니다.")
     public ResponseEntity<?> postProfileEducation(@Valid @RequestBody CreateEducationRequest createEducationRequest) {
         try {
-            requestTokenValidation.verifyEducation(createEducationRequest.getUserId());
+            requestTokenValidation.verify(createEducationRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -98,7 +99,7 @@ public class ProfileApi {
     @Operation(summary = "어학 성적 추가", description = "어학 성적 추가합니다.")
     public ResponseEntity<?> postProfileLanguageSkill(@Valid @RequestBody CreateLanguageSkillRequest createLanguageSkillRequest) {
         try {
-            requestTokenValidation.verifyLanguageSkill(createLanguageSkillRequest.getUserId());
+            requestTokenValidation.verify(createLanguageSkillRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -113,7 +114,7 @@ public class ProfileApi {
     @Operation(summary = "자격증 추가", description = "자격증 추가합니다.")
     public ResponseEntity<?> postProfileLicense(@Valid @RequestBody CreateLicenseRequest createLicenseRequest) {
         try {
-            requestTokenValidation.verifyLicense(createLicenseRequest.getUserId());
+            requestTokenValidation.verify(createLicenseRequest.getUserId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
