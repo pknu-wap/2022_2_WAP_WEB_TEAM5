@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "awards")
+@Table(name = "language_skills")
 public class LanguageSkillEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
