@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdatePositionListRequest {
-    @NotNull
+    @NotNull(message = "리스트 번호가 null 이어서는 안됩니다.")
     @JsonProperty("list_id")
     private Integer listId;
 

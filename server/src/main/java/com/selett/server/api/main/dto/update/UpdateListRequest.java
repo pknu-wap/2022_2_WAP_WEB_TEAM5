@@ -12,10 +12,10 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateListRequest {
-    @NotNull
+    @NotNull(message = "자기소개서 번호가 null 이어서는 안됩니다.")
     @JsonProperty("list_id")
     private Integer listId;
 
-    @Size(max = 200)
+    @Size(max = 200, message = "제목은 200자까지 가능합니다.")
     private String title;
 }

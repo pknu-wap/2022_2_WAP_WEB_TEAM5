@@ -12,9 +12,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateMemoRequest {
-    @Size(max = 5000)
+    @Size(max = 5000, message = "내용은 5000자까지 가능합니다.")
     private String description;
-    @NotNull
+    @NotNull(message = "유저 아이디가 null 이어서는 안됩니다.")
     @JsonProperty("user_id")
     private Integer userId;
 }

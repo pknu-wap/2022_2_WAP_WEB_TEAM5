@@ -12,10 +12,10 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateCoverLetterRequest {
-    @NotNull
+    @NotNull(message = "리스트 번호가 null 이어서는 안됩니다.")
     @JsonProperty("list_id")
     private Integer listId;
 
-    @Size(max = 200)
+    @Size(max = 200, message = "제목은 200자까지 가능합니다.")
     private String title;
 }

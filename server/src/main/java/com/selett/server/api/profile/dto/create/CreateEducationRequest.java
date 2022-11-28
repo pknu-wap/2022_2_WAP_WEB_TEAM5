@@ -14,24 +14,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateEducationRequest {
-    @NotNull
-    @Size(min = 1, max = 50)
+    @NotNull(message = "학교명이 null 이어서는 안됩니다.")
+    @Size(min = 1, max = 50, message = "학교명은 50자까지 가능합니다.")
     private String name;
-    @NotNull
-    @Size(min = 1, max = 50)
+    @NotNull(message = "전공은 null 이어서는 안됩니다.")
+    @Size(min = 1, max = 50, message = "전공은 50자까지 가능합니다.")
     private String major;
-    @NotNull
-    @Size(min = 1, max = 20)
+    @NotNull(message = "학위가 null 이어서는 안됩니다.")
+    @Size(min = 1, max = 20, message = "학위는 20자까지 가능합니다.")
     private String degree;
-    @NotNull
+    @NotNull(message = "입학일이 null 이어서는 안됩니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("admission_date")
     private LocalDate admissionDate;
-    @NotNull
+    @NotNull(message = "졸업일이 null 이어서는 안됩니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("graduation_date")
     private LocalDate graduationDate;
-
     @JsonProperty("major_grade")
     private Float majorGrade;
     @JsonProperty("major_course")
@@ -40,7 +39,7 @@ public class CreateEducationRequest {
     @JsonProperty("max_grade")
     private Float maxGrade;
     private Integer course;
-    @NotNull
+    @NotNull(message = "유저 아이디가 null 이어서는 안됩니다.")
     @JsonProperty("user_id")
     private Integer userId;
 }

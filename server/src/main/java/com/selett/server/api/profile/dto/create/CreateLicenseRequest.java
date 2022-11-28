@@ -15,15 +15,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 
 public class CreateLicenseRequest {
-    @NotNull
-    @Size(min = 1, max = 200)
+    @NotNull(message = "제목이 null 이어서는 안됩니다.")
+    @Size(min = 1, max = 200, message = "제목은 200자까지 가능합니다.")
     private String title;
-    @NotNull
+    @NotNull(message = "날짜가 null 이어서는 안됩니다.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
-    @Size(max = 5000)
+    @Size(max = 5000, message = "설명은 5000자까지 가능합니다.")
     private String description;
-    @NotNull
+    @NotNull(message = "유저 아이디가 null 이어서는 안됩니다.")
     @JsonProperty("user_id")
     private Integer userId;
 }

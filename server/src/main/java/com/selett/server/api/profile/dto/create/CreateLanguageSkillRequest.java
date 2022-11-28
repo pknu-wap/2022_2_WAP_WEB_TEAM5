@@ -13,13 +13,13 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 
 public class CreateLanguageSkillRequest {
-    @NotNull
-    @Size(min = 1, max = 200)
+    @NotNull(message = "제목이 null 이어서는 안됩니다.")
+    @Size(min = 1, max = 200, message = "제목은 200자까지 가능합니다.")
     private String title;
-    @NotNull
-    @Size(min = 1, max = 20)
+    @NotNull(message = "등급이 null 이어서는 안됩니다.")
+    @Size(min = 1, max = 20, message = "등급은 20자까지 가능합니다.")
     private String grade;
-    @NotNull
+    @NotNull(message = "유저 아이디가 null 이어서는 안됩니다.")
     @JsonProperty("user_id")
     private Integer userId;
 }

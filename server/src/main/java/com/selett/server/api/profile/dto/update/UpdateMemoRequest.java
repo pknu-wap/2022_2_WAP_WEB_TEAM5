@@ -12,8 +12,8 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 
 public class UpdateMemoRequest {
-    @NotNull
+    @NotNull(message = "갱신할 번호가 null 이어서는 안됩니다.")
     private Integer id;
-    @Size(max = 5000)
+    @Size(max = 5000, message = "내용은 5000자까지 가능합니다.")
     private String description;
 }
