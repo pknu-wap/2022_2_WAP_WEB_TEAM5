@@ -70,13 +70,12 @@ public class ProfileService {
         });
 
         //Memo
-        memoRepository.findById(userId).ifPresent(memo -> {
-            Memo memoInput = new Memo();
-            memoInput.setId(memo.getId());
-            memoInput.setDescription(memo.getDescription());
+        MemoEntity memo = memoRepository.findByUserId(userId);
+        Memo memoInput = new Memo();
+        memoInput.setId(memo.getId());
+        memoInput.setDescription(memo.getDescription());
 
-            myPageResponse.setMemo(memoInput);
-        });
+        myPageResponse.setMemo(memoInput);
 
         //LanguageSkill
         List<LanguageSkill> languageSkillResponse = new ArrayList<>();
@@ -98,12 +97,13 @@ public class ProfileService {
     }
 
     //Award
-    public void postProfileAward(String title, LocalDate date, String organization, String grade, Integer userId) {
+    public void postProfileAward(String title, LocalDate date, String organization, String grade, Integer userId, String description) {
         AwardEntity awardEntity = new AwardEntity();
         awardEntity.setTitle(title);
         awardEntity.setDate(date);
         awardEntity.setOrganization(organization);
         awardEntity.setGrade(grade);
+        awardEntity.setDescription(description);
         awardEntity.setUserId(userId);
 
         awardRepository.save(awardEntity);
@@ -179,8 +179,8 @@ public class ProfileService {
         languageSkillRepository.flush();
     }
     public void deleteProfileLicense(Integer id) {
-        languageSkillRepository.deleteById(id);
-        languageSkillRepository.flush();
+        licenseRepository.deleteById(id);
+        licenseRepository.flush();
     }
 
     public void updateProfileAward(UpdateAwardRequest updateAwardRequest) {
@@ -279,8 +279,8 @@ public class ProfileService {
 
     public void updateProfileMemo(UpdateMemoRequest updateMemoRequest) {
         memoRepository.findById(updateMemoRequest.getId()).ifPresent(memo -> {
-            if(memo.getDescription() != null) {
-                memo.setDescription(memo.getDescription());
+            if(updateMemoRequest.getDescription() != null) {
+                memo.setDescription(updateMemoRequest.getDescription());
             }
 
             memoRepository.save(memo);
