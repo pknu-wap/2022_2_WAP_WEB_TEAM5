@@ -3,7 +3,13 @@ import { useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
 import sellet from "../LandingPage/SELLET.JPG";
 import sellet2 from "../LandingPage/sellet2.JPG";
-import { InputGroup, Input, InputRightElement, Button } from "@chakra-ui/react";
+import {
+  InputGroup,
+  Input,
+  InputRightElement,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
 import axios from "axios";
 
 function RegisterPage() {
@@ -17,6 +23,7 @@ function RegisterPage() {
   const [Email, setEmail] = useState("");
   const handleClick = () => setShow(!Show);
   const handleClick_c = () => setShow_c(!Show_c);
+  const toast = useToast();
 
   const IdHandler = (event) => {
     setId(event.currentTarget.value);
@@ -42,7 +49,7 @@ function RegisterPage() {
     navigate("/");
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     const body = {
       identification: Id,
       password: Password,
@@ -67,13 +74,21 @@ function RegisterPage() {
     //   });
 
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/register",
         body
       );
       navigate("/");
-    } catch(e) {
-      console.log(e)
+    } catch (e) {
+      toast({
+        //회원가입 중복 우측하단 toast
+        position: "bottom-right",
+        title: "회원가입 실패",
+        description: e.response.data,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -85,8 +100,7 @@ function RegisterPage() {
           height: "100vh",
           backgroundColor: "black",
           display: "flex",
-        }}
-      >
+        }}>
         <Carousel
           fade
           style={{
@@ -96,8 +110,7 @@ function RegisterPage() {
             alignItems: "center",
             marginTop: "8%",
             // marginLeft: "7%",
-          }}
-        >
+          }}>
           <Carousel.Item>
             <img className="d-block w-100" src={sellet} alt="First slide" />
           </Carousel.Item>
@@ -112,23 +125,20 @@ function RegisterPage() {
           height: "100vh",
           width: "25%",
           marginTop: "9%",
-        }}
-      >
+        }}>
         <div
           style={{
             width: "88%",
             marginLeft: "6%",
             // backgroundColor: "gray",
             height: "45%",
-          }}
-        >
+          }}>
           <div
             style={{
               fontSize: "40px",
               fontWeight: "bold",
               textAlign: "center",
-            }}
-          >
+            }}>
             SELETT
           </div>
           <label style={{ width: "80%", marginLeft: "10%" }}>ID</label>
@@ -201,8 +211,7 @@ function RegisterPage() {
             <div>
               <InputGroup
                 size="md"
-                style={{ width: "80%", marginLeft: "10%", border: "red" }}
-              >
+                style={{ width: "80%", marginLeft: "10%", border: "red" }}>
                 <Input
                   value={PasswordCheck}
                   onChange={PasswordCheckHandler}
@@ -223,8 +232,7 @@ function RegisterPage() {
                   color: "red",
                   fontStyle: "italic",
                   fontSize: "15px",
-                }}
-              >
+                }}>
                 값이 일치하지 않습니다.
               </div>
             </div>
@@ -241,14 +249,12 @@ function RegisterPage() {
               Password === "" ||
               PasswordCheck === "" ||
               Password !== PasswordCheck
-            }
-          >
+            }>
             Register
           </Button>
           <div
             onClick={handleSignin}
-            style={{ marginTop: "10px", cursor: "pointer", marginLeft: "10%" }}
-          >
+            style={{ marginTop: "10px", cursor: "pointer", marginLeft: "10%" }}>
             login
           </div>
         </div>

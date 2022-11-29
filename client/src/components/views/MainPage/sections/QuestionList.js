@@ -127,7 +127,7 @@ function QuestionList({ content, fileUpdate }) {
         </div>
       ) : (
         <div style={{ display: "flex", width: "100%" }}>
-          <div
+          <Box
             style={{
               paddingLeft: "25px",
               height: "40px",
@@ -139,9 +139,10 @@ function QuestionList({ content, fileUpdate }) {
               border: "none",
               outline: "0",
             }}
-            onClick={() => questionClick(content.id)}>
+            onClick={() => questionClick(content.id)}
+            sx={{ "::-webkit-scrollbar": { display: "none" } }}>
             {content.title || ""}
-          </div>
+          </Box>
           <EditIcon
             style={{
               color: "white",

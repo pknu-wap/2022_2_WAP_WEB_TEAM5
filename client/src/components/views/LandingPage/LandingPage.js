@@ -48,15 +48,21 @@ function LandingPage() {
       setToken(response.data.token);
       setUserId(response.data.user_id);
       navigate("/main");
-
-      console.log(response);
+      toast({
+        position: "bottom-right",
+        title: "로그인 성공",
+        description: "로그인 되었습니다.",
+        status: "success",
+        duration: 2000,
+        isCloasabl: true,
+      });
     } catch (e) {
       toast({
         position: "bottom-right",
         title: "로그인 실패",
-        description: "아이디와 비밀번호를 확인해주세요",
+        description: e.response.data,
         status: "error",
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
       });
     }

@@ -7,6 +7,7 @@ import {
   MenuList,
   MenuItem,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 // import axios from "axios";
@@ -14,6 +15,7 @@ import { HamburgerIcon } from "@chakra-ui/icons";
 function NavBar(props) {
   const navigate = useNavigate();
   const [Main, setMain] = useState(false);
+  const toast = useToast();
 
   const handleAccount = () => {
     // 메뉴 탭에서 마이페이지를 눌렀을 때 실행
@@ -32,17 +34,16 @@ function NavBar(props) {
 
   const logoutHandler = () => {
     // 로그아웃을 눌렀을 때 실행되는 코드
-    alert("로그아웃 되셨습니다.");
+    toast({
+      position: "bottom-right",
+      title: "로그아웃 성공",
+      description: "로그아웃 되었습니다.",
+      status: "success",
+      duration: 2000,
+      isCloasabl: true,
+    });
     navigate("/");
   };
-
-  useEffect(() => {
-    if (props.loc === "main") {
-      // 메인페이지일 경우에만 오른쪽에 메뉴 탭과 로그아웃 탭을 넣음
-      // props로 loc을 받아와서 메인인지 아닌지 판별
-      setMain(true);
-    }
-  }, [props.loc]);
 
   return (
     <div
@@ -58,54 +59,50 @@ function NavBar(props) {
         style={{ width: "100px", height: "40px", cursor: "pointer" }}
         alt=""
       />
-      {!Main ? ( // 만약에 메인 페이지가 아닐 경우에는 그냥 빈 태그
-        <div></div>
-      ) : (
-        <div // 메인 페이지일 경우에는 로그아웃 버튼과 메뉴 버튼을 띄움
+      <div // 메인 페이지일 경우에는 로그아웃 버튼과 메뉴 버튼을 띄움
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}>
+        {props.Loading ? (
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.700"
+            size="xl"
+            marginRight="20px"
+          />
+        ) : null}
+        <button // 로그아웃 버튼
           style={{
-            display: "flex",
-            alignItems: "center",
-          }}>
-          {props.Loading ? (
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="blue.700"
-              size="xl"
-              marginRight="20px"
+            marginRight: "20px",
+            width: "50px",
+            // height: "40px",
+            fontWeight: "bold",
+          }}
+          onClick={logoutHandler}>
+          logout
+        </button>
+        <Menu>
+          {/* 로그아웃 버튼을 클릭했을 때 메뉴 창이 열리는데, 그 메뉴창 */}
+          <MenuButton>
+            <HamburgerIcon
+              style={{ width: "40px", height: "40px", marginRight: "9px" }}
             />
-          ) : null}
-          <button // 로그아웃 버튼
-            style={{
-              marginRight: "20px",
-              width: "50px",
-              // height: "40px",
-              fontWeight: "bold",
-            }}
-            onClick={logoutHandler}>
-            logout
-          </button>
-          <Menu>
-            {/* 로그아웃 버튼을 클릭했을 때 메뉴 창이 열리는데, 그 메뉴창 */}
-            <MenuButton>
-              <HamburgerIcon
-                style={{ width: "40px", height: "40px", marginRight: "9px" }}
-              />
-            </MenuButton>
-            <MenuList minWidth="100px" style={{ width: "120px" }}>
-              <MenuItem style={{ width: "120px" }} onClick={handleProfile}>
-                마이페이지
-                {/* 마이페이지로 이동할 수 있도록 함 */}
-              </MenuItem>
-              <MenuItem style={{ width: "120px" }} onClick={handleAccount}>
-                계정관리
-                {/* 계정관리 페이지로 이동할 수 있도록 함 */}
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </div>
-      )}
+          </MenuButton>
+          <MenuList minWidth="100px" style={{ width: "120px" }}>
+            <MenuItem style={{ width: "120px" }} onClick={handleProfile}>
+              마이페이지
+              {/* 마이페이지로 이동할 수 있도록 함 */}
+            </MenuItem>
+            <MenuItem style={{ width: "120px" }} onClick={handleAccount}>
+              계정관리
+              {/* 계정관리 페이지로 이동할 수 있도록 함 */}
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      </div>
     </div>
   );
 }

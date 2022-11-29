@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { Button } from "@chakra-ui/react";
 import Count from "./Count";
@@ -13,7 +13,7 @@ import {
   CompanyListState,
 } from "../Atom";
 
-function Form(props) {
+function Form() {
   // 맞춤법 검사가 꺼져있음
   const [Title, setTitle] = useState("");
   let [Text, setText] = useState("");
@@ -27,6 +27,27 @@ function Form(props) {
   const [change, setchange] = useState(false);
   const [Token, setToken] = useRecoilState(TokenState);
   const [userId, setuserId] = useRecoilState(UserIdState);
+  const [second, setsecond] = useState(0);
+  const [typing, setTyping] = useState(false);
+
+  const countInterval = () => {
+    if (second === 0) {
+      titlebuttonHandler();
+      textbuttonHandler();
+      console.log(second);
+
+      clearInterval(count);
+    } else {
+      setsecond(() => second - 1);
+    }
+  };
+
+  let count;
+
+  useEffect(() => {
+    count = setInterval(countInterval, 1000);
+    return () => clearInterval(count);
+  }, [second, typing]);
 
   useEffect(() => {
     // 제일 첫 화면에서 회사 목록이 불러진 후 실행
@@ -98,43 +119,73 @@ function Form(props) {
     }
   }, [fileClickId]); // 클릭한 파일의 아이디가 바뀔 때마다 실행
 
+  const useInterval = (callback, delay) => {
+    const savedCallback = useRef();
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+
+      let id = null;
+      if (delay !== null) {
+        id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+      if (delay === null) {
+        clearInterval(id);
+      }
+    }, [delay]);
+  };
+
   const titleHandler = (event) => {
+    clearInterval(count);
+    setTyping(!typing);
     setTitle(event.currentTarget.value);
-    if (Title !== 0) {
+    if (Title !== 0 && Title !== null && Title !== undefined) {
       if (Title.length > 200) {
         alert("200자 이상입니다.");
         setTitle(Title.substring(0, 200));
       }
     }
+
+    setsecond(3);
   };
 
-  useEffect(() => {
-    if (props.grammer === "yes") {
-      setGrammer(true);
-    }
-  }, [props.grammer]);
-
   const textHandler = (event) => {
+    clearInterval(count);
     setText(event.currentTarget.value);
+    setTyping(!typing);
 
     // console.log(event.currentTarget.value.length);
-    if (Text !== 0) {
+    if (Text !== 0 && Text !== null && Text !== undefined) {
       if (Text.length > 5000) {
         alert("5000자 이상입니다.");
         setText(Text.substring(0, 5000));
       }
     }
+
+    setsecond(3);
   };
 
   const titlebuttonHandler = async () => {
     // if (questionLock === false) {
+    if (!Cover || Cover.length === 0) {
+      return;
+    }
     let body = {};
+
     if (questionLock === false) {
       console.log("questionLock이 false-> true면 실행");
+      console.log(Cover);
       body = {
         // id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         id: fileClickId === 0 ? Cover[0].id : fileClickId,
         // CompanyList[0]이니까 0번 폴더에 저장이 되지.
+        description: Text,
         question: Title,
         question_lock: !questionLock,
       };
@@ -142,6 +193,7 @@ function Form(props) {
       console.log("questionLock이 true-> false면 실행");
       body = {
         id: fileClickId === 0 ? Cover[0].id : fileClickId,
+        description: Text,
         question_lock: !questionLock,
       };
     }
@@ -167,6 +219,10 @@ function Form(props) {
   };
 
   const textbuttonHandler = async () => {
+    console.log(Cover);
+    if (!Cover || Cover.length === 0) {
+      return;
+    }
     // setText(Text);
     let body = {};
 
@@ -175,6 +231,7 @@ function Form(props) {
 
       body = {
         id: fileClickId === 0 ? Cover[0].id : fileClickId,
+        question: Title,
         description: Text,
         description_lock: !descriptionLock,
       };
@@ -182,6 +239,7 @@ function Form(props) {
       console.log("descriptionLock true-> false면 실행");
 
       body = {
+        question: Title,
         id: fileClickId === 0 ? Cover[0].id : fileClickId,
         description_lock: !descriptionLock,
       };
@@ -207,9 +265,9 @@ function Form(props) {
   };
 
   const FormUpdate = async () => {
-    // console.log(Cover);
+    console.log("dk");
     const response = await axios.get(
-      "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1",
+      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`,
       {
         headers: {
           Authorization: Token,

@@ -87,7 +87,25 @@ function MainPage() {
       setCover(response.data.list[0].cover_letter);
       setLoading(false);
       setCov(response.data.list[0].title);
+
+      try {
+        const profile = await axios.get(
+          `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile?userId=${userId}`,
+          {
+            headers: {
+              Authorization: Token,
+            },
+          }
+        );
+        console.log(profile);
+        setMemo(profile.data.memo);
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
+      }
     } catch (e) {
+      setLoading(false);
+
       console.log(e);
     }
   };
@@ -101,6 +119,7 @@ function MainPage() {
     setListToggle(!ListToggle);
   };
   const GrammerReHandler = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/spell-check?id=${
@@ -114,14 +133,19 @@ function MainPage() {
       );
       console.log(response);
       setGrammerText(response.data.errInfo);
+      setLoading(false);
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
 
   return (
     <div>
-      <div>
+      <div
+        sx={{ "::-webkit-scrollbar": { display: "none" } }}
+        // style={{ overflow: "hidden" }}
+      >
         <NavBar loc="main" Loading={Loading} />
         {/* 네비게이션 바 출력 */}
       </div>
@@ -141,7 +165,9 @@ function MainPage() {
           }}
           sx={{ "::-webkit-scrollbar": { display: "none" } }}>
           <Folder
-          // 이곳은 폴더들의 내용이 담겨있음
+            Loading={Loading}
+            setLoading={setLoading}
+            // 이곳은 폴더들의 내용이 담겨있음
           />
         </GridItem>
         {ListToggle ? (
@@ -149,12 +175,17 @@ function MainPage() {
             sx={{ "::-webkit-scrollbar": { display: "none" } }}
             colSpan={ListToggle ? 3 : 0}
             style={{
-              height: "10px",
+              // height: "10px",
               backgroundColor: "#303136",
               height: "100%",
               overflow: "scroll",
             }}>
-            <Question Cov={Cov} setCov={setCov} />
+            <Question
+              Cov={Cov}
+              setCov={setCov}
+              Loading={Loading}
+              setLoading={setLoading}
+            />
             {/* <HiddenTag
               ListToggle={ListToggle}
               refreshfunction={toggleListFunction}
@@ -189,7 +220,7 @@ function MainPage() {
                 refreshfunction={toggleListFunction}
               />
             )}
-            <Form />
+            <Form Loading={Loading} setLoading={setLoading} />
             {/* 제목과 내용 입력칸 */}
             <div
               style={{
@@ -231,10 +262,10 @@ function MainPage() {
                 }}>
                 <div // 네모의 제일 상위 제목
                   style={{
-                    fontWeight: "bold",
+                    fontWeight: "900",
                     textAlign: "center",
                     marginTop: "10px",
-                    fontSize: "20px",
+                    fontSize: "26px",
                     color: "black",
                     alignItems: "center",
                     marginBottom: "5px",
@@ -272,7 +303,7 @@ function MainPage() {
                   alignItems: "center",
                   marginRight: "1%",
                 }}>
-                <MemoForm />
+                <MemoForm Memo={Memo} setMemo={setMemo} />
               </div>
             ) : (
               <div></div>

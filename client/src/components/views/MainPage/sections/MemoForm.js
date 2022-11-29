@@ -1,54 +1,82 @@
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
-import { MemoState } from "../Atom";
+import { MemoState, TokenState, UserIdState } from "../Atom";
 import { Button } from "@chakra-ui/react";
-function MemoForm() {
-  const [Memo, setMemo] = useRecoilState(MemoState);
+import axios from "axios";
 
-  const MemoHandler = (event) => {
-    setMemo(event.currentTarget.value);
-    console.log(Memo);
+function MemoForm({ Memo, setMemo }) {
+  console.log("Memo: " + Memo);
+  const [Token, setToken] = useRecoilState(TokenState);
+  const [userId, setuserId] = useRecoilState(UserIdState);
+  const updateMemo = async (id) => {
+    const body = {
+      id: id,
+      description: Description,
+    };
+    setMemo(body);
+
+    try {
+      await axios.put(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/memos",
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
+      );
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <textarea
-        value={Memo}
-        onChange={MemoHandler}
-        placeholder="메모할 내용을 입력하세요"
-        style={{
-          width: "90%",
-          borderBottom: "1px solid #d9d9d9",
-          borderTop: "1px solid #d9d9d9",
-          // border: "none",
-          resize: "none",
-          outline: "0",
-          marginTop: "15px",
-          marginBottom: "10px",
-          // justifyContent: "center",
-          // height: "520%",
-          height: "85%",
-          color: "black",
-          fontWeight: "normal",
-          overflow: "scroll",
-        }}></textarea>
+  const MemoHandler = (event) => {
+    setDescription(event.currentTarget.value);
+  };
 
-      <Button
-        variant="outline"
-        colorScheme="gray"
-        onClick={() => {
-          setMemo(Memo);
-          console.log(Memo);
-        }}
-        style={{
-          marginLeft: "85%",
-          height: "30px",
-          width: "5%",
-          flow: "right",
-        }}>
-        저장
-      </Button>
-    </div>
+  const [Description, setDescription] = useState(Memo ? Memo.description : "");
+
+  return (
+    Memo && (
+      <div style={{ width: "100%", height: "100%" }}>
+        <textarea
+          value={Description}
+          onChange={MemoHandler}
+          placeholder="메모할 내용을 입력하세요"
+          style={{
+            width: "90%",
+            borderBottom: "1px solid #d9d9d9",
+            borderTop: "1px solid #d9d9d9",
+            // border: "none",
+            resize: "none",
+            outline: "0",
+            marginTop: "15px",
+            marginLeft: "20px",
+            marginBottom: "10px",
+            // justifyContent: "center",
+            height: "87%",
+            color: "black",
+            fontWeight: "normal",
+            overflow: "scroll",
+            overflowX: "hidden",
+          }}></textarea>
+
+        <Button
+          variant="outline"
+          colorScheme="gray"
+          onClick={() => {
+            Memo && updateMemo(Memo.id);
+          }}
+          style={{
+            marginLeft: "70%",
+            height: "30px",
+            width: "5%",
+            flow: "right",
+          }}>
+          저장
+        </Button>
+      </div>
+    )
   );
 }
 

@@ -14,6 +14,7 @@ import {
   Input,
   FormLabel,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import QuestionList from "./QuestionList";
 import {
@@ -26,7 +27,7 @@ import {
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from "axios";
 
-function Question({ Cov, setCov }) {
+function Question({ Cov, setCov, Loading, setLoading }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
@@ -37,6 +38,7 @@ function Question({ Cov, setCov }) {
   const [Token, setToken] = useRecoilState(TokenState);
   const [userId, setuserId] = useRecoilState(UserIdState);
   const queryAttr = "data-rbd-drag-handle-draggable-id";
+  const toast = useToast();
 
   const ContentHandler = (event) => {
     setContent(event.currentTarget.value);
@@ -62,6 +64,8 @@ function Question({ Cov, setCov }) {
           // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
         };
 
+        setLoading(true);
+
         try {
           await axios.post(
             "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
@@ -72,16 +76,34 @@ function Question({ Cov, setCov }) {
               },
             }
           );
+          setLoading(false);
           await fileUpdate();
         } catch (e) {
+          setLoading(false);
           console.log(e);
         }
         onClose();
       } else {
-        alert("중복되는 파일이 존재합니다.");
+        toast({
+          //파일 중복 생성 우측하단 toast
+          position: "bottom-right",
+          title: "파일 생성 실패",
+          description: "중복되는 파일이 존재합니다.",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
     } else {
-      alert("값을 입력해주세요");
+      toast({
+        //파일명이 입력되지 않았을 때 우측하단 toast
+        position: "bottom-right",
+        title: "파일 생성 실패",
+        description: "파일명을 입력해주세요.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
 
     setContent("");
@@ -98,6 +120,8 @@ function Question({ Cov, setCov }) {
   }, [folderClickId]);
 
   const fileUpdate = async () => {
+    setLoading(true);
+
     try {
       const response = await axios.get(
         `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`,
@@ -109,6 +133,7 @@ function Question({ Cov, setCov }) {
           },
         }
       );
+      setLoading(false);
       setCompanyList(response.data.list);
       const fileList = await response.data.list.filter(
         (company) =>
@@ -122,6 +147,7 @@ function Question({ Cov, setCov }) {
         setCov(fileList[0].title);
       }
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -249,13 +275,14 @@ function Question({ Cov, setCov }) {
     };
     // }
     console.log(body);
-
-    server(body);
-
+    if (result.length !== 1) {
+      server(body);
+    }
     return result;
   };
 
   const server = async (body) => {
+    setLoading(true);
     try {
       await axios.put(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters/position",
@@ -266,10 +293,12 @@ function Question({ Cov, setCov }) {
           },
         }
       );
+      setLoading(false);
       fileUpdate();
     } catch (e) {
+      setLoading(false);
       // console.log(e);
-      alert("자기 자리로 이동할 수 없습니다.");
+      // alert("자기 자리로 이동할 수 없습니다.");
     }
   };
 

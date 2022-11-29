@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
@@ -27,7 +27,6 @@ import {
   TokenState,
   UserIdState,
 } from "../MainPage/Atom";
-import Myinfo from "./Myinfo";
 import axios from "axios";
 
 function Profile() {
@@ -125,8 +124,9 @@ function Profile() {
   const completingCreditHandler = (event) => {
     setCompletingCredit(event.currentTarget.value);
   };
+  // 메모
   const memoHandler = (event) => {
-    setMemo(event.currentTarget.value);
+    setDescription(event.currentTarget.value);
   };
   // 카드 삭제 기능
   const deleteLicense = async (id) => {
@@ -143,6 +143,7 @@ function Profile() {
       } catch (e) {
         console.log(e);
       }
+      await first();
     }
   };
   const deleteAwards = async (id) => {
@@ -159,6 +160,7 @@ function Profile() {
       } catch (e) {
         console.log(e);
       }
+      await first();
     }
   };
   const deleteLan = async (id) => {
@@ -175,6 +177,27 @@ function Profile() {
       } catch (e) {
         console.log(e);
       }
+
+      await first();
+    }
+  };
+
+  const deleteEducations = async (id) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      try {
+        await axios.delete(
+          `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/profile/educations?id=${id}`,
+          {
+            headers: {
+              Authorization: Token,
+            },
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+
+      await first();
     }
   };
 
@@ -195,10 +218,13 @@ function Profile() {
       console.log(response);
       setLicense(response.data.licenses);
       setAwards(response.data.awards);
-      console.log(response.data.language_skills);
       setLanguageSkills(response.data.language_skills);
       setEducations(response.data.educations);
       setMemo(response.data.memo);
+      setDescription(response.data.memo.description);
+      response.data.educations &&
+        response.data.educations.length !== 0 &&
+        setPage(0);
     } catch (e) {
       console.log(e);
     }
@@ -245,22 +271,19 @@ function Profile() {
   let [Grade1, setGrade1] = useState("");
   let [LanguageSkills, setLanguageSkills] = useState([]);
   //메모
-  let [Memo, setMemo] = useRecoilState(MemoState);
+  let [Memo, setMemo] = useState({});
+  let [Description, setDescription] = useState("");
   // user token
   let [Token, setToken] = useRecoilState(TokenState);
+  // page
+  let [Page, setPage] = useState(-1);
 
-  const updateMemo = () => {
-    setMemo(Memo);
-
-    update();
-  };
-
-  const update = async () => {
-    console.log(Memo);
+  const updateMemo = async (id) => {
     const body = {
-      description: Memo,
-      id: 1,
+      id: id,
+      description: Description,
     };
+    setMemo(body);
 
     try {
       await axios.put(
@@ -279,43 +302,19 @@ function Profile() {
 
   // 학력
   const updateEducation = async () => {
-    setSchool(School);
-    setMajor(Major);
-    setDegree(Degree);
-    setEnrollment(Enrollment);
-    setGraduation(Graduation);
-    setMajorCredit(MajorCredit);
-    setCompletingMajorCredit(CompletingMajorCredit);
-    setCredit(Credit);
-    setMaxCredit(MaxCredit);
-    setCompletingCredit(CompletingCredit);
-
-    setEducations([
-      School,
-      Major,
-      Degree,
-      Enrollment,
-      Graduation,
-      MajorCredit,
-      CompletingMajorCredit,
-      Credit,
-      MaxCredit,
-      CompletingCredit,
-    ]);
-
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
       name: School,
       major: Major,
       degree: Degree,
-      admissionDate: Enrollment,
-      graduationDate: Graduation,
-      majorGrade: MajorCredit,
-      majorCourse: CompletingMajorCredit,
+      admission_date: Enrollment,
+      graduation_date: Graduation,
+      major_grade: MajorCredit,
+      major_course: CompletingMajorCredit,
       grade: Credit,
-      maxGrade: MaxCredit,
+      max_grade: MaxCredit,
       course: CompletingCredit,
-      user_id: 1,
+      user_id: userId,
     };
 
     try {
@@ -342,17 +341,12 @@ function Profile() {
     setCredit("");
     setMaxCredit("");
     setCompletingCredit("");
+
+    await first();
   };
 
   // 취득 자격증
   const updateLicense = async () => {
-    setDate(Date);
-    setName(Name);
-    setInfo(Info);
-
-    const con = { date: Date, title: Name, description: Info };
-    setLicense([...License, con]);
-
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
       date: Date,
@@ -380,25 +374,12 @@ function Profile() {
     setDate("");
     setName("");
     setInfo("");
+
+    await first();
   };
 
   // 수상 경력
   const updateAward = async () => {
-    setDate2(Date2);
-    setName2(Name2);
-    setOrg(Org);
-    setGrade(Grade);
-    setInfo2(Info2);
-
-    const con2 = {
-      date: Date2,
-      title: Name2,
-      organization: Org,
-      grade: Grade,
-      description: Info2,
-    };
-    setAwards([...Awards, con2]);
-
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
       date: Date2,
@@ -406,7 +387,7 @@ function Profile() {
       organization: Org,
       grade: Grade,
       description: Info2,
-      user_id: 1,
+      user_id: userId,
     };
     console.log(body);
 
@@ -429,23 +410,17 @@ function Profile() {
     setOrg("");
     setGrade("");
     setInfo2("");
+
+    await first();
   };
 
   //어학 성적
   const updateLen = async () => {
-    setTitle(Title);
-    setGrade1(Grade1);
-
-    const con3 = { title: Title, grade: Grade1 };
-    console.log(con3);
-    console.log(LanguageSkills);
-    setLanguageSkills([...LanguageSkills, con3]);
-
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
       title: Title,
       grade: Grade1,
-      user_id: 1,
+      user_id: userId,
     };
 
     try {
@@ -464,6 +439,8 @@ function Profile() {
 
     setTitle("");
     setGrade1("");
+
+    await first();
   };
 
   return (
@@ -521,7 +498,7 @@ function Profile() {
                   <Input
                     ref={initialRef}
                     value={Date}
-                    placeholder="ex) 2022.10.1"
+                    placeholder="ex) 2022-10-01"
                     onChange={dateHandler}
                   />
                 </FormControl>
@@ -629,7 +606,7 @@ function Profile() {
                   <Input
                     ref={initialRef}
                     value={Date2}
-                    placeholder="ex) 2022.10.1"
+                    placeholder="ex) 2022-10-01"
                     onChange={dateHandler2}
                   />
                 </FormControl>
@@ -813,48 +790,79 @@ function Profile() {
                   <Input
                     ref={initialRef}
                     value={School}
+                    placeholder="ex) 부경대"
                     onChange={schoolHandler}
                   />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>전공</FormLabel>
-                  <Input value={Major} onChange={majorHandler} />
+                  <Input
+                    value={Major}
+                    placeholder="ex) 컴퓨터공학부"
+                    onChange={majorHandler}
+                  />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>학위</FormLabel>
-                  <Input value={Degree} onChange={degreeHandler} />
+                  <Input
+                    value={Degree}
+                    placeholder="ex) 대학생"
+                    onChange={degreeHandler}
+                  />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>입학일</FormLabel>
-                  <Input value={Enrollment} onChange={enrollmentHandler} />
+                  <Input
+                    value={Enrollment}
+                    placeholder="ex) 2018-03-11"
+                    onChange={enrollmentHandler}
+                  />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>졸업일</FormLabel>
-                  <Input value={Graduation} onChange={graduationHandler} />
+                  <Input
+                    value={Graduation}
+                    placeholder="ex) 2022-12-31"
+                    onChange={graduationHandler}
+                  />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>전공 학점</FormLabel>
-                  <Input value={MajorCredit} onChange={majorCreditHandler} />
+                  <Input
+                    value={MajorCredit}
+                    placeholder="ex) 4.5"
+                    onChange={majorCreditHandler}
+                  />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>전공 이수 학점</FormLabel>
                   <Input
                     value={CompletingMajorCredit}
+                    placeholder="ex) 45"
                     onChange={completingMajorCreditHandler}
                   />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>학점</FormLabel>
-                  <Input value={Credit} onChange={creditHandler} />
+                  <Input
+                    value={Credit}
+                    placeholder="ex) 4.5"
+                    onChange={creditHandler}
+                  />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>최대 학점</FormLabel>
-                  <Input value={MaxCredit} onChange={maxCreditHandler} />
+                  <Input
+                    value={MaxCredit}
+                    placeholder="ex) 4.5"
+                    onChange={maxCreditHandler}
+                  />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>이수 학점</FormLabel>
                   <Input
                     value={CompletingCredit}
+                    placeholder="ex) 120"
                     onChange={completingCreditHandler}
                   />
                 </FormControl>
@@ -886,65 +894,129 @@ function Profile() {
             </ModalContent>
           </Modal>
 
-          <div
-            style={{
-              display: "inline-block",
-              width: "40%",
-              height: "100%",
-              marginRight: "10px",
-            }}>
-            {Type &&
-              Type.map((contents, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginLeft: "5px",
-                    padding: "5px",
-                    borderBottom: "1px solid grey",
-                  }}>
-                  {Type[index]}
-                </div>
-              ))}
-          </div>
-
-          <div
-            style={{
-              display: "inline-block",
-              width: "45%",
-              height: "100%",
-              marginRight: "10px",
-            }}>
-            {Educations &&
-              Educations.map((contents, index) => (
-                <div key={index}>
-                  <div className="educationInfo">{Educations[index]}</div>
-                </div>
-              ))}
+          <div>
+            <div
+              style={{
+                display: "inline-block",
+                width: "40%",
+                height: "100%",
+                marginRight: "10px",
+              }}>
+              {Type &&
+                Type.map((contents, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      marginLeft: "5px",
+                      padding: "5px",
+                      borderBottom: "1px solid grey",
+                    }}>
+                    {Type[index]}
+                  </div>
+                ))}
+            </div>
+            {
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "45%",
+                  height: "100%",
+                  marginRight: "10px",
+                }}>
+                {Educations && Educations.length !== 0 && (
+                  <div key={Page}>
+                    <div className="educationInfo">{Educations[Page].name}</div>
+                    <div className="educationInfo">
+                      {Educations[Page].major}
+                    </div>
+                    <div className="educationInfo">
+                      {Educations[Page].degree}
+                    </div>
+                    <div className="educationInfo">
+                      {Educations[Page].admission_date}
+                    </div>
+                    <div className="educationInfo">
+                      {Educations[Page].graduation_date}
+                    </div>
+                    <div className="educationInfo">
+                      {Educations[Page].major_grade}
+                    </div>
+                    <div className="educationInfo">
+                      {Educations[Page].major_course}
+                    </div>
+                    <div className="educationInfo">
+                      {Educations[Page].grade}
+                    </div>
+                    <div className="educationInfo">
+                      {Educations[Page].max_course}
+                    </div>
+                    <div className="educationInfo">
+                      {Educations[Page].course}
+                    </div>
+                  </div>
+                )}
+              </div>
+            }
           </div>
         </div>
-        <ArrowLeftIcon
-          w={4}
-          h={4}
-          style={{ marginTop: "3.5%", marginLeft: "75%" }}
-        />
-        <ArrowRightIcon
-          w={4}
-          h={4}
-          style={{ marginTop: "3.5%", marginLeft: "5%" }}
-        />
-        <Button
-          variant="outline"
-          colorScheme="gray"
-          onClick={onOpen3}
-          style={{
-            marginTop: "10px",
-            border: "1px solid gray",
-            width: "10%",
-            height: "30px",
-            float: "right",
-          }}>
-          추가
-        </Button>
+        <div style={{ display: "flex" }}>
+          <ArrowLeftIcon
+            w={4}
+            h={4}
+            onClick={() => {
+              if (Page > 0) setPage(Page - 1);
+            }}
+            style={{ marginTop: "3.5%", marginLeft: "55%" }}
+          />
+          <div
+            style={{
+              width: "min-contents",
+              display: "flex",
+              fontSize: "15px",
+              marginTop: "3%",
+              marginLeft: "5%",
+            }}>
+            {Page !== -1 && Page + 1}
+          </div>
+          <ArrowRightIcon
+            w={4}
+            h={4}
+            onClick={() => {
+              if (Page < Educations.length - 1) setPage(Page + 1);
+            }}
+            style={{ marginTop: "3.5%", marginLeft: "5%" }}
+          />
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            onClick={onOpen3}
+            style={{
+              marginTop: "2.5%",
+              marginLeft: "5%",
+              border: "1px solid gray",
+              width: "10%",
+              height: "30px",
+              float: "right",
+            }}>
+            추가
+          </Button>
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            onClick={() => deleteEducations(Educations[Page].id)}
+            style={{
+              marginTop: "2.5%",
+              marginLeft: "1%",
+              border: "1px solid gray",
+              width: "10%",
+              height: "30px",
+              float: "right",
+            }}>
+            삭제
+          </Button>
+        </div>
+
+        {/* --------------------------------------------------------- */}
 
         <div className="right-title" style={{ paddingTop: "8%" }}>
           <h4>메모장</h4>
@@ -952,7 +1024,7 @@ function Profile() {
         <div className="memo">
           <textarea
             type="text"
-            value={Memo}
+            value={Description}
             onChange={memoHandler}
             style={{
               backgroundColor: "white",
@@ -966,7 +1038,7 @@ function Profile() {
             variant="outline"
             colorScheme="gray"
             onClick={() => {
-              updateMemo();
+              Memo && updateMemo(Memo.id);
             }}
             style={{
               marginTop: "10px",

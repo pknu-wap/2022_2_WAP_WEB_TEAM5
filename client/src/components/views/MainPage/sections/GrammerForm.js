@@ -3,9 +3,6 @@ import React, { Fragment } from "react";
 function GrammerForm(GrammerText) {
   return (
     <Fragment>
-      {console.log(GrammerText)}
-      {console.log(GrammerText.GrammerText)}
-
       {GrammerText.GrammerText &&
         GrammerText.GrammerText.length !== 0 &&
         GrammerText.GrammerText.map((text, index) => (
@@ -21,7 +18,7 @@ function GrammerForm(GrammerText) {
               justifyContent: "center",
               maxHeight: "100%",
               color: "black",
-              fontWeight: "normal",
+              // fontWeight: "normal",
               fontSize: "13px",
             }}>
             <tbody>
@@ -34,11 +31,14 @@ function GrammerForm(GrammerText) {
                 <th
                   style={{
                     width: "30%",
+                    fontWeight: "bold",
                     // borderRight: "1px solid #d9d9d9",
                   }}>
                   입력 내용
                 </th>
-                <th style={{ width: "70%" }}>{text.orgStr}</th>
+                <th style={{ width: "70%", color: "#ff6955" }}>
+                  {text.orgStr}
+                </th>
               </tr>
               <tr
                 style={
@@ -53,7 +53,9 @@ function GrammerForm(GrammerText) {
                   }}>
                   대치어
                 </th>
-                <th style={{ width: "70%" }}>{text.candWord}</th>
+                <th style={{ width: "70%", color: "#3381ff" }}>
+                  {text.candWord}
+                </th>
               </tr>
               <tr>
                 <th
@@ -64,7 +66,7 @@ function GrammerForm(GrammerText) {
                   }}>
                   도움말
                 </th>
-                <th style={{ width: "70%" }}>{text.help}</th>
+                <th style={{ width: "70%", fontWeight: "500" }}>{text.help}</th>
               </tr>
             </tbody>
           </table>

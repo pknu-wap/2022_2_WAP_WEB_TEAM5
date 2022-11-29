@@ -16,6 +16,7 @@ import {
   useDisclosure,
   Avatar,
   AvatarBadge,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import {
@@ -24,23 +25,26 @@ import {
   CompanyListState,
   TokenState,
   UserIdState,
+  fileClickIdState,
 } from "../Atom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-function Folder() {
+function Folder({ Loading, setLoading }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
   const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
+  const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
   const [Cover, setCover] = useRecoilState(CoverState);
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
-  const [Loading, setLoading] = useState(false);
+  // const [Loading, setLoading] = useState(false);
   const [placeholderProps, setPlaceholderProps] = useState({});
   const queryAttr = "data-rbd-drag-handle-draggable-id";
   const [Prev, setPrev] = useState("");
   const [Next, setNext] = useState("");
   const [Token, setToken] = useRecoilState(TokenState);
   const [userId, setuserId] = useRecoilState(UserIdState);
+  const toast = useToast();
 
   const companyHandler = (event) => {
     // 회사의 이름 적는 칸 실시간으로 받아와서 Company에 저장
@@ -72,6 +76,8 @@ function Folder() {
           title: Company,
         };
 
+        setLoading(true);
+
         try {
           await axios.post(
             "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
@@ -83,16 +89,36 @@ function Folder() {
             }
           );
           // 서버에게 요청하고,
+          setLoading(false);
+
           await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
         } catch (e) {
+          setLoading(false);
+
           console.log(e);
         }
         onClose(); // 모달창을 닫아주는 코드
       } else {
-        alert("중복되는 폴더가 존재합니다."); // 중복이라면 alert창을 띄움
+        toast({
+          //폴더 중복 생성시 우측하단 toast
+          position: "bottom-right",
+          title: "폴더 생성 실패",
+          description: "중복되는 폴더가 존재합니다.",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
     } else {
-      alert("값을 입력해주세요"); // 값이 입력되지 않았다면 alert 창을 띄움
+      toast({
+        //폴더명이 입력되지 않았을 때 우측하단 toast
+        position: "bottom-right",
+        title: "폴더 생성 실패",
+        description: "폴더명을 입력해주세요.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
 
     setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
@@ -106,6 +132,8 @@ function Folder() {
       const body = {
         listId: id,
       };
+      setLoading(true);
+
       try {
         await axios.delete(
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
@@ -116,8 +144,12 @@ function Folder() {
             },
           }
         );
+        setLoading(false);
+
         await FolUpdate();
       } catch (e) {
+        setLoading(false);
+
         console.log(e);
       }
     }
@@ -140,6 +172,8 @@ function Folder() {
       setCompanyList(response.data.list);
       setLoading(false);
     } catch (e) {
+      setLoading(false);
+
       console.log(e);
     }
   };
@@ -150,6 +184,7 @@ function Folder() {
     setCover(cov[0].cover_letter);
     setfolderClickId(id);
     // 폴더를 클릭했을 때 id를 mainPage로 보내줌
+    setfileClickId(cov[0].cover_letter[0].id);
   };
 
   const onDragEnd = (result) => {
@@ -228,9 +263,17 @@ function Folder() {
     let prev,
       next = 0;
 
-    if (endIndex === startIndex) {
-      alert("자신의 자리로 이동할 수 없습니다.");
-    }
+    // if (endIndex === startIndex) {
+    //   toast({
+    //     // 폴더 원래 자리로 이동했을 때(폴더가 이동x) 우측하단 toast
+    //     position: "bottom-right",
+    //     title: "폴더 이동 실패",
+    //     description: "",
+    //     status: "error",
+    //     duration: 2000,
+    //     isClosable: true,
+    //   });
+    // }
 
     if (endIndex === 0) {
       // 제일 첫 인덱스로 이동을 하려고 할 때,
@@ -277,7 +320,9 @@ function Folder() {
     // }
     console.log(body);
 
-    server(body);
+    if (result.length !== 1) {
+      server(body);
+    }
 
     // const [removed] = result.splice(startIndex, 1);
     // result.splice(endIndex, 0, removed);
@@ -286,6 +331,8 @@ function Folder() {
   };
 
   const server = async (body) => {
+    setLoading(true);
+
     try {
       await axios.put(
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists/position",
@@ -296,8 +343,11 @@ function Folder() {
           },
         }
       );
+      setLoading(false);
+
       await FolUpdate();
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
