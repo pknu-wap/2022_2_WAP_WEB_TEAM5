@@ -152,6 +152,10 @@ function Form() {
   };
 
   const AutoHandler = async () => {
+    if (!Cover || Cover.length === 0) {
+      return;
+    }
+
     setAutoSave(true);
     console.log("asd");
     const body = {
