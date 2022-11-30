@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { AddIcon } from "@chakra-ui/icons";
 import {
@@ -20,6 +21,7 @@ import QuestionList from "./QuestionList";
 import {
   CoverState,
   CompanyListState,
+  fileClickIdState,
   folderClickIdState,
   UserIdState,
   TokenState,
@@ -28,12 +30,14 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from "axios";
 
 function Question({ Cov, setCov, Loading, setLoading }) {
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Content, setContent] = useState([]);
   const [Cover, setCover] = useRecoilState(CoverState);
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
-  const [folderClickId, setFolderClickId] = useRecoilState(folderClickIdState);
+  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
+  const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
   const [placeholderProps, setPlaceholderProps] = useState({});
   const [Token, setToken] = useRecoilState(TokenState);
   const [userId, setuserId] = useRecoilState(UserIdState);
@@ -148,6 +152,22 @@ function Question({ Cov, setCov, Loading, setLoading }) {
       }
     } catch (e) {
       setLoading(false);
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: "로그인 정보가 없습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      setToken("");
+      setuserId(0);
+      setCover([]);
+      setfileClickId(0);
+      setfolderClickId(0);
+      setCompanyList([]);
+      navigate("/");
+
       console.log(e);
     }
   };
@@ -228,6 +248,10 @@ function Question({ Cov, setCov, Loading, setLoading }) {
 
     let prev,
       next = 0;
+
+    if (startIndex === endIndex) {
+      return;
+    }
 
     if (endIndex === 0) {
       // 제일 첫 인덱스로 이동을 하려고 할 때,

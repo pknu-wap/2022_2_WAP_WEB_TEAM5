@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 import {
   Modal,
   ModalOverlay,
@@ -28,8 +29,10 @@ import {
   fileClickIdState,
 } from "../Atom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Navigate } from "react-router-dom";
 
 function Folder({ Loading, setLoading }) {
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const [Company, setCompany] = useState("");
@@ -56,7 +59,7 @@ function Folder({ Loading, setLoading }) {
 
     let va = false; // 일단 false로 저장해놓음(중복 여부 / 중복일 시 true)
 
-    if (Company) {
+    if (Company && Company.length > 0) {
       // 만약에 폴더 이름을 적는 칸에 문자가 있으면
       CompanyList.map((list, index) => {
         // map 시켜서
@@ -94,16 +97,14 @@ function Folder({ Loading, setLoading }) {
           await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
         } catch (e) {
           setLoading(false);
-
+          console.log(e);
           toast({
             position: "bottom-right",
             title: "폴더 생성 실패",
-            description: e.response.data,
             status: "error",
             duration: 2000,
             isClosable: true,
           });
-          console.log(e);
         }
         onClose(); // 모달창을 닫아주는 코드
       } else {
@@ -142,6 +143,8 @@ function Folder({ Loading, setLoading }) {
       };
       setLoading(true);
 
+      console.log(body);
+
       try {
         await axios.delete(
           "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/lists",
@@ -158,7 +161,14 @@ function Folder({ Loading, setLoading }) {
       } catch (e) {
         setLoading(false);
 
-        console.log(e);
+        toast({
+          position: "bottom-right",
+          title: "폴더 삭제 실패",
+          description: e.response.data,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
     }
   };
@@ -178,11 +188,25 @@ function Folder({ Loading, setLoading }) {
         }
       );
       setCompanyList(response.data.list);
+      circleClick(response.data.list[0].list_id);
       setLoading(false);
     } catch (e) {
       setLoading(false);
-
-      console.log(e);
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: "로그인 정보가 없습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      setToken("");
+      setuserId(0);
+      setCover([]);
+      setfileClickId(0);
+      setfolderClickId(0);
+      setCompanyList([]);
+      navigate("/");
     }
   };
 
@@ -271,17 +295,9 @@ function Folder({ Loading, setLoading }) {
     let prev,
       next = 0;
 
-    // if (endIndex === startIndex) {
-    //   toast({
-    //     // 폴더 원래 자리로 이동했을 때(폴더가 이동x) 우측하단 toast
-    //     position: "bottom-right",
-    //     title: "폴더 이동 실패",
-    //     description: "",
-    //     status: "error",
-    //     duration: 2000,
-    //     isClosable: true,
-    //   });
-    // }
+    if (endIndex === startIndex) {
+      return;
+    }
 
     if (endIndex === 0) {
       // 제일 첫 인덱스로 이동을 하려고 할 때,

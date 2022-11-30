@@ -9,10 +9,17 @@ import {
   useToast,
   Box,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { TokenState, UserIdState } from "../MainPage/Atom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  TokenState,
+  UserIdState,
+  CoverState,
+  CompanyListState,
+  fileClickIdState,
+  folderClickIdState,
+} from "../MainPage/Atom";
 import bg from "./background3.PNG";
 
 function Account() {
@@ -22,8 +29,12 @@ function Account() {
   const [NewPasswordCheck, setNewPasswordCheck] = useState("");
   const [Show, setShow] = useState(false);
   const [Show_c, setShow_c] = useState(false);
+  const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   const [Show_cr, setShow_cr] = useState(false);
+  const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
+  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
   const [Token, setToken] = useRecoilState(TokenState);
+  const [Cover, setCover] = useRecoilState(CoverState);
   const [UserId, setUserId] = useRecoilState(UserIdState);
   const handleClick = () => setShow(!Show);
   const handleClick_c = () => setShow_c(!Show_c);
@@ -46,6 +57,15 @@ function Account() {
   //     setCurrentPassword(NewPassword);
   //   }
   // };
+  useEffect(() => {
+    setToken("");
+    setUserId(0);
+    setCover([]);
+    setfileClickId(0);
+    setfolderClickId(0);
+    setCompanyList([]);
+    navigate("/");
+  }, []);
 
   const passwordHandler = async () => {
     const body = {

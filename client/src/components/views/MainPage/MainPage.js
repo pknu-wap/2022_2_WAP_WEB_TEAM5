@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Grid,
@@ -15,6 +16,7 @@ import {
   FormLabel,
   Input,
   Button,
+  useToast,
   Box,
 } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
@@ -41,12 +43,15 @@ import {
   MemoState,
   TokenState,
   UserIdState,
+  folderClickIdState,
   fileClickIdState,
 } from "./Atom";
 import { useRecoilState } from "recoil";
 
 function MainPage() {
   // const [Cover, setCover] = useState([]); // 파일을 저장
+  const navigate = useNavigate();
+  const toast = useToast();
   const [Grammer, setGrammer] = useState(false);
   // 맞춤법 검사 탭이 열려있냐 안 열려있냐 판단
   const [Memo, setMemo] = useRecoilState(MemoState);
@@ -59,6 +64,7 @@ function MainPage() {
   const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
   // 폴더의 list가 저장됨
   const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
+  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
 
   const [Loading, setLoading] = useState(false);
   // Loading 여부 판단
@@ -70,6 +76,14 @@ function MainPage() {
 
   const [GrammerText, setGrammerText] = useState([]);
 
+  const Notoken = async () => {
+    setToken("");
+    setuserId(0);
+    setCover([]);
+    setfileClickId(0);
+    setfolderClickId(0);
+    setCompanyList([]);
+  };
   const first = async () => {
     setLoading(true);
     try {
@@ -107,7 +121,17 @@ function MainPage() {
       }
     } catch (e) {
       setLoading(false);
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: "로그인 정보가 없습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
 
+      await Notoken();
+      navigate("/");
       console.log(e);
     }
   };
@@ -138,6 +162,9 @@ function MainPage() {
       setLoading(false);
     } catch (e) {
       setLoading(false);
+      await Notoken();
+      navigate("/");
+
       console.log(e);
     }
   };

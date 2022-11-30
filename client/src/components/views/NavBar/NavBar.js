@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import logo_img from "./lala1.png";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+
 import {
   Menu,
   MenuButton,
@@ -9,6 +11,14 @@ import {
   Spinner,
   useToast,
 } from "@chakra-ui/react";
+import {
+  TokenState,
+  UserIdState,
+  CoverState,
+  fileClickIdState,
+  folderClickIdState,
+  CompanyListState,
+} from "../MainPage/Atom";
 import { HamburgerIcon } from "@chakra-ui/icons";
 // import axios from "axios";
 
@@ -16,6 +26,13 @@ function NavBar(props) {
   const navigate = useNavigate();
   const [Main, setMain] = useState(false);
   const toast = useToast();
+
+  const [Token, setToken] = useRecoilState(TokenState);
+  const [userId, setuserId] = useRecoilState(UserIdState);
+  const [Cover, setCover] = useRecoilState(CoverState);
+  const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
+  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
+  const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
 
   const handleAccount = () => {
     // 메뉴 탭에서 마이페이지를 눌렀을 때 실행
@@ -43,6 +60,13 @@ function NavBar(props) {
       isCloasabl: true,
     });
     navigate("/");
+
+    setToken("");
+    setuserId(0);
+    setCover([]);
+    setfileClickId(0);
+    setfolderClickId(0);
+    setCompanyList([]);
   };
 
   return (

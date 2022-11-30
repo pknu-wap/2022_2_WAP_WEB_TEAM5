@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import "./LandingPage.css";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +32,22 @@ function LandingPage() {
   const PwHandler = (event) => {
     setPassword(event.currentTarget.value);
   };
+
+  useEffect(() => {
+    if (Token !== "") {
+      navigate("/main");
+      return;
+    }
+
+    toast({
+      position: "bottom-right",
+      title: "잘못된 접근입니다.",
+      status: "error",
+      duration: 2000,
+      isClosable: true,
+    });
+    console.log(Token);
+  }, []);
 
   const handleSubmit = async () => {
     console.log("d");

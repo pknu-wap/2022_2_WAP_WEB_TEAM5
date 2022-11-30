@@ -37,6 +37,6 @@ export const TokenState = atom({
 
 export const UserIdState = atom({
   key: "userIdState",
-  default: "",
+  default: 0,
   effects_UNSTABLE: [persistAtom],
 });

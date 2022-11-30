@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 import { Button, Tag } from "@chakra-ui/react";
 import Count from "./Count";
 import { LockIcon, UnlockIcon } from "@chakra-ui/icons";
@@ -15,6 +16,7 @@ import {
 
 function Form() {
   // 맞춤법 검사가 꺼져있음
+  const navigate = useNavigate();
   const [Title, setTitle] = useState("");
   let [Text, setText] = useState("");
   const [Grammer, setGrammer] = useState(false);
@@ -47,6 +49,10 @@ function Form() {
   let count;
 
   useEffect(() => {
+    console.log(CompanyList);
+    if (!CompanyList || CompanyList.length === 0) {
+      return;
+    }
     console.log(second);
     count = setInterval(countInterval, 1000);
     return () => clearInterval(count);
@@ -54,6 +60,9 @@ function Form() {
 
   useEffect(() => {
     // 제일 첫 화면에서 회사 목록이 불러진 후 실행
+    if (!CompanyList || CompanyList.length === 0) {
+      return;
+    }
     if (
       CompanyList[0] &&
       fileClickId === 0 &&
@@ -73,6 +82,9 @@ function Form() {
   });
 
   useEffect(() => {
+    if (!Cover || Cover.length === 0) {
+      return;
+    }
     if (Cover[0] && folderClickId) {
       // 파일 목록이 불러와졌고, 폴더 클릭이 있으면
       console.log("파일 목록 불러와졌고, 폴더 클릭이 있으면 실행");
@@ -94,6 +106,9 @@ function Form() {
   }, [folderClickId]); // 폴더 클릭할 때마다 바뀜
 
   useEffect(() => {
+    if (!Cover || Cover.length === 0) {
+      return;
+    }
     if (Cover[0] && fileClickId) {
       // Cover가 하나라도 존재하는 상태에서
       console.log("파일 목록 불러와졌고, 파일 클릭이 있으면 실행");
@@ -163,6 +178,8 @@ function Form() {
       question: Title,
       description: Text,
     };
+
+    console.log(body);
 
     try {
       await axios.put(
@@ -276,39 +293,51 @@ function Form() {
 
   const FormUpdate = async () => {
     console.log("dk");
-    const response = await axios.get(
-      `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`,
-      {
-        headers: {
-          Authorization: Token,
-          // Authorization: `JWT ${Token}`,
-        },
-      }
-    );
-    setCompanyList(response.data.list);
-    const fileList = await response.data.list.filter(
-      (company) =>
-        company.list_id ===
-        (folderClickId === 0 ? CompanyList[0].list_id : folderClickId)
-      // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
-    );
-
-    if (fileList[0]) {
-      const co = fileList[0].cover_letter;
-      setCover(fileList[0].cover_letter);
-
-      const FormList = co.filter(
-        (form) =>
-          form.id ===
-          (fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId)
+    try {
+      const response = await axios.get(
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`,
+        {
+          headers: {
+            Authorization: Token,
+            // Authorization: `JWT ${Token}`,
+          },
+        }
+      );
+      setCompanyList(response.data.list);
+      const fileList = await response.data.list.filter(
+        (company) =>
+          company.list_id ===
+          (folderClickId === 0 ? CompanyList[0].list_id : folderClickId)
+        // 제일 첫 화면일 때는 0번째 리스트의 id를 반환
       );
 
-      if (FormList[0]) {
-        setTitle(FormList[0].question);
-        setText(FormList[0].description);
-        setquestionLock(FormList[0].question_lock);
-        setdescriptionLock(FormList[0].description_lock);
+      if (fileList[0]) {
+        const co = fileList[0].cover_letter;
+        setCover(fileList[0].cover_letter);
+
+        const FormList = co.filter(
+          (form) =>
+            form.id ===
+            (fileClickId === 0
+              ? CompanyList[0].cover_letter[0].id
+              : fileClickId)
+        );
+
+        if (FormList[0]) {
+          setTitle(FormList[0].question);
+          setText(FormList[0].description);
+          setquestionLock(FormList[0].question_lock);
+          setdescriptionLock(FormList[0].description_lock);
+        }
       }
+    } catch (e) {
+      navigate("/");
+      setToken("");
+      setuserId(0);
+      setCover([]);
+      setfileClickId(0);
+      setfolderClickId(0);
+      setCompanyList([]);
     }
   };
 

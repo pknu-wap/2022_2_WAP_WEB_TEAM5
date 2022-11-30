@@ -25,14 +25,21 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 
 import {
   folderClickIdState,
+  fileClickIdState,
+  CoverState,
   MemoState,
   TokenState,
+  CompanyListState,
   UserIdState,
 } from "../MainPage/Atom";
 import axios from "axios";
 
 function Profile() {
   const toast = useToast();
+  const [fileClickId, setfileClickId] = useRecoilState(fileClickIdState);
+  const [CompanyList, setCompanyList] = useRecoilState(CompanyListState);
+  const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
+  const [Cover, setCover] = useRecoilState(CoverState);
   const [userId, setuserId] = useRecoilState(UserIdState);
   const {
     isOpen: isOpen1,
@@ -290,14 +297,13 @@ function Profile() {
         response.data.educations.length !== 0 &&
         setPage(0);
     } catch (e) {
-      toast({
-        position: "bottom-right",
-        title: "실패",
-        description: e.response.data,
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
+      setToken("");
+      setuserId(0);
+      setCover([]);
+      setfileClickId(0);
+      setfolderClickId(0);
+      setCompanyList([]);
+      navigate("/");
     }
   };
 
@@ -1218,7 +1224,7 @@ function Profile() {
         <div className="memo">
           <textarea
             type="text"
-            value={Description}
+            value={Description || ""}
             onChange={memoHandler}
             style={{
               backgroundColor: "white",

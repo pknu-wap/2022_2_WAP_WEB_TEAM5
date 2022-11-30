@@ -78,6 +78,14 @@ function RegisterPage() {
         "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/register",
         body
       );
+      toast({
+        //회원가입 중복 우측하단 toast
+        position: "bottom-right",
+        title: "회원가입 성공",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
       navigate("/");
     } catch (e) {
       toast({
