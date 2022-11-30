@@ -19,6 +19,7 @@ import {
   useDisclosure,
   border,
   useToast,
+  Box,
 } from "@chakra-ui/react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 
@@ -150,10 +151,18 @@ function Profile() {
           duration: 2000,
           isClosable: true,
         });
+
+        await first();
       } catch (e) {
-        console.log(e);
+        toast({
+          position: "bottom-right",
+          title: "실패",
+          description: e.response.data,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
-      await first();
     }
   };
   const deleteAwards = async (id) => {
@@ -175,10 +184,18 @@ function Profile() {
           duration: 2000,
           isClosable: true,
         });
+
+        await first();
       } catch (e) {
-        console.log(e);
+        toast({
+          position: "bottom-right",
+          title: "실패",
+          description: e.response.data,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
-      await first();
     }
   };
   const deleteLan = async (id) => {
@@ -200,11 +217,18 @@ function Profile() {
           duration: 2000,
           isClosable: true,
         });
-      } catch (e) {
-        console.log(e);
-      }
 
-      await first();
+        await first();
+      } catch (e) {
+        toast({
+          position: "bottom-right",
+          title: "실패",
+          description: e.response.data,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -227,11 +251,18 @@ function Profile() {
           duration: 2000,
           isClosable: true,
         });
-      } catch (e) {
-        console.log(e);
-      }
 
-      await first();
+        await first();
+      } catch (e) {
+        toast({
+          position: "bottom-right",
+          title: "실패",
+          description: e.response.data,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -249,7 +280,6 @@ function Profile() {
           },
         }
       );
-      console.log(response);
       setLicense(response.data.licenses);
       setAwards(response.data.awards);
       setLanguageSkills(response.data.language_skills);
@@ -260,7 +290,14 @@ function Profile() {
         response.data.educations.length !== 0 &&
         setPage(0);
     } catch (e) {
-      console.log(e);
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: e.response.data,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -331,15 +368,13 @@ function Profile() {
       );
     } catch (e) {
       toast({
-        //폴더 중복 생성시 우측하단 toast
         position: "bottom-right",
-        title: "폴더 생성 실패",
-        description: "중복되는 폴더가 존재합니다.",
+        title: "메모 저장 실패",
+        description: e.response.data,
         status: "error",
         duration: 2000,
         isClosable: true,
       });
-      console.log(e);
     }
   };
 
@@ -370,23 +405,29 @@ function Profile() {
           },
         }
       );
+      setSchool("");
+      setMajor("");
+      setDegree("");
+      setEnrollment("");
+      setGraduation("");
+      setMajorCredit("");
+      setCompletingMajorCredit("");
+      setCredit("");
+      setMaxCredit("");
+      setCompletingCredit("");
+
+      await first();
       onClose3();
     } catch (e) {
-      console.log(e);
+      toast({
+        position: "bottom-right",
+        title: "인적사항",
+        description: e.response.data,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
-
-    setSchool("");
-    setMajor("");
-    setDegree("");
-    setEnrollment("");
-    setGraduation("");
-    setMajorCredit("");
-    setCompletingMajorCredit("");
-    setCredit("");
-    setMaxCredit("");
-    setCompletingCredit("");
-
-    await first();
   };
 
   // 취득 자격증
@@ -412,28 +453,26 @@ function Profile() {
         }
       );
       onClose1();
+
+      setDate("");
+      setName("");
+      setInfo("");
+
+      await first();
     } catch (e) {
-      console.log(e);
+      toast({
+        position: "bottom-right",
+        title: "자격증",
+        description: e.response.data,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
-
-    setDate("");
-    setName("");
-    setInfo("");
-
-    await first();
   };
 
   // 수상 경력
   const updateAward = async () => {
-    toast({
-      //날짜 형식 오류 우측하단 toast
-      position: "bottom-right",
-      title: "형식 오류",
-      description: "날짜 형식으로 입력해주세요.",
-      status: "error",
-      duration: 2000,
-      isClosable: true,
-    });
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
       date: Date2,
@@ -455,16 +494,26 @@ function Profile() {
           },
         }
       );
+
+      setDate2("");
+      setName2("");
+      setOrg("");
+      setGrade("");
+      setInfo2("");
+
+      await first();
+
       onClose2();
-    } catch (e) {} //학점 숫자(date처럼)
-
-    setDate2("");
-    setName2("");
-    setOrg("");
-    setGrade("");
-    setInfo2("");
-
-    await first();
+    } catch (e) {
+      toast({
+        position: "bottom-right",
+        title: "수상 경력",
+        description: e.response.data,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    } //학점 숫자(date처럼)
   };
 
   //어학 성적
@@ -486,18 +535,29 @@ function Profile() {
           },
         }
       );
+
+      setTitle("");
+      setGrade1("");
+
+      await first();
+
+      onClose4();
     } catch (e) {
-      console.log(e);
+      toast({
+        position: "bottom-right",
+        title: "어학 성적",
+        description: e.response.data,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
-
-    setTitle("");
-    setGrade1("");
-
-    await first();
   };
 
   return (
-    <div style={{ width: "100%", height: "93vh", backgroundColor: "white" }}>
+    <Box
+      style={{ width: "100%", height: "93vh", backgroundColor: "white" }}
+      sx={{ "::-webkit-scrollbar": { display: "none" } }}>
       <NavBar />
       {/* ---------------------------------------------------------------- */}
       <div className="left-nav">
@@ -832,7 +892,6 @@ function Profile() {
                   colorScheme="blue"
                   onClick={() => {
                     updateLen();
-                    onClose4();
                   }}
                   mr={3}>
                   Save
@@ -976,7 +1035,7 @@ function Profile() {
                       /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
                     );
                     var regexPI = RegExp(/^[0-9]{1,3}$/); //정수만 3자리 숫자까지 가능
-                    var regexPF1 = RegExp(/^[1-9]*.\d*|0.\d*[1-9]\d*$/); //소수점까지도 가능
+                    var regexPF1 = RegExp(/^[0-9]{1,1}\.[0-9]{1,2}$/); //소수점까지도 가능
 
                     var date = regex.test(Enrollment) && regex.test(Graduation);
                     var complete = //정수3자리 이하 (이수학점)
@@ -1195,7 +1254,7 @@ function Profile() {
           </Button>
         </div>
       </div>
-    </div>
+    </Box>
   );
 }
 

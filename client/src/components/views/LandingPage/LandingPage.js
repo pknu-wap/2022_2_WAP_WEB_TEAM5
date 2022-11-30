@@ -34,6 +34,7 @@ function LandingPage() {
   };
 
   const handleSubmit = async () => {
+    console.log("d");
     const body = {
       identification: Id,
       password: Password,

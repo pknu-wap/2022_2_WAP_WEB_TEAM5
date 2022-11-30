@@ -7,6 +7,7 @@ import {
   InputGroup,
   InputRightElement,
   useToast,
+  Box,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
@@ -79,7 +80,7 @@ function Account() {
   };
   //newpassword를 currentpassword로 보내기
   return (
-    <div
+    <Box
       className="account_page"
       style={{
         height: "100vh",
@@ -88,19 +89,21 @@ function Account() {
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundAttachment: "fixed",
-      }}>
+      }}
+      sx={{ "::-webkit-scrollbar": { display: "none" } }}>
       <div className="account">
         <div>
           <NavBar />
-
+          <Box height="200" fontSize="xx-large" textAlign="center">
+            SELETT
+          </Box>
           <div
             className="account_border" //account 테두리
             style={{
-              marginTop: "10%",
               marginLeft: "37%",
               width: "27%",
               height: "65%",
-              border: "5px solid #5a5a5a",
+              border: "1px solid #5a5a5a",
               borderRadius: "20px",
             }}>
             <div
@@ -116,6 +119,7 @@ function Account() {
                 marginLeft: "13%",
                 marginTop: "5%",
                 marginBottom: "1%",
+                fontWeight: "bold",
               }}>
               {/* 비밀번호 변경 폼
       현재 비밀번호 확인*/}
@@ -141,6 +145,7 @@ function Account() {
                 width: "80%",
                 marginLeft: "13%",
                 marginTop: "3%",
+                fontWeight: "bold",
                 marginBottom: "1%",
               }}>
               새 비밀번호
@@ -164,6 +169,7 @@ function Account() {
                 width: "80%",
                 marginLeft: "13%",
                 marginTop: "3%",
+                fontWeight: "bold",
                 marginBottom: "1%",
               }}>
               {/* 새 비밀번호 확인 */}새 비밀번호 확인
@@ -248,7 +254,7 @@ function Account() {
           </div>
         </div>
       </div>
-    </div>
+    </Box>
   );
 }
 export default Account;

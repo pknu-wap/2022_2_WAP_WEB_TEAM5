@@ -15,10 +15,12 @@ import {
   FormLabel,
   Input,
   Button,
+  Box,
 } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
 import GrammerForm from "./sections/GrammerForm";
 import NavBar from "../NavBar/NavBar";
+import Lo from "./sections/Lo";
 
 import "./MainPage.css";
 
@@ -142,13 +144,14 @@ function MainPage() {
 
   return (
     <div>
-      <div
+      <Lo isOpen={Loading} />
+      <Box
         sx={{ "::-webkit-scrollbar": { display: "none" } }}
         // style={{ overflow: "hidden" }}
       >
         <NavBar loc="main" Loading={Loading} />
         {/* 네비게이션 바 출력 */}
-      </div>
+      </Box>
       <Grid templateColumns="repeat(20, 1fr)" h="92vh">
         {/* chakra의 grid를 사용하는데, 총 메인 페이지의 열을 20개의 열로 나눔 */}
         <GridItem // 폴더 칸
