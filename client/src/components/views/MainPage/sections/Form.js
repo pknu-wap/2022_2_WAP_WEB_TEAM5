@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
-import { Button } from "@chakra-ui/react";
+import { Button, Tag } from "@chakra-ui/react";
 import Count from "./Count";
 import { LockIcon, UnlockIcon } from "@chakra-ui/icons";
 import axios from "axios";
@@ -29,11 +29,13 @@ function Form() {
   const [userId, setuserId] = useRecoilState(UserIdState);
   const [second, setsecond] = useState(0);
   const [typing, setTyping] = useState(false);
+  const [AutoSave, setAutoSave] = useState(false);
 
   const countInterval = () => {
     if (second === 0) {
-      titlebuttonHandler();
-      textbuttonHandler();
+      // titlebuttonHandler();
+      // textbuttonHandler();
+      AutoHandler();
       console.log(second);
 
       clearInterval(count);
@@ -45,6 +47,7 @@ function Form() {
   let count;
 
   useEffect(() => {
+    console.log(second);
     count = setInterval(countInterval, 1000);
     return () => clearInterval(count);
   }, [second, typing]);
@@ -119,28 +122,6 @@ function Form() {
     }
   }, [fileClickId]); // 클릭한 파일의 아이디가 바뀔 때마다 실행
 
-  const useInterval = (callback, delay) => {
-    const savedCallback = useRef();
-    useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
-
-    useEffect(() => {
-      function tick() {
-        savedCallback.current();
-      }
-
-      let id = null;
-      if (delay !== null) {
-        id = setInterval(tick, delay);
-        return () => clearInterval(id);
-      }
-      if (delay === null) {
-        clearInterval(id);
-      }
-    }, [delay]);
-  };
-
   const titleHandler = (event) => {
     clearInterval(count);
     setTyping(!typing);
@@ -167,8 +148,33 @@ function Form() {
         setText(Text.substring(0, 5000));
       }
     }
-
     setsecond(3);
+  };
+
+  const AutoHandler = async () => {
+    setAutoSave(true);
+    console.log("asd");
+    const body = {
+      id: fileClickId === 0 ? Cover[0].id : fileClickId,
+      question: Title,
+      description: Text,
+    };
+
+    try {
+      await axios.put(
+        "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/cover-letters",
+        body,
+        {
+          headers: {
+            Authorization: Token,
+          },
+        }
+      );
+      await FormUpdate();
+      setAutoSave(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const titlebuttonHandler = async () => {
@@ -351,12 +357,27 @@ function Form() {
           alignItems: "center",
           color: "black",
         }}>
+        {AutoSave ? (
+          <div
+            style={{
+              height: "30px",
+              marginTop: "5px",
+              color: "gray",
+              justifyContent: "right",
+              marginLeft: "86%",
+              paddingTop: "2px",
+            }}>
+            저장 중 ...
+          </div>
+        ) : (
+          <div style={{ height: "30px", marginTop: "5px" }}></div>
+        )}
         <div // 제목
           style={{
             width: "93%",
             height: "7%",
             border: "solid 2px #d9d9d9",
-            marginTop: "40px",
+            marginTop: "5px",
             borderRadius: "5px",
             display: "flex",
           }}>

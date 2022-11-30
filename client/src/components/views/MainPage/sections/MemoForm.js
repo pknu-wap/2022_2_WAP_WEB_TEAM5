@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import { MemoState, TokenState, UserIdState } from "../Atom";
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import axios from "axios";
 
 function MemoForm({ Memo, setMemo }) {
   console.log("Memo: " + Memo);
   const [Token, setToken] = useRecoilState(TokenState);
   const [userId, setuserId] = useRecoilState(UserIdState);
+  const toast = useToast();
   const updateMemo = async (id) => {
     const body = {
       id: id,
@@ -25,6 +26,15 @@ function MemoForm({ Memo, setMemo }) {
           },
         }
       );
+      toast({
+        //메모 저장 성공
+        position: "bottom-right",
+        title: "성공",
+        description: "메모가 저장되었습니다.",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
     } catch (e) {
       console.log(e);
     }

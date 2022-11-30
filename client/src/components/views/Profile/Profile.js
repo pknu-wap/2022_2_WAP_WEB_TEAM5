@@ -18,6 +18,7 @@ import {
   FormControl,
   useDisclosure,
   border,
+  useToast,
 } from "@chakra-ui/react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 
@@ -30,6 +31,7 @@ import {
 import axios from "axios";
 
 function Profile() {
+  const toast = useToast();
   const [userId, setuserId] = useRecoilState(UserIdState);
   const {
     isOpen: isOpen1,
@@ -140,6 +142,14 @@ function Profile() {
             },
           }
         );
+        toast({
+          position: "bottom-right",
+          title: "성공",
+          description: "삭제되었습니다.",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
       } catch (e) {
         console.log(e);
       }
@@ -157,6 +167,14 @@ function Profile() {
             },
           }
         );
+        toast({
+          position: "bottom-right",
+          title: "성공",
+          description: "삭제되었습니다.",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
       } catch (e) {
         console.log(e);
       }
@@ -174,6 +192,14 @@ function Profile() {
             },
           }
         );
+        toast({
+          position: "bottom-right",
+          title: "성공",
+          description: "삭제되었습니다.",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
       } catch (e) {
         console.log(e);
       }
@@ -193,6 +219,14 @@ function Profile() {
             },
           }
         );
+        toast({
+          position: "bottom-right",
+          title: "성공",
+          description: "삭제되었습니다.",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
       } catch (e) {
         console.log(e);
       }
@@ -296,6 +330,15 @@ function Profile() {
         }
       );
     } catch (e) {
+      toast({
+        //폴더 중복 생성시 우측하단 toast
+        position: "bottom-right",
+        title: "폴더 생성 실패",
+        description: "중복되는 폴더가 존재합니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
       console.log(e);
     }
   };
@@ -327,6 +370,7 @@ function Profile() {
           },
         }
       );
+      onClose3();
     } catch (e) {
       console.log(e);
     }
@@ -367,6 +411,7 @@ function Profile() {
           },
         }
       );
+      onClose1();
     } catch (e) {
       console.log(e);
     }
@@ -380,6 +425,15 @@ function Profile() {
 
   // 수상 경력
   const updateAward = async () => {
+    toast({
+      //날짜 형식 오류 우측하단 toast
+      position: "bottom-right",
+      title: "형식 오류",
+      description: "날짜 형식으로 입력해주세요.",
+      status: "error",
+      duration: 2000,
+      isClosable: true,
+    });
     const body = {
       // 서버에서 요청하는 정보 이름으로 변환
       date: Date2,
@@ -401,9 +455,8 @@ function Profile() {
           },
         }
       );
-    } catch (e) {
-      console.log(e);
-    }
+      onClose2();
+    } catch (e) {} //학점 숫자(date처럼)
 
     setDate2("");
     setName2("");
@@ -525,8 +578,24 @@ function Profile() {
                   disabled={Date === "" || Name === "" || Info === ""}
                   colorScheme="blue"
                   onClick={() => {
+                    var date = true;
+                    var regex = RegExp(
+                      /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
+                    );
+                    date = regex.test(Date);
+
+                    if (!date) {
+                      toast({
+                        position: "bottom-right",
+                        title: "실패",
+                        description: "날짜 형식이 맞지 않습니다.",
+                        status: "error",
+                        duration: 2000,
+                        isClosable: true,
+                      });
+                      return;
+                    }
                     updateLicense();
-                    onClose1();
                   }}
                   mr={3}>
                   Save
@@ -655,8 +724,25 @@ function Profile() {
                   }
                   colorScheme="blue"
                   onClick={() => {
+                    var date = true;
+                    var regex = RegExp(
+                      /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
+                    );
+                    date = regex.test(Date2);
+
+                    if (!date) {
+                      toast({
+                        //수상경력 날짜 형식 오류
+                        position: "bottom-right",
+                        title: "실패",
+                        description: "날짜 형식이 맞지 않습니다.",
+                        status: "error",
+                        duration: 2000,
+                        isClosable: true,
+                      });
+                      return;
+                    }
                     updateAward();
-                    onClose2();
                   }}
                   mr={3}>
                   Save
@@ -883,8 +969,57 @@ function Profile() {
                   }
                   colorScheme="blue"
                   onClick={() => {
+                    var date = true;
+                    var complete = true;
+                    var score = true;
+                    var regex = RegExp(
+                      /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
+                    );
+                    var regexPI = RegExp(/^[0-9]{1,3}$/); //정수만 3자리 숫자까지 가능
+                    var regexPF1 = RegExp(/^[1-9]*.\d*|0.\d*[1-9]\d*$/); //소수점까지도 가능
+
+                    var date = regex.test(Enrollment) && regex.test(Graduation);
+                    var complete = //정수3자리 이하 (이수학점)
+                      regexPI.test(CompletingMajorCredit) &&
+                      regexPI.test(CompletingCredit);
+                    var score = //정수, 소수까지 가능(학점)
+                      (regexPI.test(MajorCredit) ||
+                        regexPF1.test(MajorCredit)) &&
+                      (regexPI.test(MaxCredit) || regexPF1.test(MaxCredit)) &&
+                      (regexPI.test(Credit) || regexPF1.test(Credit));
+
+                    if (!date) {
+                      toast({
+                        position: "bottom-right",
+                        title: "실패",
+                        description: "날짜 형식이 맞지 않습니다.",
+                        status: "error",
+                        duration: 2000,
+                        isClosable: true,
+                      });
+                      return;
+                    } else if (!complete) {
+                      toast({
+                        position: "bottom-right",
+                        title: "실패",
+                        description: "이수학점 형식이 맞지 않습니다.",
+                        status: "error",
+                        duration: 2000,
+                        isClosable: true,
+                      });
+                      return;
+                    } else if (!score) {
+                      toast({
+                        position: "bottom-right",
+                        title: "실패",
+                        description: "학점 형식이 맞지 않습니다.",
+                        status: "error",
+                        duration: 2000,
+                        isClosable: true,
+                      });
+                      return;
+                    }
                     updateEducation();
-                    onClose3();
                   }}
                   mr={3}>
                   Save
@@ -1039,6 +1174,15 @@ function Profile() {
             colorScheme="gray"
             onClick={() => {
               Memo && updateMemo(Memo.id);
+              toast({
+                //메모 저장 성공
+                position: "bottom-right",
+                title: "성공",
+                description: "메모가 저장되었습니다.",
+                status: "success",
+                duration: 2000,
+                isClosable: true,
+              });
             }}
             style={{
               marginTop: "10px",

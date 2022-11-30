@@ -72,7 +72,7 @@ function Folder({ Loading, setLoading }) {
         // 폴더의 모달창에서 save 버튼을 누르면 입력한 이름이 company로 반환되고 여기로 들어옴
 
         const body = {
-          user_id: 1,
+          user_id: userId,
           title: Company,
         };
 
@@ -95,6 +95,14 @@ function Folder({ Loading, setLoading }) {
         } catch (e) {
           setLoading(false);
 
+          toast({
+            position: "bottom-right",
+            title: "폴더 생성 실패",
+            description: e.response.data,
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
           console.log(e);
         }
         onClose(); // 모달창을 닫아주는 코드
