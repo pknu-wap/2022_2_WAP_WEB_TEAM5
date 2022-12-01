@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { DeleteIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
-import { Box } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import {
   fileClickIdState,
@@ -18,6 +18,7 @@ function QuestionList({ content, fileUpdate }) {
   const [Cover, setCover] = useRecoilState(CoverState);
   const [folderClickId, setfolderClickId] = useRecoilState(folderClickIdState);
   const [Token, setToken] = useRecoilState(TokenState);
+  const toast = useToast();
   const [userId, setuserId] = useRecoilState(UserIdState);
 
   useEffect(() => {
