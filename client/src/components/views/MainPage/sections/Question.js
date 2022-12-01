@@ -159,13 +159,13 @@ function Question({ Cov, setCov, Loading, setLoading }) {
         duration: 2000,
         isClosable: true,
       });
-      setToken("");
+      // setToken("");
       setuserId(0);
       setCover([]);
       setfileClickId(0);
       setfolderClickId(0);
       setCompanyList([]);
-      navigate("/");
+      // navigate("/");
 
       console.log(e);
     }

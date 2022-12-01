@@ -311,13 +311,13 @@ function Profile() {
         response.data.educations.length !== 0 &&
         setPage(0);
     } catch (e) {
-      setToken("");
+      // setToken("");
       setuserId(0);
       setCover([]);
       setfileClickId(0);
       setfolderClickId(0);
       setCompanyList([]);
-      navigate("/");
+      // navigate("/");
     }
   };
 

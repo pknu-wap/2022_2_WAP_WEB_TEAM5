@@ -201,13 +201,13 @@ function Folder({ Loading, setLoading }) {
         duration: 2000,
         isClosable: true,
       });
-      setToken("");
+      // setToken("");
       setuserId(0);
       setCover([]);
       setfileClickId(0);
       setfolderClickId(0);
       setCompanyList([]);
-      navigate("/");
+      // navigate("/");
     }
   };
 
@@ -238,13 +238,13 @@ function Folder({ Loading, setLoading }) {
         duration: 2000,
         isClosable: true,
       });
-      setToken("");
+      // setToken("");
       setuserId(0);
       setCover([]);
       setfileClickId(0);
       setfolderClickId(0);
       setCompanyList([]);
-      navigate("/");
+      // navigate("/");
     }
   };
 

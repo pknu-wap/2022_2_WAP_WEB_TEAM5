@@ -33,21 +33,21 @@ function LandingPage() {
     setPassword(event.currentTarget.value);
   };
 
-  useEffect(() => {
-    if (Token !== "") {
-      navigate("/main");
-      return;
-    }
+  // useEffect(() => {
+  //   if (Token !== "") {
+  //     navigate("/main");
+  //     return;
+  //   }
 
-    toast({
-      position: "bottom-right",
-      title: "잘못된 접근입니다.",
-      status: "error",
-      duration: 2000,
-      isClosable: true,
-    });
-    console.log(Token);
-  }, []);
+  //   toast({
+  //     position: "bottom-right",
+  //     title: "잘못된 접근입니다.",
+  //     status: "error",
+  //     duration: 2000,
+  //     isClosable: true,
+  //   });
+  //   console.log(Token);
+  // }, []);
 
   const handleSubmit = async () => {
     console.log("d");

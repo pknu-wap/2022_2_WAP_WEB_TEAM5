@@ -69,8 +69,9 @@ function Account() {
     const body = {
       current_password: CurrentPassword,
       new_password: NewPassword,
-      user_id: 1,
+      user_id: UserId,
     };
+    console.log(body);
 
     try {
       const response = await axios.put(

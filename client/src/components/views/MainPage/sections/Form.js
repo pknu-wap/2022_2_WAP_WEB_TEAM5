@@ -331,8 +331,8 @@ function Form() {
         }
       }
     } catch (e) {
-      navigate("/");
-      setToken("");
+      // navigate("/");
+      // setToken("");
       setuserId(0);
       setCover([]);
       setfileClickId(0);

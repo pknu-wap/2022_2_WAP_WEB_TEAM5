@@ -50,7 +50,7 @@ function MemoForm({ Memo, setMemo }) {
     Memo && (
       <div style={{ width: "100%", height: "100%" }}>
         <textarea
-          value={Description}
+          value={Description || ""}
           onChange={MemoHandler}
           placeholder="메모할 내용을 입력하세요"
           style={{
