@@ -3,8 +3,8 @@ import { useRecoilState } from "recoil";
 import "./LandingPage.css";
 import { useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-import sellet from "./SELLET.JPG";
-import sellet2 from "./sellet2.JPG";
+import sellet from "../../../imageFolder/1.JPG";
+import sellet2 from "../../../imageFolder/2.JPG";
 import {
   InputGroup,
   Input,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import logo_img from "./lala1.png";
+import logo_img from "../../../imageFolder/lala1.png";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 

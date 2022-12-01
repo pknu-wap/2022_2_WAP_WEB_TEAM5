@@ -20,7 +20,8 @@ import {
   fileClickIdState,
   folderClickIdState,
 } from "../MainPage/Atom";
-import bg from "./background3.PNG";
+// import bg from "./background3.PNG";
+import bg from "../../../imageFolder/background.png";
 
 function Account() {
   const navigate = useNavigate();
@@ -58,13 +59,10 @@ function Account() {
   //   }
   // };
   useEffect(() => {
-    setToken("");
-    setUserId(0);
     setCover([]);
     setfileClickId(0);
     setfolderClickId(0);
     setCompanyList([]);
-    navigate("/");
   }, []);
 
   const passwordHandler = async () => {
@@ -114,12 +112,19 @@ function Account() {
       <div className="account">
         <div>
           <NavBar />
-          <Box height="200" fontSize="xx-large" textAlign="center">
+          <Box
+            height="min-content"
+            fontSize="xx-large"
+            textAlign="center"
+            marginTop="6%"
+            fontWeight="900"
+            style={{ fontSize: "50px" }}>
             SELETT
           </Box>
           <div
             className="account_border" //account 테두리
             style={{
+              marginTop: "1%",
               marginLeft: "37%",
               width: "27%",
               height: "65%",

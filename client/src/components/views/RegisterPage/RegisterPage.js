@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-import sellet from "../LandingPage/SELLET.JPG";
-import sellet2 from "../LandingPage/sellet2.JPG";
+import sellet from "../../../imageFolder/1.JPG";
+import sellet2 from "../../../imageFolder/2.JPG";
 import {
   InputGroup,
   Input,
@@ -97,6 +97,23 @@ function RegisterPage() {
         duration: 2000,
         isClosable: true,
       });
+    }
+  };
+
+  const onSubmitClick = (e) => {
+    console.log("a");
+    if (
+      e.key === "Enter" &&
+      !(
+        Id === "" ||
+        Name === "" ||
+        Email === "" ||
+        Password === "" ||
+        PasswordCheck === "" ||
+        Password !== PasswordCheck
+      )
+    ) {
+      handleSignin();
     }
   };
 
@@ -201,7 +218,10 @@ function RegisterPage() {
           <br />
           {/* 비밀번호 확인 시작 */}
           {!Password || Password === PasswordCheck ? (
-            <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
+            <InputGroup
+              size="md"
+              style={{ width: "80%", marginLeft: "10%" }}
+              onKeyPress={onSubmitClick}>
               <Input
                 value={PasswordCheck}
                 onChange={PasswordCheckHandler}

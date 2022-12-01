@@ -145,6 +145,13 @@ function Profile() {
       licensesOnClick();
     }
   };
+
+  useEffect(() => {
+    setCover([]);
+    setfileClickId(0);
+    setfolderClickId(0);
+    setCompanyList([]);
+  }, []);
   // 카드 삭제 기능
   const deleteLicense = async (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {

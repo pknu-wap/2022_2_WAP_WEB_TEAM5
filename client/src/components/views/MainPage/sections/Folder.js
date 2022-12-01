@@ -96,6 +96,7 @@ function Folder({ Loading, setLoading }) {
           setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
 
           await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
+          console.log(CompanyList);
         } catch (e) {
           setLoading(false);
           console.log(e);
@@ -187,6 +188,7 @@ function Folder({ Loading, setLoading }) {
         }
       );
       setCompanyList(response.data.list);
+      console.log(CompanyList);
       circleClick(response.data.list[0].list_id);
       setLoading(false);
     } catch (e) {
@@ -301,32 +303,34 @@ function Folder({ Loading, setLoading }) {
     if (endIndex === 0) {
       // 제일 첫 인덱스로 이동을 하려고 할 때,
       prev = null;
-      console.log(endIndex - 1);
       next = result[endIndex].list_id;
+      console.log(endIndex);
     } else if (endIndex === result.length - 1) {
       // 제일 마지막 인덱스로 이동하려고 할 때
       prev = result[endIndex].list_id;
-      console.log(endIndex - 1);
+      console.log(endIndex);
       next = null;
     } else if (endIndex - startIndex > 0) {
       prev = result[endIndex].list_id; // 위에서 밑으로 이동할 때
-      console.log(endIndex - 1);
       next = result[endIndex + 1].list_id;
+      console.log(endIndex);
+      console.log(endIndex + 1);
     } else {
       prev = result[endIndex - 1].list_id; // 밑에서 위로 이동할 때
       next = result[endIndex].list_id;
       console.log(endIndex - 1);
+      console.log(endIndex);
     }
 
     if (Math.abs(endIndex - startIndex) === 1 && endIndex - startIndex > 0) {
       // 한 칸 차이로 이동하려고 하면서, 위에서 밑으로 내려가려고 할 때
       if (prev !== null) {
         prev = result[endIndex].list_id;
-        console.log(endIndex - 1);
+        console.log(endIndex);
       }
       if (next !== null) {
-        console.log(endIndex - 1);
         next = result[endIndex + 1].list_id;
+        console.log(endIndex + 1);
       }
     } else if (
       Math.abs(endIndex - startIndex) === 1 && // 한 칸 차이로 이동하려고 하면서, 밑에서 위로 가려고 할 때
@@ -338,7 +342,7 @@ function Folder({ Loading, setLoading }) {
       }
       if (next !== null) {
         next = result[endIndex].list_id;
-        console.log(endIndex - 1);
+        console.log(endIndex);
       }
     }
 
