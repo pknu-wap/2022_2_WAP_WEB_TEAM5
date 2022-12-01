@@ -112,7 +112,7 @@ function RegisterPage() {
         Password !== PasswordCheck
       )
     ) {
-      handleSignin();
+      handleSubmit();
     }
   };
 
