@@ -77,7 +77,7 @@ function MainPage() {
   const [GrammerText, setGrammerText] = useState([]);
 
   const Notoken = async () => {
-    // setToken("");
+    setToken("");
     setuserId(0);
     setCover([]);
     setfileClickId(0);
@@ -129,7 +129,7 @@ function MainPage() {
       });
 
       await Notoken();
-      // navigate("/");
+      navigate("/", { replace: true });
     }
   };
 

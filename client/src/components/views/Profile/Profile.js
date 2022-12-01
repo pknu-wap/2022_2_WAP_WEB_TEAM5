@@ -311,12 +311,21 @@ function Profile() {
         setPage(0);
     } catch (e) {
       // setToken("");
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: "로그인 정보가 없습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+
       setuserId(0);
       setCover([]);
       setfileClickId(0);
       setfolderClickId(0);
       setCompanyList([]);
-      // navigate("/");
+      navigate("/", { replace: true });
     }
   };
 
