@@ -61,7 +61,6 @@ function QuestionList({ content, fileUpdate }) {
   };
 
   const CheckOnClick = async (id) => {
-    // console.log(Cover.id);
     const body = {
       id: id,
       title: Text,

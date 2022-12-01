@@ -71,7 +71,7 @@ function Account() {
       new_password: NewPassword,
       user_id: UserId,
     };
-    console.log(body);
+    // console.log(body);
 
     try {
       const response = await axios.put(
@@ -83,7 +83,15 @@ function Account() {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
+      toast({
+        //현재 비밀번호 실패 toast
+        position: "bottom-right",
+        title: "다시 로그인 해주세요.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
       navigate("/");
     } catch (e) {
       toast({

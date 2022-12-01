@@ -140,7 +140,6 @@ function Profile() {
   };
 
   const onSubmitClick = (e) => {
-    console.log("a");
     if (e.key === "Enter" && !(Date === "" || Name === "" || Info === "")) {
       licensesOnClick();
     }
@@ -460,7 +459,6 @@ function Profile() {
       user_id: userId,
     };
     // 2022-02-02
-    console.log(body);
 
     try {
       await axios.post(
@@ -502,7 +500,6 @@ function Profile() {
       description: Info2,
       user_id: userId,
     };
-    console.log(body);
 
     try {
       await axios.post(

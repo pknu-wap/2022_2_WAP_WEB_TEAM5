@@ -96,10 +96,8 @@ function Folder({ Loading, setLoading }) {
           setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
 
           await FolUpdate1(); // 요청한 다음에는 FolUpdate 함수 써줌
-          console.log(CompanyList);
         } catch (e) {
           setLoading(false);
-          console.log(e);
           toast({
             position: "bottom-right",
             title: "폴더 생성 실패",
@@ -142,8 +140,6 @@ function Folder({ Loading, setLoading }) {
         listId: id,
       };
       setLoading(true);
-
-      console.log(body);
 
       try {
         await axios.delete(
@@ -188,7 +184,6 @@ function Folder({ Loading, setLoading }) {
         }
       );
       setCompanyList(response.data.list);
-      console.log(CompanyList);
       circleClick(response.data.list[0].list_id);
       setLoading(false);
     } catch (e) {
@@ -260,7 +255,6 @@ function Folder({ Loading, setLoading }) {
   const onDragEnd = (result) => {
     // dropped outside the list
     // drag 끝날 때 호출되는 함수
-    // console.log(result);
     if (!result.destination) {
       // list밖으로 빠져나갔을 때 destination이 null로 설정됨
       // => null일 때는 그냥 리턴해줌
@@ -280,7 +274,6 @@ function Folder({ Loading, setLoading }) {
       // list 밖으로 빠져나갔을 때 null로 설정
       return;
     }
-    // console.log(update);
     const draggableId = update.draggableId;
     const destinationIndex = update.destination.index;
 
@@ -341,33 +334,25 @@ function Folder({ Loading, setLoading }) {
       // 제일 첫 인덱스로 이동을 하려고 할 때,
       prev = null;
       next = result[endIndex].list_id;
-      console.log(endIndex);
     } else if (endIndex === result.length - 1) {
       // 제일 마지막 인덱스로 이동하려고 할 때
       prev = result[endIndex].list_id;
-      console.log(endIndex);
       next = null;
     } else if (endIndex - startIndex > 0) {
       prev = result[endIndex].list_id; // 위에서 밑으로 이동할 때
       next = result[endIndex + 1].list_id;
-      console.log(endIndex);
-      console.log(endIndex + 1);
     } else {
       prev = result[endIndex - 1].list_id; // 밑에서 위로 이동할 때
       next = result[endIndex].list_id;
-      console.log(endIndex - 1);
-      console.log(endIndex);
     }
 
     if (Math.abs(endIndex - startIndex) === 1 && endIndex - startIndex > 0) {
       // 한 칸 차이로 이동하려고 하면서, 위에서 밑으로 내려가려고 할 때
       if (prev !== null) {
         prev = result[endIndex].list_id;
-        console.log(endIndex);
       }
       if (next !== null) {
         next = result[endIndex + 1].list_id;
-        console.log(endIndex + 1);
       }
     } else if (
       Math.abs(endIndex - startIndex) === 1 && // 한 칸 차이로 이동하려고 하면서, 밑에서 위로 가려고 할 때
@@ -375,11 +360,9 @@ function Folder({ Loading, setLoading }) {
     ) {
       if (prev !== null) {
         prev = result[endIndex - 1].list_id;
-        console.log(endIndex - 1);
       }
       if (next !== null) {
         next = result[endIndex].list_id;
-        console.log(endIndex);
       }
     }
 
@@ -389,8 +372,6 @@ function Folder({ Loading, setLoading }) {
       to_move_prev_list_id: prev,
       to_move_next_list_id: next,
     };
-    // }
-    console.log(body);
 
     if (result.length !== 1) {
       server(body);
@@ -425,7 +406,6 @@ function Folder({ Loading, setLoading }) {
   };
 
   const onSubmitClick = (e) => {
-    console.log("a");
     if (e.key === "Enter") {
       companyclickHandler();
     }

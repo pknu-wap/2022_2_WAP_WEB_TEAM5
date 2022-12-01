@@ -101,7 +101,6 @@ function RegisterPage() {
   };
 
   const onSubmitClick = (e) => {
-    console.log("a");
     if (
       e.key === "Enter" &&
       !(

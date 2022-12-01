@@ -38,7 +38,6 @@ function Form() {
       // titlebuttonHandler();
       // textbuttonHandler();
       AutoHandler();
-      console.log(second);
 
       clearInterval(count);
     } else {
@@ -49,11 +48,9 @@ function Form() {
   let count;
 
   useEffect(() => {
-    console.log(CompanyList);
     if (!CompanyList || CompanyList.length === 0) {
       return;
     }
-    console.log(second);
     count = setInterval(countInterval, 1000);
     return () => clearInterval(count);
   }, [second, typing]);
@@ -76,7 +73,6 @@ function Form() {
         setText(CompanyList[0].cover_letter[0].description);
         setdescriptionLock(CompanyList[0].cover_letter[0].description_lock);
         setquestionLock(CompanyList[0].cover_letter[0].question_lock);
-        console.log("제일 첫 화면에서 회사 목록이 불러진 후 실행");
       }
     }
   });
@@ -87,7 +83,6 @@ function Form() {
     }
     if (Cover[0] && folderClickId) {
       // 파일 목록이 불러와졌고, 폴더 클릭이 있으면
-      console.log("파일 목록 불러와졌고, 폴더 클릭이 있으면 실행");
 
       if (Cover[0].question === null || Cover[0].question === undefined) {
         // null일 땐 빈 칸
@@ -111,7 +106,6 @@ function Form() {
     }
     if (Cover[0] && fileClickId) {
       // Cover가 하나라도 존재하는 상태에서
-      console.log("파일 목록 불러와졌고, 파일 클릭이 있으면 실행");
 
       const cov = Cover.filter((cover) => cover.id === fileClickId);
       // Question 파일에서 클릭한 아이디와 현재 cover에 있는 id가 동일한 것을 cov에 담음
@@ -172,14 +166,11 @@ function Form() {
     }
 
     setAutoSave(true);
-    console.log("asd");
     const body = {
       id: fileClickId === 0 ? Cover[0].id : fileClickId,
       question: Title,
       description: Text,
     };
-
-    console.log(body);
 
     try {
       await axios.put(
@@ -206,8 +197,6 @@ function Form() {
     let body = {};
 
     if (questionLock === false) {
-      console.log("questionLock이 false-> true면 실행");
-      console.log(Cover);
       body = {
         // id: fileClickId === 0 ? CompanyList[0].cover_letter[0].id : fileClickId,
         id: fileClickId === 0 ? Cover[0].id : fileClickId,
@@ -217,7 +206,6 @@ function Form() {
         question_lock: !questionLock,
       };
     } else if (questionLock === true) {
-      console.log("questionLock이 true-> false면 실행");
       body = {
         id: fileClickId === 0 ? Cover[0].id : fileClickId,
         description: Text,
@@ -246,7 +234,6 @@ function Form() {
   };
 
   const textbuttonHandler = async () => {
-    console.log(Cover);
     if (!Cover || Cover.length === 0) {
       return;
     }
@@ -254,8 +241,6 @@ function Form() {
     let body = {};
 
     if (descriptionLock === false) {
-      console.log("descriptionLock false-> true면 실행");
-
       body = {
         id: fileClickId === 0 ? Cover[0].id : fileClickId,
         question: Title,
@@ -263,8 +248,6 @@ function Form() {
         description_lock: !descriptionLock,
       };
     } else if (descriptionLock === true) {
-      console.log("descriptionLock true-> false면 실행");
-
       body = {
         question: Title,
         id: fileClickId === 0 ? Cover[0].id : fileClickId,
@@ -292,7 +275,6 @@ function Form() {
   };
 
   const FormUpdate = async () => {
-    console.log("dk");
     try {
       const response = await axios.get(
         `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`,

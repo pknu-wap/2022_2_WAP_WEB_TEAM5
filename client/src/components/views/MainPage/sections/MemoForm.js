@@ -5,7 +5,6 @@ import { Button, useToast } from "@chakra-ui/react";
 import axios from "axios";
 
 function MemoForm({ Memo, setMemo }) {
-  console.log("Memo: " + Memo);
   const [Token, setToken] = useRecoilState(TokenState);
   const [userId, setuserId] = useRecoilState(UserIdState);
   const toast = useToast();

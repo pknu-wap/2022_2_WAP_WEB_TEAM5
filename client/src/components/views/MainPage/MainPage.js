@@ -97,7 +97,6 @@ function MainPage() {
           },
         }
       );
-      console.log(response);
       setCompanyList(response.data.list);
 
       setCover(response.data.list[0].cover_letter);
@@ -113,7 +112,6 @@ function MainPage() {
             },
           }
         );
-        console.log(profile);
         setMemo(profile.data.memo);
         setLoading(false);
       } catch (e) {
@@ -132,7 +130,6 @@ function MainPage() {
 
       await Notoken();
       // navigate("/");
-      console.log(e);
     }
   };
 
@@ -157,15 +154,12 @@ function MainPage() {
           },
         }
       );
-      console.log(response);
       setGrammerText(response.data.errInfo);
       setLoading(false);
     } catch (e) {
       setLoading(false);
       await Notoken();
       navigate("/");
-
-      console.log(e);
     }
   };
 

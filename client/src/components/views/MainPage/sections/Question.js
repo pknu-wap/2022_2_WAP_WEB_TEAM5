@@ -166,15 +166,12 @@ function Question({ Cov, setCov, Loading, setLoading }) {
       setfolderClickId(0);
       setCompanyList([]);
       // navigate("/");
-
-      console.log(e);
     }
   };
 
   const onDragEnd = (result) => {
     // dropped outside the list
     // drag 끝날 때 호출되는 함수
-    // console.log(result);
     if (!result.destination) {
       // list밖으로 빠져나갔을 때 destination이 null로 설정됨
       // => null일 때는 그냥 리턴해줌
@@ -194,7 +191,6 @@ function Question({ Cov, setCov, Loading, setLoading }) {
       // list 밖으로 빠져나갔을 때 null로 설정
       return;
     }
-    // console.log(update);
     const draggableId = update.draggableId;
     const destinationIndex = update.destination.index;
 
@@ -243,7 +239,6 @@ function Question({ Cov, setCov, Loading, setLoading }) {
 
   const reorder = (list, startIndex, endIndex) => {
     let result = Array.from(list);
-    console.log(result);
 
     let prev,
       next = 0;
@@ -256,8 +251,6 @@ function Question({ Cov, setCov, Loading, setLoading }) {
       // 제일 첫 인덱스로 이동을 하려고 할 때,
       prev = null;
       next = result[endIndex].id;
-      console.log(result[endIndex]);
-      console.log(next);
     } else if (endIndex === result.length - 1) {
       // 제일 마지막 인덱스로 이동하려고 할 때
       prev = result[endIndex].id;
@@ -297,7 +290,6 @@ function Question({ Cov, setCov, Loading, setLoading }) {
       to_move_next_id: next,
     };
     // }
-    console.log(body);
     if (result.length !== 1) {
       server(body);
     }
@@ -320,13 +312,11 @@ function Question({ Cov, setCov, Loading, setLoading }) {
       fileUpdate();
     } catch (e) {
       setLoading(false);
-      // console.log(e);
       // alert("자기 자리로 이동할 수 없습니다.");
     }
   };
 
   const onSubmitClick = (e) => {
-    console.log("a");
     if (e.key === "Enter") {
       contentclickHandler();
     }

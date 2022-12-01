@@ -50,7 +50,6 @@ function LandingPage() {
   // }, []);
 
   const handleSubmit = async () => {
-    console.log("d");
     const body = {
       identification: Id,
       password: Password,
@@ -90,7 +89,6 @@ function LandingPage() {
   };
 
   const onSubmitClick = (e) => {
-    console.log("a");
     if (e.key === "Enter") {
       handleSubmit();
     }
