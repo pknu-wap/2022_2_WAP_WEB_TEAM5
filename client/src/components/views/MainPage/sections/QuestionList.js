@@ -82,7 +82,15 @@ function QuestionList({ content, fileUpdate }) {
       );
       await fileUpdate();
     } catch (e) {
-      console.log(e);
+      toast({
+        //회원가입 중복 우측하단 toast
+        position: "bottom-right",
+        title: "파일 이름 수정 오류",
+        description: e.response.data,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
 
     setEdit(false);
