@@ -38,7 +38,7 @@ public class MainService {
         if (id != null) {
             coverLetterRepository.findById(id).ifPresent(coverLetter -> {
                 coverLetter.setNext(to);
-                coverLetterRepository.save(coverLetter);
+                coverLetterRepository.saveAndFlush(coverLetter);
             });
         }
     }
@@ -47,7 +47,7 @@ public class MainService {
         if (id != null) {
             coverLetterRepository.findById(id).ifPresent(coverLetter -> {
                 coverLetter.setPrev(to);
-                coverLetterRepository.save(coverLetter);
+                coverLetterRepository.saveAndFlush(coverLetter);
             });
         }
     }
@@ -56,7 +56,7 @@ public class MainService {
         if (id != null) {
             ListEntity listEntity = listRepository.findByListId(id);
             listEntity.setNext(to);
-            listRepository.save(listEntity);
+            listRepository.saveAndFlush(listEntity);
         }
     }
 
@@ -64,7 +64,7 @@ public class MainService {
         if (id != null) {
             ListEntity listEntity = listRepository.findByListId(id);
             listEntity.setPrev(to);
-            listRepository.save(listEntity);
+            listRepository.saveAndFlush(listEntity);
         }
     }
 
@@ -237,7 +237,7 @@ public class MainService {
         newListEntity.setUserId(userId);
 
         if (listRepository.countByUserId(userId) == 0) {
-            newListEntity = listRepository.save(newListEntity);
+            newListEntity = listRepository.saveAndFlush(newListEntity);
             createCoverLetter(newListEntity.getListId(), "새 자기소개서");
 
             return;
@@ -246,10 +246,10 @@ public class MainService {
         ListEntity lastListEntity = listRepository.findByUserIdAndNext(userId, null);
 
         newListEntity.setPrev(lastListEntity.getListId());
-        newListEntity = listRepository.save(newListEntity);
+        newListEntity = listRepository.saveAndFlush(newListEntity);
 
         lastListEntity.setNext(newListEntity.getListId());
-        listRepository.save(lastListEntity);
+        listRepository.saveAndFlush(lastListEntity);
 
         createCoverLetter(newListEntity.getListId(), "새 자기소개서");
     }
@@ -272,7 +272,7 @@ public class MainService {
         CoverLetterEntity lastCoverLetterEntity = coverLetterRepository.findByListIdAndNext(listId, null);
 
         newCoverLetterEntity.setPrev(lastCoverLetterEntity.getId());
-        newCoverLetterEntity = coverLetterRepository.save(newCoverLetterEntity);
+        newCoverLetterEntity = coverLetterRepository.saveAndFlush(newCoverLetterEntity);
 
         lastCoverLetterEntity.setNext(newCoverLetterEntity.getId());
         coverLetterRepository.saveAndFlush(lastCoverLetterEntity);
@@ -286,6 +286,10 @@ public class MainService {
             setListNext(prevId, nextId);
             setListPrev(nextId, prevId);
 
+            list.setPrev(null);
+            list.setNext(null);
+
+            listRepository.saveAndFlush(list);
             listRepository.deleteById(listId);
             listRepository.flush();
         });
@@ -299,6 +303,10 @@ public class MainService {
             setCoverLetterNext(prevId, nextId);
             setCoverLetterPrev(nextId, prevId);
 
+            coverLetter.setPrev(null);
+            coverLetter.setNext(null);
+
+            coverLetterRepository.saveAndFlush(coverLetter);
             coverLetterRepository.deleteById(id);
             coverLetterRepository.flush();
         });
@@ -339,19 +347,21 @@ public class MainService {
         });
     }
 
+
     public void updatePositionList(UpdatePositionListRequest updatePositionListRequest) {
-        listRepository.findById(updatePositionListRequest.getListId()).ifPresent(list -> {
+        Integer listId = updatePositionListRequest.getListId();
+        Integer toMovePrevListId = updatePositionListRequest.getToMovePrevListId();
+        Integer toMoveNextListId = updatePositionListRequest.getToMoveNextListId();
+
+        listRepository.findById(listId).ifPresent(list -> {
             Integer currentPrevListId = list.getPrev();
             Integer currentNextListId = list.getNext();
 
             setListPrev(currentNextListId, currentPrevListId);
             setListNext(currentPrevListId, currentNextListId);
 
-            Integer toMovePrevListId = updatePositionListRequest.getToMovePrevListId();
-            Integer toMoveNextListId = updatePositionListRequest.getToMoveNextListId();
-
-            setListPrev(toMoveNextListId, updatePositionListRequest.getListId());
-            setListNext(toMovePrevListId, updatePositionListRequest.getListId());
+            setListPrev(toMoveNextListId, listId);
+            setListNext(toMovePrevListId, listId);
 
             list.setPrev(toMovePrevListId);
             list.setNext(toMoveNextListId);
@@ -361,18 +371,19 @@ public class MainService {
     }
 
     public void updatePositionCoverLetter(UpdatePositionCoverLetterRequest updatePositionCoverLetterRequest) {
-        coverLetterRepository.findById(updatePositionCoverLetterRequest.getId()).ifPresent(coverLetter -> {
+        Integer id = updatePositionCoverLetterRequest.getId();
+        Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
+        Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
+
+        coverLetterRepository.findById(id).ifPresent(coverLetter -> {
             Integer currentPrevId = coverLetter.getPrev();
             Integer currentNextId = coverLetter.getNext();
 
             setCoverLetterPrev(currentNextId, currentPrevId);
             setCoverLetterNext(currentPrevId, currentNextId);
 
-            Integer toMovePrevId = updatePositionCoverLetterRequest.getToMovePrevId();
-            Integer toMoveNextId = updatePositionCoverLetterRequest.getToMoveNextId();
-
-            setCoverLetterPrev(toMoveNextId, updatePositionCoverLetterRequest.getId());
-            setCoverLetterNext(toMovePrevId, updatePositionCoverLetterRequest.getId());
+            setCoverLetterPrev(toMoveNextId, id);
+            setCoverLetterNext(toMovePrevId, id);
 
             coverLetter.setPrev(toMovePrevId);
             coverLetter.setNext(toMoveNextId);
@@ -395,33 +406,36 @@ public class MainService {
             coverLetter.setListId(updatePositionCoverLetterDiffListRequest.getToMoveListId());
             coverLetter.setNext(null);
 
-            coverLetterRepository.save(lastCoverLetter);
+            coverLetterRepository.saveAndFlush(lastCoverLetter);
             coverLetterRepository.saveAndFlush(coverLetter);
         });
     }
 
-    public Map<String, String> spellCheck(SpellCheckRequest spellCheckRequest) throws JsonProcessingException, URISyntaxException {
+    public Map spellCheck(SpellCheckRequest spellCheckRequest) throws JsonProcessingException, URISyntaxException {
         CoverLetterEntity coverLetter = coverLetterRepository.findById(spellCheckRequest.getId())
                 .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
 
-        if(coverLetter.getDescription() == null)
+        if (coverLetter.getDescription() == null)
             return null;
 
         String replace = coverLetter.getDescription().replaceAll("\n", "\r\n");
         String encode = URLEncoder.encode(replace, StandardCharsets.UTF_8);
 
         RequestEntity<String> res = RequestEntity
-                    .post(new URI("http://164.125.7.61/speller/results"))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .body("text1=" + encode);
+                .post(new URI("http://164.125.7.61/speller/results"))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .body("text1=" + encode);
 
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<String> response = restTemplate.exchange(res, String.class);
 
-        String data = "{" + Objects.requireNonNull(response.getBody()).substring(response.getBody().indexOf("\"errInfo\":[{"), response.getBody().indexOf("],\"idx\":") + 1) + "}";
-
         ObjectMapper mapper = new ObjectMapper();
+        if(response.toString().contains("기술적 한계로 찾지 못한 맞춤법 오류나 문법 오류가 있을 수 있습니다.")) {
+            return mapper.readValue("{\"errInfo\":[]}", Map.class);
+        }
+
+        String data = "{" + Objects.requireNonNull(response.getBody()).substring(response.getBody().indexOf("\"errInfo\":[{"), response.getBody().indexOf("],\"idx\":") + 1) + "}";
 
         return mapper.readValue(data, Map.class);
     }
