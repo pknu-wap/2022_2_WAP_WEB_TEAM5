@@ -19,7 +19,7 @@ function Lo(props) {
         // background="black"
         // style={{ backgroundColor: "transparent" }}
       >
-        <ModalOverlay />
+        {/* <ModalOverlay /> */}
         <ModalContent w="min-content" background="transparent">
           <Spinner
             thickness="4px"

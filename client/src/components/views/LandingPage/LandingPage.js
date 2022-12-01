@@ -3,8 +3,8 @@ import { useRecoilState } from "recoil";
 import "./LandingPage.css";
 import { useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-import sellet from "../../../imageFolder/1.JPG";
-import sellet2 from "../../../imageFolder/2.JPG";
+import sellet from "../../../imageFolder/1.png";
+import sellet2 from "../../../imageFolder/2.png";
 import {
   InputGroup,
   Input,
@@ -97,23 +97,18 @@ function LandingPage() {
   };
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", width: "100%", height: "100vh" }}>
       <div // 검정색 배경
         style={{
           width: "75%",
-          height: "100vh",
           backgroundColor: "black",
+          alignItems: "center",
           display: "flex",
         }}>
         <Carousel
           fade
           style={{
             width: "100%",
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "8%",
-            // marginLeft: "7%",
           }}>
           <Carousel.Item>
             <img className="d-block w-100" src={sellet} alt="First slide" />
@@ -126,7 +121,7 @@ function LandingPage() {
       <div // 흰색 배경
         style={{
           backgroundColor: "white",
-          height: "100vh",
+          height: "70%",
           width: "25%",
           marginTop: "13%",
         }}>
@@ -134,7 +129,6 @@ function LandingPage() {
           style={{
             width: "88%",
             marginLeft: "6%",
-            // backgroundColor: "gray",
             height: "45%",
           }}>
           <div

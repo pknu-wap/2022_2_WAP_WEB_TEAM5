@@ -95,7 +95,7 @@ function Folder({ Loading, setLoading }) {
           setLoading(false);
           setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
 
-          await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
+          await FolUpdate1(); // 요청한 다음에는 FolUpdate 함수 써줌
           console.log(CompanyList);
         } catch (e) {
           setLoading(false);
@@ -211,6 +211,43 @@ function Folder({ Loading, setLoading }) {
     }
   };
 
+  const FolUpdate1 = async () => {
+    // 서버에서 새로 값들을 받아옴(폴더에 관한 내용 처리)
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        // "http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=1"
+        `http://ec2-13-209-139-191.ap-northeast-2.compute.amazonaws.com/?userId=${userId}`,
+        {
+          headers: {
+            Authorization: Token,
+            // Authorization: `JWT ${Token}`,
+          },
+        }
+      );
+      setCompanyList(response.data.list);
+
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: "로그인 정보가 없습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      setToken("");
+      setuserId(0);
+      setCover([]);
+      setfileClickId(0);
+      setfolderClickId(0);
+      setCompanyList([]);
+      navigate("/");
+    }
+  };
+
   const circleClick = (id) => {
     const cov = CompanyList.filter((company) => company.list_id === id);
     // CompanyList에 담겨져있는 폴더들을 살피면서 클릭한 id와 같은 것을 추출해냄
@@ -297,7 +334,7 @@ function Folder({ Loading, setLoading }) {
       next = 0;
 
     if (endIndex === startIndex) {
-      return;
+      return result;
     }
 
     if (endIndex === 0) {

@@ -170,11 +170,11 @@ function MainPage() {
   };
 
   return (
-    <div>
+    <Box
+      sx={{ "::-webkit-scrollbar": { display: "none" }, overflow: "hidden" }}>
       <Lo isOpen={Loading} />
       <Box
-        sx={{ "::-webkit-scrollbar": { display: "none" } }}
-        // style={{ overflow: "hidden" }}
+      // style={{ overflow: "hidden" }}
       >
         <NavBar loc="main" Loading={Loading} />
         {/* 네비게이션 바 출력 */}
@@ -342,7 +342,7 @@ function MainPage() {
           </div>
         </GridItem>
       </Grid>
-    </div>
+    </Box>
   );
 }
 

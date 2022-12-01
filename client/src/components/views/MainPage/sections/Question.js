@@ -249,7 +249,7 @@ function Question({ Cov, setCov, Loading, setLoading }) {
       next = 0;
 
     if (startIndex === endIndex) {
-      return;
+      return result;
     }
 
     if (endIndex === 0) {

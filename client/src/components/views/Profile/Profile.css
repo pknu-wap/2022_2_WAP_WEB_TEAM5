@@ -17,7 +17,7 @@
 .my-info {
   margin-left: 5%;
   width: 100%;
-  height: 40%;
+  min-height: 40%;
   margin-bottom: 5%;
   text-align: left;
   background-color: white;
@@ -39,6 +39,13 @@
   margin-bottom: 10px;
 }
 
+.right-title {
+  border-bottom: 1px solid black;
+  width: 100%;
+  padding-left: 10px;
+  padding-top: 5%;
+  margin-bottom: 10px;
+}
 /* 전체카드 감싸는 div */
 .info-div {
   width: 100%;
@@ -68,14 +75,6 @@
   margin: 2% 0 2% 0;
 }
 
-.right-title {
-  border-bottom: 1px solid black;
-  width: 100%;
-  padding-left: 10px;
-  padding-top: 5%;
-  margin-bottom: 10px;
-}
-
 /* 카드 div */
 .infoCard {
   width: 300px;
@@ -86,6 +85,9 @@
 }
 
 .educationInfo {
+  display: flex;
+  width: 100%;
+  height: 100%;
   margin-left: 5px;
   border-bottom: 1px solid grey;
   padding: 5px;

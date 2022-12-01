@@ -108,7 +108,7 @@ function Account() {
         backgroundSize: "cover",
         backgroundAttachment: "fixed",
       }}
-      sx={{ "::-webkit-scrollbar": { display: "none" } }}>
+      sx={{ "::-webkit-scrollbar": { display: "none" }, overflow: "hidden" }}>
       <div className="account">
         <div>
           <NavBar />

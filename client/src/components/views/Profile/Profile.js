@@ -706,7 +706,7 @@ function Profile() {
   return (
     <Box
       style={{ width: "100%", height: "93vh", backgroundColor: "white" }}
-      sx={{ "::-webkit-scrollbar": { display: "none" } }}>
+      sx={{ "::-webkit-scrollbar": { display: "none" }, overflow: "hidden" }}>
       <NavBar />
       {/* ---------------------------------------------------------------- */}
       <div className="left-nav">
