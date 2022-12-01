@@ -89,6 +89,13 @@ function LandingPage() {
     navigate("/register");
   };
 
+  const onSubmitClick = (e) => {
+    console.log("a");
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <div // 검정색 배경
@@ -149,7 +156,10 @@ function LandingPage() {
           <br />
           <label style={{ width: "80%", marginLeft: "10%" }}>Password</label>
           <br />
-          <InputGroup size="md" style={{ width: "80%", marginLeft: "10%" }}>
+          <InputGroup
+            size="md"
+            style={{ width: "80%", marginLeft: "10%" }}
+            onKeyPress={onSubmitClick}>
             <Input
               value={Password}
               onChange={PwHandler}

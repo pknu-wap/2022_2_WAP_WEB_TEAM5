@@ -190,7 +190,8 @@ function MainPage() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            overflow: "scroll",
+            overflowY: "scroll",
+            overflowX: "hidden",
             minWidth: "100px",
           }}
           sx={{ "::-webkit-scrollbar": { display: "none" } }}>

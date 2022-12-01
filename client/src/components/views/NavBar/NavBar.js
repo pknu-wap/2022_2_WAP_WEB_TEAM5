@@ -101,7 +101,7 @@ function NavBar(props) {
         <button // 로그아웃 버튼
           style={{
             marginRight: "20px",
-            width: "50px",
+            width: "min-content",
             // height: "40px",
             fontWeight: "bold",
           }}

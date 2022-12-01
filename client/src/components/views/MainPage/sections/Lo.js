@@ -10,9 +10,17 @@ import {
 function Lo(props) {
   return (
     <Fragment>
-      <Modal isOpen={props.isOpen}>
+      <Modal
+        isOpen={props.isOpen}
+        background="transparent"
+        borderStyle="none"
+        border="transparent"
+        isCentered
+        // background="black"
+        // style={{ backgroundColor: "transparent" }}
+      >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent w="min-content" background="transparent">
           <Spinner
             thickness="4px"
             speed="0.65s"

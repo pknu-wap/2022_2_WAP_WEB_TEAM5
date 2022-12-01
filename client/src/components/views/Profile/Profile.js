@@ -138,6 +138,13 @@ function Profile() {
   const memoHandler = (event) => {
     setDescription(event.currentTarget.value);
   };
+
+  const onSubmitClick = (e) => {
+    console.log("a");
+    if (e.key === "Enter" && !(Date === "" || Name === "" || Info === "")) {
+      licensesOnClick();
+    }
+  };
   // 카드 삭제 기능
   const deleteLicense = async (id) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
@@ -560,6 +567,135 @@ function Profile() {
     }
   };
 
+  const licensesOnClick = () => {
+    var date = true;
+    var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
+    date = regex.test(Date);
+
+    if (!date) {
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: "날짜 형식이 맞지 않습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+    updateLicense();
+  };
+
+  const awardsOnClick = () => {
+    var date = true;
+    var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
+    date = regex.test(Date2);
+
+    if (!date) {
+      toast({
+        //수상경력 날짜 형식 오류
+        position: "bottom-right",
+        title: "실패",
+        description: "날짜 형식이 맞지 않습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+    updateAward();
+  };
+
+  const awardsSubmit = (e) => {
+    if (
+      e.key === "Enter" &&
+      !(
+        Date2 === "" ||
+        Name2 === "" ||
+        Org === "" ||
+        Info2 === "" ||
+        Grade === ""
+      )
+    ) {
+      awardsOnClick();
+    }
+  };
+
+  const EducationsSubmit = (e) => {
+    if (e.key === "Enter" && !(Title === "" || Grade1 === "")) {
+      updateLen();
+    }
+  };
+
+  const infoOnClick = () => {
+    var date = true;
+    var complete = true;
+    var score = true;
+    var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
+    var regexPI = RegExp(/^[0-9]{1,3}$/); //정수만 3자리 숫자까지 가능
+    var regexPF1 = RegExp(/^[0-9]{1,1}\.[0-9]{1,2}$/); //소수점까지도 가능
+
+    var date = regex.test(Enrollment) && regex.test(Graduation);
+    var complete = //정수3자리 이하 (이수학점)
+      regexPI.test(CompletingMajorCredit) && regexPI.test(CompletingCredit);
+    var score = //정수, 소수까지 가능(학점)
+      (regexPI.test(MajorCredit) || regexPF1.test(MajorCredit)) &&
+      (regexPI.test(MaxCredit) || regexPF1.test(MaxCredit)) &&
+      (regexPI.test(Credit) || regexPF1.test(Credit));
+
+    if (!date) {
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: "날짜 형식이 맞지 않습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    } else if (!complete) {
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: "이수학점 형식이 맞지 않습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    } else if (!score) {
+      toast({
+        position: "bottom-right",
+        title: "실패",
+        description: "학점 형식이 맞지 않습니다.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+    updateEducation();
+  };
+
+  const infoSubmit = (e) => {
+    if (
+      e.key === "Enter" &&
+      !(
+        Major === "" ||
+        Degree === "" ||
+        Enrollment === "" ||
+        Graduation === "" ||
+        MajorCredit === "" ||
+        CompletingMajorCredit === "" ||
+        Credit === "" ||
+        MaxCredit === "" ||
+        CompletingCredit === ""
+      )
+    ) {
+      infoOnClick();
+    }
+  };
+
   return (
     <Box
       style={{ width: "100%", height: "93vh", backgroundColor: "white" }}
@@ -611,7 +747,7 @@ function Profile() {
             <ModalContent>
               <ModalHeader>취득 자격증 정보를 입력해주세요.</ModalHeader>
               <ModalCloseButton />
-              <ModalBody pb={6}>
+              <ModalBody pb={6} onKeyPress={onSubmitClick}>
                 <FormControl>
                   <FormLabel>날짜</FormLabel>
                   <Input
@@ -643,26 +779,7 @@ function Profile() {
                 <Button
                   disabled={Date === "" || Name === "" || Info === ""}
                   colorScheme="blue"
-                  onClick={() => {
-                    var date = true;
-                    var regex = RegExp(
-                      /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
-                    );
-                    date = regex.test(Date);
-
-                    if (!date) {
-                      toast({
-                        position: "bottom-right",
-                        title: "실패",
-                        description: "날짜 형식이 맞지 않습니다.",
-                        status: "error",
-                        duration: 2000,
-                        isClosable: true,
-                      });
-                      return;
-                    }
-                    updateLicense();
-                  }}
+                  onClick={licensesOnClick}
                   mr={3}>
                   Save
                 </Button>
@@ -735,7 +852,7 @@ function Profile() {
             <ModalContent>
               <ModalHeader>수상 경력 정보를 입력해주세요.</ModalHeader>
               <ModalCloseButton />
-              <ModalBody pb={6}>
+              <ModalBody pb={6} onKeyPress={awardsSubmit}>
                 <FormControl>
                   <FormLabel>날짜</FormLabel>
                   <Input
@@ -789,27 +906,7 @@ function Profile() {
                     Grade === ""
                   }
                   colorScheme="blue"
-                  onClick={() => {
-                    var date = true;
-                    var regex = RegExp(
-                      /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
-                    );
-                    date = regex.test(Date2);
-
-                    if (!date) {
-                      toast({
-                        //수상경력 날짜 형식 오류
-                        position: "bottom-right",
-                        title: "실패",
-                        description: "날짜 형식이 맞지 않습니다.",
-                        status: "error",
-                        duration: 2000,
-                        isClosable: true,
-                      });
-                      return;
-                    }
-                    updateAward();
-                  }}
+                  onClick={awardsOnClick}
                   mr={3}>
                   Save
                 </Button>
@@ -872,7 +969,7 @@ function Profile() {
             <ModalContent>
               <ModalHeader>어학 성적 정보를 입력해주세요.</ModalHeader>
               <ModalCloseButton />
-              <ModalBody pb={6}>
+              <ModalBody pb={6} onKeyPress={EducationsSubmit}>
                 <FormControl>
                   <FormLabel>시험명</FormLabel>
                   <Input
@@ -926,178 +1023,124 @@ function Profile() {
         <div className="right-title">
           <h4>인적사항</h4>
         </div>
+        <Modal initialFocusRef={initialRef} isOpen={isOpen3} onClose={onClose3}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>인적사항을 입력해주세요.</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6} onKeyPress={infoSubmit}>
+              <FormControl>
+                <FormLabel>학교명</FormLabel>
+                <Input
+                  ref={initialRef}
+                  value={School}
+                  placeholder="ex) 부경대"
+                  onChange={schoolHandler}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>전공</FormLabel>
+                <Input
+                  value={Major}
+                  placeholder="ex) 컴퓨터공학부"
+                  onChange={majorHandler}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>학위</FormLabel>
+                <Input
+                  value={Degree}
+                  placeholder="ex) 대학생"
+                  onChange={degreeHandler}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>입학일</FormLabel>
+                <Input
+                  value={Enrollment}
+                  placeholder="ex) 2018-03-11"
+                  onChange={enrollmentHandler}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>졸업일</FormLabel>
+                <Input
+                  value={Graduation}
+                  placeholder="ex) 2022-12-31"
+                  onChange={graduationHandler}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>전공 학점</FormLabel>
+                <Input
+                  value={MajorCredit}
+                  placeholder="ex) 4.5"
+                  onChange={majorCreditHandler}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>전공 이수 학점</FormLabel>
+                <Input
+                  value={CompletingMajorCredit}
+                  placeholder="ex) 45"
+                  onChange={completingMajorCreditHandler}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>학점</FormLabel>
+                <Input
+                  value={Credit}
+                  placeholder="ex) 4.5"
+                  onChange={creditHandler}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>최대 학점</FormLabel>
+                <Input
+                  value={MaxCredit}
+                  placeholder="ex) 4.5"
+                  onChange={maxCreditHandler}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>이수 학점</FormLabel>
+                <Input
+                  value={CompletingCredit}
+                  placeholder="ex) 120"
+                  onChange={completingCreditHandler}
+                />
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                disabled={
+                  Major === "" ||
+                  Degree === "" ||
+                  Enrollment === "" ||
+                  Graduation === "" ||
+                  MajorCredit === "" ||
+                  CompletingMajorCredit === "" ||
+                  Credit === "" ||
+                  MaxCredit === "" ||
+                  CompletingCredit === ""
+                }
+                colorScheme="blue"
+                onClick={infoOnClick}
+                mr={3}>
+                Save
+              </Button>
+              <Button onClick={onClose3}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         <div className="my-info">
-          <Modal
-            initialFocusRef={initialRef}
-            isOpen={isOpen3}
-            onClose={onClose3}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>인적사항을 입력해주세요.</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody pb={6}>
-                <FormControl>
-                  <FormLabel>학교명</FormLabel>
-                  <Input
-                    ref={initialRef}
-                    value={School}
-                    placeholder="ex) 부경대"
-                    onChange={schoolHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>전공</FormLabel>
-                  <Input
-                    value={Major}
-                    placeholder="ex) 컴퓨터공학부"
-                    onChange={majorHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>학위</FormLabel>
-                  <Input
-                    value={Degree}
-                    placeholder="ex) 대학생"
-                    onChange={degreeHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>입학일</FormLabel>
-                  <Input
-                    value={Enrollment}
-                    placeholder="ex) 2018-03-11"
-                    onChange={enrollmentHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>졸업일</FormLabel>
-                  <Input
-                    value={Graduation}
-                    placeholder="ex) 2022-12-31"
-                    onChange={graduationHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>전공 학점</FormLabel>
-                  <Input
-                    value={MajorCredit}
-                    placeholder="ex) 4.5"
-                    onChange={majorCreditHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>전공 이수 학점</FormLabel>
-                  <Input
-                    value={CompletingMajorCredit}
-                    placeholder="ex) 45"
-                    onChange={completingMajorCreditHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>학점</FormLabel>
-                  <Input
-                    value={Credit}
-                    placeholder="ex) 4.5"
-                    onChange={creditHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>최대 학점</FormLabel>
-                  <Input
-                    value={MaxCredit}
-                    placeholder="ex) 4.5"
-                    onChange={maxCreditHandler}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>이수 학점</FormLabel>
-                  <Input
-                    value={CompletingCredit}
-                    placeholder="ex) 120"
-                    onChange={completingCreditHandler}
-                  />
-                </FormControl>
-              </ModalBody>
-
-              <ModalFooter>
-                <Button
-                  disabled={
-                    Major === "" ||
-                    Degree === "" ||
-                    Enrollment === "" ||
-                    Graduation === "" ||
-                    MajorCredit === "" ||
-                    CompletingMajorCredit === "" ||
-                    Credit === "" ||
-                    MaxCredit === "" ||
-                    CompletingCredit === ""
-                  }
-                  colorScheme="blue"
-                  onClick={() => {
-                    var date = true;
-                    var complete = true;
-                    var score = true;
-                    var regex = RegExp(
-                      /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
-                    );
-                    var regexPI = RegExp(/^[0-9]{1,3}$/); //정수만 3자리 숫자까지 가능
-                    var regexPF1 = RegExp(/^[0-9]{1,1}\.[0-9]{1,2}$/); //소수점까지도 가능
-
-                    var date = regex.test(Enrollment) && regex.test(Graduation);
-                    var complete = //정수3자리 이하 (이수학점)
-                      regexPI.test(CompletingMajorCredit) &&
-                      regexPI.test(CompletingCredit);
-                    var score = //정수, 소수까지 가능(학점)
-                      (regexPI.test(MajorCredit) ||
-                        regexPF1.test(MajorCredit)) &&
-                      (regexPI.test(MaxCredit) || regexPF1.test(MaxCredit)) &&
-                      (regexPI.test(Credit) || regexPF1.test(Credit));
-
-                    if (!date) {
-                      toast({
-                        position: "bottom-right",
-                        title: "실패",
-                        description: "날짜 형식이 맞지 않습니다.",
-                        status: "error",
-                        duration: 2000,
-                        isClosable: true,
-                      });
-                      return;
-                    } else if (!complete) {
-                      toast({
-                        position: "bottom-right",
-                        title: "실패",
-                        description: "이수학점 형식이 맞지 않습니다.",
-                        status: "error",
-                        duration: 2000,
-                        isClosable: true,
-                      });
-                      return;
-                    } else if (!score) {
-                      toast({
-                        position: "bottom-right",
-                        title: "실패",
-                        description: "학점 형식이 맞지 않습니다.",
-                        status: "error",
-                        duration: 2000,
-                        isClosable: true,
-                      });
-                      return;
-                    }
-                    updateEducation();
-                  }}
-                  mr={3}>
-                  Save
-                </Button>
-                <Button onClick={onClose3}>Cancel</Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-
-          <div>
+          <div style={{ display: "flex" }}>
             <div
               style={{
-                display: "inline-block",
+                // display: "inline-block",
+                flexDirection: "column",
+                display: "flex",
                 width: "40%",
                 height: "100%",
                 marginRight: "10px",
@@ -1115,50 +1158,43 @@ function Profile() {
                   </div>
                 ))}
             </div>
-            {
-              <div
-                style={{
-                  display: "inline-block",
-                  width: "45%",
-                  height: "100%",
-                  marginRight: "10px",
-                }}>
-                {Educations && Educations.length !== 0 && (
-                  <div key={Page}>
-                    <div className="educationInfo">{Educations[Page].name}</div>
-                    <div className="educationInfo">
-                      {Educations[Page].major}
-                    </div>
-                    <div className="educationInfo">
-                      {Educations[Page].degree}
-                    </div>
-                    <div className="educationInfo">
-                      {Educations[Page].admission_date}
-                    </div>
-                    <div className="educationInfo">
-                      {Educations[Page].graduation_date}
-                    </div>
-                    <div className="educationInfo">
-                      {Educations[Page].major_grade}
-                    </div>
-                    <div className="educationInfo">
-                      {Educations[Page].major_course}
-                    </div>
-                    <div className="educationInfo">
-                      {Educations[Page].grade}
-                    </div>
-                    <div className="educationInfo">
-                      {Educations[Page].max_course}
-                    </div>
-                    <div className="educationInfo">
-                      {Educations[Page].course}
-                    </div>
+            <div
+              style={{
+                // display: "inline-block",
+                display: "flex",
+                flexDirection: "column",
+                width: "45%",
+                height: "100%",
+                marginRight: "10px",
+              }}>
+              {Educations && Educations.length !== 0 && (
+                <div key={Page}>
+                  <div className="educationInfo">{Educations[Page].name}</div>
+                  <div className="educationInfo">{Educations[Page].major}</div>
+                  <div className="educationInfo">{Educations[Page].degree}</div>
+                  <div className="educationInfo">
+                    {Educations[Page].admission_date}
                   </div>
-                )}
-              </div>
-            }
+                  <div className="educationInfo">
+                    {Educations[Page].graduation_date}
+                  </div>
+                  <div className="educationInfo">
+                    {Educations[Page].major_grade}
+                  </div>
+                  <div className="educationInfo">
+                    {Educations[Page].major_course}
+                  </div>
+                  <div className="educationInfo">{Educations[Page].grade}</div>
+                  <div className="educationInfo">
+                    {Educations[Page].max_course}
+                  </div>
+                  <div className="educationInfo">{Educations[Page].course}</div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
+
         <div style={{ display: "flex" }}>
           <ArrowLeftIcon
             w={4}
@@ -1196,7 +1232,7 @@ function Profile() {
               border: "1px solid gray",
               width: "10%",
               height: "30px",
-              float: "right",
+              // float: "right",
             }}>
             추가
           </Button>
@@ -1210,7 +1246,7 @@ function Profile() {
               border: "1px solid gray",
               width: "10%",
               height: "30px",
-              float: "right",
+              // float: "right",
             }}>
             삭제
           </Button>

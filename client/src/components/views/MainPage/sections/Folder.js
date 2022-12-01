@@ -93,6 +93,7 @@ function Folder({ Loading, setLoading }) {
           );
           // 서버에게 요청하고,
           setLoading(false);
+          setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
 
           await FolUpdate(); // 요청한 다음에는 FolUpdate 함수 써줌
         } catch (e) {
@@ -129,8 +130,6 @@ function Folder({ Loading, setLoading }) {
         isClosable: true,
       });
     }
-
-    setCompany(""); // 회사가 적혀있는 칸은 다시 공백으로 만듦
   };
 
   const deleteHandler = async (id) => {
@@ -281,7 +280,7 @@ function Folder({ Loading, setLoading }) {
   });
 
   const getItemStyle = (isDragging, draggableStyle) => ({
-    color: "black",
+    color: "#212226",
     cursor: "pointer",
     fontWeight: "bold",
     marginTop: "40px",
@@ -384,6 +383,13 @@ function Folder({ Loading, setLoading }) {
     }
   };
 
+  const onSubmitClick = (e) => {
+    console.log("a");
+    if (e.key === "Enter") {
+      companyclickHandler();
+    }
+  };
+
   return (
     <Fragment>
       <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
@@ -474,6 +480,7 @@ function Folder({ Loading, setLoading }) {
                 value={Company}
                 onChange={companyHandler}
                 focusBorderColor="gray.300"
+                onKeyPress={onSubmitClick}
               />
             </FormControl>
           </ModalBody>
@@ -488,7 +495,13 @@ function Folder({ Loading, setLoading }) {
               }}>
               Save
             </Button>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button
+              onClick={() => {
+                onClose();
+                setCompany("");
+              }}>
+              Cancel
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -82,6 +82,7 @@ function Question({ Cov, setCov, Loading, setLoading }) {
           );
           setLoading(false);
           await fileUpdate();
+          setContent("");
         } catch (e) {
           setLoading(false);
           console.log(e);
@@ -109,8 +110,6 @@ function Question({ Cov, setCov, Loading, setLoading }) {
         isClosable: true,
       });
     }
-
-    setContent("");
   };
 
   useEffect(() => {
@@ -326,6 +325,13 @@ function Question({ Cov, setCov, Loading, setLoading }) {
     }
   };
 
+  const onSubmitClick = (e) => {
+    console.log("a");
+    if (e.key === "Enter") {
+      contentclickHandler();
+    }
+  };
+
   return (
     <div
       style={{
@@ -426,6 +432,7 @@ function Question({ Cov, setCov, Loading, setLoading }) {
                 placeholder="file name"
                 value={Content}
                 onChange={ContentHandler}
+                onKeyPress={onSubmitClick}
               />
             </FormControl>
           </ModalBody>
