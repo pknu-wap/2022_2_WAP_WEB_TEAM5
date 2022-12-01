@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -28,6 +30,7 @@ import java.util.*;
 public class MainService {
     private final ListRepository listRepository;
     private final CoverLetterRepository coverLetterRepository;
+    private final EntityManager em;
     private final String errorMsgOverLap = "중복된 제목입니다.";
     private final String errorMsgRemainOne = "1개일 때는 이동 또는 삭제할 수 없습니다.";
     private final String errorMsgMoveNull = "이동할 위치가 둘 다 null이면 안됩니다.";
@@ -72,6 +75,20 @@ public class MainService {
         if (listRepository.existsByUserIdAndTitle(userId, title)) {
             throw new IllegalArgumentException(errorMsgOverLap);
         }
+    }
+
+    public Integer getUserIdFromListId(Integer listId) {
+        ListEntity list = listRepository.findById(listId)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
+
+        return list.getUserId();
+    }
+
+    public Integer getListIdFromId(Integer id) {
+        CoverLetterEntity coverLetter = coverLetterRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 아이디입니다."));
+
+        return coverLetter.getListId();
     }
 
     public void existCoverLetterTitle(Integer listId, String title) {
@@ -278,7 +295,9 @@ public class MainService {
         coverLetterRepository.saveAndFlush(lastCoverLetterEntity);
     }
 
+    @Transactional
     public void deleteList(Integer listId) {
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
         listRepository.findById(listId).ifPresent(list -> {
             Integer prevId = list.getPrev();
             Integer nextId = list.getNext();
@@ -293,9 +312,12 @@ public class MainService {
             listRepository.deleteById(listId);
             listRepository.flush();
         });
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
     }
 
+    @Transactional
     public void deleteCoverLetter(Integer id) {
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
         coverLetterRepository.findById(id).ifPresent(coverLetter -> {
             Integer prevId = coverLetter.getPrev();
             Integer nextId = coverLetter.getNext();
@@ -310,6 +332,7 @@ public class MainService {
             coverLetterRepository.deleteById(id);
             coverLetterRepository.flush();
         });
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
     }
 
     public void updateList(UpdateListRequest updateListRequest) {

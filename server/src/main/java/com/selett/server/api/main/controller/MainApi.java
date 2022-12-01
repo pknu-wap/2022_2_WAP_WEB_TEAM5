@@ -145,6 +145,8 @@ public class MainApi {
     public ResponseEntity<?> updateList(@Valid @RequestBody UpdateListRequest updateListRequest) {
         try {
             requestTokenValidation.verifyList(updateListRequest.getListId());
+
+            mainService.existListTitle(mainService.getUserIdFromListId(updateListRequest.getListId()), updateListRequest.getTitle());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -163,6 +165,8 @@ public class MainApi {
     public ResponseEntity<?> updateCoverLetter(@Valid @RequestBody UpdateCoverLetterRequest updateCoverLetterRequest) {
         try {
             requestTokenValidation.verifyCoverLetter(updateCoverLetterRequest.getId());
+
+            mainService.existCoverLetterTitle(mainService.getListIdFromId(updateCoverLetterRequest.getId()), updateCoverLetterRequest.getTitle());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
